@@ -1,0 +1,107 @@
+### Recuperar todos localhost territorios registrados
+GET http://localhost:7070/api/v1/territories
+
+### Recuperar un territorio por numero
+GET http://localhost:7070/api/v1/territories/10
+
+### Crear una territorio
+POST http://localhost:7070/api/v1/territories
+Content-Type: application/json
+
+{
+  "number": 10,
+  "label": "Place beatiful",
+  "limits": {
+    "NORTH": "Mont",
+    "SOUTH": "Rest",
+    "EAST": "Sunny",
+    "WEST": "River good"
+  },
+  "lastDateCompleted": "2023-01-10"
+}
+
+### Actualizar un territorio
+PATCH http://localhost:7070/api/v1/territories/10
+Content-Type: application/json
+
+{
+  "lastDateCompleted": "2023-03-10"
+}
+
+### Borrar un territorio
+DELETE http://localhost:7070/api/v1/territories/53989f84-78c0-4087-907f-dbb406809638
+
+### ---------------------------------------------------------------------------
+
+### Recuperar los registros del territorio
+GET http://localhost:7070/api/v1/territories/10/registries
+
+### Recuperar el ultimo registro del territorio
+GET http://localhost:7070/api/v1/territories/10/registries?last=true
+
+### Crear un registro
+POST http://localhost:7070/api/v1/territories/10/registries
+Content-Type: application/json
+
+{
+  "assignedTo": "Julio Amoroso",
+  "dateAssigned": "2023-7-19"
+}
+
+### Actualizar el ultimo registro del territorio
+PATCH http://localhost:7070/api/v1/territories/10/registries?last=true
+Content-Type: application/json
+
+{
+  "dateCompleted": "2023-7-20"
+}
+
+### Cerrar el ultimo registro del territorio con la fecha de hoy
+POST http://localhost:7070/api/v1/territories/10/registries/closed
+
+### Actualizar un registro
+PATCH http://localhost:7070/api/v1/territories/registries/546468464146
+Content-Type: application/json
+
+{
+  "assignedTo": "Junior Publisher",
+  "dateCompleted": "2023-7-20"
+}
+
+### Borrar un registro
+DELETE http://localhost:7070/api/v1/territories/registries/546468464146
+
+### ---------------------------------------------------------------------------
+
+### Recuperar lista de conductores
+GET http://localhost:7070/api/v1/conductors
+
+### Recuperar conductore por id
+GET http://localhost:7070/api/v1/conductors/215155542
+
+### Crear un conductor
+POST http://localhost:7070/api/v1/conductors
+Content-Type: application/json
+
+{
+  "name": "Julio A.",
+  "mobile-phone": "000-000000",
+  "availability": {
+    SATURDAY: { frequency: "2 week", moment: "morning" },
+    THUESDAY: { frequency: "every", moment: "afternon" }
+  },
+  "serviceGroup": 3,
+  "privilegie": "QUALIFIED_BROTHER"
+}
+
+### Actualizar un conductor
+PATCH http://localhost:7070/api/v1/conductors/215155542
+Content-Type: application/json
+
+{
+  "name": "Julio Amoroso",
+  "privilegie": "GROUP_SERVANT"
+}
+
+### Borrar un conductor
+DELETE http://localhost:7070/api/v1/conductors/215155542

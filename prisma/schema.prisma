@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Territories {
+  id                  String          @id @default(uuid())
+  number              Int             @unique
+  label               String
+  north_limit         String
+  south_limit         String
+  east_limit          String
+  west_limit          String
+  url_map_image       String?
+  last_date_completed DateTime
+  assigned_lock       Boolean         @default(false)
+  MeetingPlaces       MeetingPlaces[]
+  Registry            Registries[]
+}
+
+model MeetingPlaces {
+  id           String      @id @default(uuid())
+  place        String
+  latitude     String?
+  longitude    String?
+  territory_id String
+  territory    Territories @relation(fields: [territory_id], references: [id])
+}
+
+model Registries {
+  id             String      @id @default(uuid())
+  date_assigned  DateTime
+  date_completed DateTime?
+  territory_id   String
+  conductor_id   String
+  conductor      Conductors  @relation(fields: [conductor_id], references: [id])
+  territory      Territories @relation(fields: [territory_id], references: [id])
+}
+
+model Conductors {
+  id                 String         @id @default(uuid())
+  name               String
+  mobile_phone       String
+  service_group      Int
+  privilege          String
+  last_date_assigned DateTime
+  Availability       Availability[]
+  Registry           Registries[]
+}
+
+model Availability {
+  id           String     @id @default(uuid())
+  day          String
+  frequency    String
+  moment       String
+  conductor_id String
+  conductor    Conductors @relation(fields: [conductor_id], references: [id])
+}
