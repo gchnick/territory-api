@@ -53,10 +53,11 @@ model Conductors {
 }
 
 model Availability {
-  id           String     @id @default(uuid())
   day          String
   frequency    String
   moment       String
   conductor_id String
   conductor    Conductors @relation(fields: [conductor_id], references: [id])
+
+  @@id([conductor_id, day])
 }
