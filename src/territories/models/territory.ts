@@ -1,6 +1,6 @@
 import { prisma } from '../../config/connection';
 
-enum CardinalPoint {
+export enum CardinalPoint {
   NORTH = 'NORTH',
   SOUTH = 'SOUTH',
   EAST = 'EAST',
@@ -9,12 +9,14 @@ enum CardinalPoint {
 
 type Limits = Partial<Record<CardinalPoint, string>>;
 
-type Territory = {
+export type Territory = {
   number: number;
   label: string;
   limits: Limits;
   lastDateCompleted: Date;
 };
+
+export type PartialTerritory = Partial<Territory>;
 
 export class TerritoryModel {
   static async getAll() {
@@ -22,7 +24,7 @@ export class TerritoryModel {
     return territories;
   }
 
-  static async getById(number: number) {
+  static async getByNumber(number: number) {
     const territory = await prisma.territories.findUnique({
       where: { number }
     });
@@ -30,6 +32,12 @@ export class TerritoryModel {
   }
 
   static async create(input: Territory) {
+    const exist = await TerritoryModel.#ensureExistNumber(input.number);
+
+    if (exist) {
+      throw Error('Territory number already exist');
+    }
+
     const newTerritory = await prisma.territories.create({
       data: {
         number: input.number,
@@ -45,7 +53,7 @@ export class TerritoryModel {
     return newTerritory;
   }
 
-  static async update(number: number, input: Partial<Territory>) {
+  static async update(number: number, input: PartialTerritory) {
     const data = {
       number: input.number,
       label: input.label,
@@ -64,6 +72,17 @@ export class TerritoryModel {
   }
 
   static async delete(id: string) {
-    await prisma.territories.delete({ where: { id } });
+    const exist = await TerritoryModel.#ensureExistId(id);
+    exist && (await prisma.territories.delete({ where: { id } }));
+  }
+
+  static async #ensureExistNumber(number: number) {
+    return (
+      (await prisma.territories.findUnique({ where: { number } })) !== null
+    );
+  }
+
+  static async #ensureExistId(id: string) {
+    return (await prisma.territories.findUnique({ where: { id } })) !== null;
   }
 }
