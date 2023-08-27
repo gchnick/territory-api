@@ -6,7 +6,8 @@ export const ensureInputIsValid =
   (request: Request, response: Response, next: NextFunction) => {
     const result = schema.safeParse({
       params: request.params,
-      body: request.body
+      body: request.body,
+      query: request.query
     });
 
     if (!result.success) {
