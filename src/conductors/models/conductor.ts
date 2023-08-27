@@ -1,6 +1,4 @@
-import { prisma } from '../../config/connection';
-
-export enum Days {
+enum Days {
   MONDAY = 'MONDAY',
   TUESDAY = 'TUESDAY',
   WEDNESDAY = 'WEDNESDAY',
@@ -10,7 +8,7 @@ export enum Days {
   SUNDAY = 'SUNDAY'
 }
 
-export enum Moments {
+enum Moments {
   MORNING = 'MORNING',
   AFTERNOON = 'AFTERNOON',
   EVENING = 'EVENING',
@@ -22,7 +20,7 @@ type Available = {
   moment: Moments;
 };
 
-export enum Privilegies {
+enum Privilegies {
   GROUP_OVERSEER = 'GROUP_OVERSEER',
   GROUP_SERVANT = 'GROUP_SERVANT',
   QUALIFIED_BROTHER = 'QUALIFIED_BROTHER'
@@ -30,7 +28,8 @@ export enum Privilegies {
 
 type Availability = Partial<Record<Days, Available>>;
 
-export type Conductor = {
+type Conductor = {
+  id?: string;
   name: string;
   mobilePhone: string;
   serviceGroup: number;
@@ -39,114 +38,39 @@ export type Conductor = {
   availability?: Availability;
 };
 
-export type PartialConductor = Partial<Conductor>;
+type PartialConductor = Partial<Conductor>;
 
-export class ConductorModel {
-  static async getAll() {
-    const conductors = await prisma.conductors.findMany();
-    return conductors;
-  }
+type AvailabilityEntity = {
+  day: string;
+  frequency: string;
+  moment: string;
+  conductor_id: string;
+};
 
-  static async getById(id: string) {
-    const conductor = await prisma.conductors.findUnique({
-      where: { id },
-      include: { Availability: true }
-    });
+type ConductorEntity = {
+  id: string;
+  name: string;
+  mobile_phone: string;
+  service_group: number;
+  privilege: string;
+  last_date_assigned: Date;
+};
 
-    return conductor;
-  }
+type ConductorWithAvailability = {
+  Availability: AvailabilityEntity[];
+} & ConductorEntity;
 
-  static async create(data: Conductor) {
-    const availableArray = ConductorModel.#getAvailableArray(data.availability);
-    const newConductor = await prisma.conductors.create({
-      data: {
-        name: data.name,
-        mobile_phone: data.mobilePhone,
-        service_group: data.serviceGroup,
-        privilege: data.privilegie,
-        last_date_assigned: data.lastDateAssigned ?? new Date(),
-        Availability: {
-          create: availableArray
-        }
-      }
-    });
+type Entity = ConductorEntity | ConductorWithAvailability;
 
-    return newConductor;
-  }
-
-  static async update(id: string, data: PartialConductor) {
-    const dataMapper = {
-      name: data.name,
-      mobile_phone: data.mobilePhone,
-      service_group: data.serviceGroup,
-      privilege: data.privilegie,
-      last_date_assigned: data.lastDateAssigned ?? new Date()
-    };
-
-    const updatedConductor = await prisma.conductors.update({
-      where: { id },
-      data: {
-        ...dataMapper
-      }
-    });
-
-    if (data.availability) {
-      ConductorModel.#updateAvailability(
-        updatedConductor.id,
-        data.availability
-      );
-    }
-
-    return updatedConductor;
-  }
-
-  static async delete(id: string) {
-    const exist = await ConductorModel.#existConductor(id);
-    exist && (await prisma.conductors.delete({ where: { id } }));
-  }
-
-  static #getAvailableArray(availability: Availability | undefined) {
-    if (typeof availability === 'undefined') return [];
-
-    const availableArray: { day: string; frequency: string; moment: string }[] =
-      [];
-    for (const key in availability) {
-      const available = availability[key as Days];
-      if (available) {
-        availableArray.push({
-          day: key,
-          frequency: available.frequency,
-          moment: available.moment
-        });
-      }
-    }
-
-    return availableArray;
-  }
-
-  static async #updateAvailability(
-    coductorId: string,
-    availability: Availability
-  ) {
-    for (const key in availability) {
-      const available = availability[key as Days];
-      available &&
-        (await prisma.availability.update({
-          where: {
-            conductor_id_day: {
-              conductor_id: coductorId,
-              day: key
-            }
-          },
-          data: {
-            frequency: available.frequency,
-            moment: available.moment
-          }
-        }));
-    }
-  }
-
-  static async #existConductor(id: string) {
-    return (await prisma.conductors.findUnique({ where: { id } })) !== null;
-  }
-}
+export {
+  Availability,
+  AvailabilityEntity,
+  Conductor,
+  ConductorEntity,
+  ConductorWithAvailability,
+  Days,
+  Entity,
+  Moments,
+  PartialConductor,
+  Privilegies
+};

@@ -1,11 +1,8 @@
+import { UUID } from 'crypto';
 import { Request, Response } from 'express';
 import { RequestBody } from '../../shared/controllers/request-body';
-import {
-  Conductor,
-  ConductorModel,
-  PartialConductor
-} from '../models/conductor';
-import { UUID } from 'crypto';
+import { Conductor, PartialConductor } from '../models/conductor';
+import { ConductorModel } from '../models/conductor.model';
 
 export class ConductorController {
   static async getAll(_: Request, response: Response) {
@@ -33,7 +30,7 @@ export class ConductorController {
     const updatedConductor = await ConductorModel.update(id, request.body);
     return response.json(updatedConductor);
   }
-  static async delete(request: Request<{ id: UUID}>, response: Response) {
+  static async delete(request: Request<{ id: UUID }>, response: Response) {
     const { id } = request.params;
     await ConductorModel.delete(id);
     return response.status(204).json(null);
