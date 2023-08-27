@@ -30,7 +30,7 @@ const territorySchema = z.object({
   })
 });
 
-const numberTerritoryParam = z.string().nonempty().min(1).max(3);
+export const numberTerritoryParam = z.string().nonempty().min(1).max(2);
 
 export const getByNumberSchema = z.object({
   params: z.object({
