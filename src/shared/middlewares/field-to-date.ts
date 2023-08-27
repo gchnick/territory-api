@@ -4,8 +4,10 @@ import { z } from 'zod';
 export const fieldToDate =
   (fieldName: string) =>
   (request: Request, response: Response, next: NextFunction) => {
+    if (!request.body[fieldName]) return next();
+
     const value = request.body[fieldName];
-    if (!request.body[fieldName] && !ensureDateIsValid(value)) {
+    if (!ensureDateIsValid(value)) {
       return response.status(400).send({
         error: { path: `/${fieldName}`, message: 'string to date is invalid' }
       });
