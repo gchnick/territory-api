@@ -1,22 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
-import { BadRequest, NotFount } from '../models/errors';
+import { ErrorHandler } from '../models/error-handler';
 
-export const errorHandler = (
+export const errorHandlerMiddleware = (
   error: Error,
-  _: Request,
+  request: Request,
   response: Response,
   next: NextFunction
 ) => {
-  let status = 500;
-
-  if (error instanceof NotFount) {
-    status = 404;
+  const isTruestedError = ErrorHandler.isTrustedError(error);
+  if (!isTruestedError) {
+    next(error);
   }
 
-  if (error instanceof BadRequest) {
-    status = 400;
-  }
-
-  response.status(status).json({ error: error.message });
-  next();
+  const { httpCode, message, name, stack } = ErrorHandler.handleError(error);
+  response.status(httpCode).json({ error: name, message, stack });
 };

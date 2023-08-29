@@ -1,4 +1,4 @@
-import { BadRequest, NotFount } from '../../shared/models/errors';
+import { BadRequest, NotFount } from '../../shared/models/error-model';
 
 export class TerritoryNotFount extends NotFount {
   constructor(message: string) {

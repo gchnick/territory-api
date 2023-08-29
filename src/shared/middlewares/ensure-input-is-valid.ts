@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject } from 'zod';
+import { HTTP400Error } from '../controllers/errors';
 
 export const ensureInputIsValid =
   (schema: AnyZodObject) =>
-  (request: Request, response: Response, next: NextFunction) => {
+  (request: Request, _: Response, next: NextFunction) => {
     const result = schema.safeParse({
       params: request.params,
       body: request.body,
@@ -11,24 +12,22 @@ export const ensureInputIsValid =
     });
 
     if (!result.success) {
-      return response
-        .status(400)
-        .send({ error: JSON.parse(result.error.message) });
+      const error = new HTTP400Error(result.error.message.toString());
+      next(error);
     }
 
-    next();
+    if (result.success) next();
   };
 
 export const ensurePartialInputIsValid =
   (schema: AnyZodObject) =>
-  (request: Request, response: Response, next: NextFunction) => {
+  (request: Request, _: Response, next: NextFunction) => {
     const result = schema.partial().safeParse(request.body);
 
     if (!result.success) {
-      return response
-        .status(400)
-        .send({ error: JSON.parse(result.error.message) });
+      const error = new HTTP400Error(JSON.parse(result.error.message));
+      next(error);
     }
 
-    next();
+    if (result.success) next();
   };

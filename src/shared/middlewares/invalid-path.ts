@@ -1,11 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
+import { APIError } from '../controllers/errors';
+import { HttpStatusCode } from '../models/http-status-code';
 
-export const invalidPath = (
-  _: Request,
-  response: Response,
+export const invalidPathMiddleware = (
+  request: Request,
+  _: Response,
   next: NextFunction
 ) => {
-  response.status(404);
-  response.json({ error: 'invalid path' });
-  next();
+  const message = `Can't find '${request.originalUrl}' on the server!`;
+  const error = new APIError('fail', HttpStatusCode.NOT_FOUNT, true, message);
+  next(error);
 };
