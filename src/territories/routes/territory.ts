@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ensureInputIsValid } from '../../shared/middlewares/ensure-input-is-valid';
-import { fieldToDate } from '../../shared/middlewares/field-to-date';
+import { fieldsToDate } from '../../shared/middlewares/fields-to-date';
 import { TerritoryController } from '../controllers/territory';
 import {
   createSchema,
@@ -19,13 +19,13 @@ territoryRouter.get(
 );
 territoryRouter.post(
   '/',
-  fieldToDate('lastDateCompleted'),
+  fieldsToDate(['lastDateCompleted']),
   ensureInputIsValid(createSchema),
   TerritoryController.create
 );
 territoryRouter.patch(
   '/:number',
-  fieldToDate('lastDateCompleted'),
+  fieldsToDate(['lastDateCompleted']),
   ensureInputIsValid(updateSchema),
   TerritoryController.update
 );

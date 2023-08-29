@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CardinalPoint } from '../models/territory';
+import { CardinalPoint } from '../models/types';
 
 const territorySchema = z.object({
   number: z

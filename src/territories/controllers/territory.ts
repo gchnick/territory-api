@@ -1,50 +1,51 @@
-import { UUID } from 'crypto';
 import { Request, Response } from 'express';
-import { RequestBody } from '../../shared/controllers/request-body';
-import { PartialTerritory, Territory } from '../models/territory';
-import { TerritoryModel } from '../models/territory.model';
+import { asyncErrorHandler } from '../../shared/controllers/async-error-handler';
+import { TerritoryModel } from '../models/territory';
 
 export class TerritoryController {
-  static async getAll(_: Request, response: Response) {
+  static getAll = asyncErrorHandler(async (_: Request, response: Response) => {
     const territories = await TerritoryModel.getAll();
-    return response.json(territories);
-  }
+    response.json(territories);
+  });
 
-  static async getByNumber(request: Request, response: Response) {
-    const { number } = request.params;
-    const numberTerritory = Number(number);
+  static getByNumber = asyncErrorHandler(
+    async (request: Request, response: Response) => {
+      const { number } = request.params;
+      const numberTerritory = Number(number);
 
-    const territory = await TerritoryModel.getByNumber(numberTerritory);
+      const territory = await TerritoryModel.getByNumber(numberTerritory);
 
-    return response.json(territory);
-  }
+      response.json(territory);
+    }
+  );
 
-  static async create(request: RequestBody<Territory>, response: Response) {
-    const newTerritory = await TerritoryModel.create(request.body);
+  static create = asyncErrorHandler(
+    async (request: Request, response: Response) => {
+      const newTerritory = await TerritoryModel.create(request.body);
 
-    return response.status(201).json(newTerritory);
-  }
+      response.status(201).json(newTerritory);
+    }
+  );
 
-  static async update(
-    request: RequestBody<PartialTerritory>,
-    response: Response
-  ) {
-    const { number } = request.params;
-    const numberTerritory = Number(number);
+  static update = asyncErrorHandler(
+    async (request: Request, response: Response) => {
+      const { number } = request.params;
+      const numberTerritory = Number(number);
 
-    const updatedTerritory = await TerritoryModel.update(
-      numberTerritory,
-      request.body
-    );
+      const updatedTerritory = await TerritoryModel.update(
+        numberTerritory,
+        request.body
+      );
 
-    return response.status(200).json(updatedTerritory);
-  }
+      response.status(200).json(updatedTerritory);
+    }
+  );
 
-  static async delete(request: Request<{ id: UUID }>, response: Response) {
+  static delete = async (request: Request, response: Response) => {
     const { id } = request.params;
 
     await TerritoryModel.delete(id);
 
-    return response.status(204).send(null);
-  }
+    response.status(204).send(null);
+  };
 }
