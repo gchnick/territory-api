@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { Days, Moments, Privilegies } from '../models/conductor';
+import { Days, Moments, Privilegies } from '../models/types';
 
 const conductorSchema = z.object({
   name: z.string().nonempty().max(100),

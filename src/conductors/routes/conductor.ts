@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { ensureInputIsValid } from '../../shared/middlewares/ensure-input-is-valid';
-import { fieldToDate } from '../../shared/middlewares/field-to-date';
+import { fieldsToDate } from '../../shared/middlewares/fields-to-date';
 import { ConductorController } from '../controllers/conductor';
 import { byIdSchema, createSchema, updateSchema } from '../schemas/conductor';
 
@@ -14,13 +14,13 @@ conductorRouter.get(
 );
 conductorRouter.post(
   '/',
-  fieldToDate('lastDateAssigned'),
+  fieldsToDate(['lastDateAssigned']),
   ensureInputIsValid(createSchema),
   ConductorController.create
 );
 conductorRouter.patch(
   '/:id',
-  fieldToDate('lastDateAssigned'),
+  fieldsToDate(['lastDateAssigned']),
   ensureInputIsValid(updateSchema),
   ConductorController.update
 );
