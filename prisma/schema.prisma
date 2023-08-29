@@ -28,7 +28,7 @@ model MeetingPlaces {
   latitude     String?
   longitude    String?
   territory_id String
-  territory    Territories @relation(fields: [territory_id], references: [id])
+  territory    Territories @relation(fields: [territory_id], references: [id], onDelete: Cascade)
 }
 
 model Registries {
@@ -37,14 +37,14 @@ model Registries {
   date_completed DateTime?
   territory_id   String
   conductor_id   String
-  conductor      Conductors  @relation(fields: [conductor_id], references: [id])
-  territory      Territories @relation(fields: [territory_id], references: [id])
+  conductor      Conductors  @relation(fields: [conductor_id], references: [id], onDelete: Cascade)
+  territory      Territories @relation(fields: [territory_id], references: [id], onDelete: Cascade)
 }
 
 model Conductors {
   id                 String         @id @default(uuid())
   name               String
-  mobile_phone       String
+  mobile_phone       String         @unique
   service_group      Int
   privilege          String
   last_date_assigned DateTime
@@ -57,7 +57,7 @@ model Availability {
   frequency    String
   moment       String
   conductor_id String
-  conductor    Conductors @relation(fields: [conductor_id], references: [id])
+  conductor    Conductors @relation(fields: [conductor_id], references: [id], onDelete: Cascade)
 
   @@id([conductor_id, day])
 }
