@@ -12,8 +12,7 @@ export const ensureInputIsValid =
     });
 
     if (!result.success) {
-      const error = new HTTP400Error(result.error.message.toString());
-      next(error);
+      next(result.error);
     }
 
     if (result.success) next();
