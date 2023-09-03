@@ -13,13 +13,13 @@ import {
   Privilegies
 } from './types';
 
-export class ConductorModel {
-  static async getAll() {
+class ConductorModel {
+  async getAll() {
     const conductors = await prisma.conductors.findMany();
     return conductors.map((c) => this.toModel(c));
   }
 
-  static async getById(id: string) {
+  async getById(id: string) {
     const conductor = await prisma.conductors.findUnique({
       where: { id },
       include: { Availability: true }
@@ -32,7 +32,7 @@ export class ConductorModel {
     return this.toModel(conductor);
   }
 
-  static async create(data: Conductor) {
+  async create(data: Conductor) {
     const unique = await this.#ensureIsMobilePhoneUnique(data.mobilePhone);
 
     if (!unique) {
@@ -57,7 +57,7 @@ export class ConductorModel {
     return this.toModel(newConductor);
   }
 
-  static async update(id: string, data: PartialConductor) {
+  async update(id: string, data: PartialConductor) {
     const exist = await this.#ensureExistConductorId(id);
 
     if (!exist) {
@@ -82,7 +82,7 @@ export class ConductorModel {
     return this.toModel(updatedConductor);
   }
 
-  static async delete(id: string) {
+  async delete(id: string) {
     const exist = await this.#ensureExistConductorId(id);
 
     if (exist) {
@@ -90,7 +90,7 @@ export class ConductorModel {
     }
   }
 
-  static async #ensureExistConductorId(id: string) {
+  async #ensureExistConductorId(id: string) {
     const exist = await prisma.conductors.findUnique({
       select: { id: true },
       where: { id }
@@ -99,7 +99,7 @@ export class ConductorModel {
     return exist !== null;
   }
 
-  static async #ensureIsMobilePhoneUnique(phone: string) {
+  async #ensureIsMobilePhoneUnique(phone: string) {
     const number = await prisma.conductors.findUnique({
       select: { mobile_phone: true },
       where: { mobile_phone: phone }
@@ -110,7 +110,7 @@ export class ConductorModel {
   /**
    * Method to get `prisma queries` to update availability fields in database
    */
-  static #getAvailabilityUpdateQueries(
+  #getAvailabilityUpdateQueries(
     coductorId: string,
     availability: Availability | undefined
   ) {
@@ -139,7 +139,7 @@ export class ConductorModel {
     return prismaQueries;
   }
 
-  static #getAvailableCreateQuery(availability: Availability | undefined) {
+  #getAvailableCreateQuery(availability: Availability | undefined) {
     if (typeof availability === 'undefined') return [];
 
     const availableArray: { day: string; frequency: string; moment: string }[] =
@@ -158,7 +158,7 @@ export class ConductorModel {
     return availableArray;
   }
 
-  static toModel(entity: Entity): Conductor {
+  toModel(entity: Entity): Conductor {
     return this.#checkIsConductorWithAvailability(entity)
       ? {
           id: entity.id,
@@ -182,7 +182,7 @@ export class ConductorModel {
   /**
    * Check guard
    */
-  static #checkIsConductorWithAvailability(
+  #checkIsConductorWithAvailability(
     entity: Entity
   ): entity is ConductorWithAvailability {
     return (
@@ -190,7 +190,7 @@ export class ConductorModel {
     );
   }
 
-  static #toAvailabilityModel(entity: AvailabilityEntity[] | undefined) {
+  #toAvailabilityModel(entity: AvailabilityEntity[] | undefined) {
     if (!entity) return undefined;
     const record: Availability = {};
 
@@ -204,7 +204,7 @@ export class ConductorModel {
     return record;
   }
 
-  static #toEntity(model: PartialConductor): Partial<ConductorEntity> {
+  #toEntity(model: PartialConductor): Partial<ConductorEntity> {
     return {
       name: model.name,
       mobile_phone: model.mobilePhone,
@@ -214,3 +214,5 @@ export class ConductorModel {
     };
   }
 }
+
+export const conductorModel = new ConductorModel();
