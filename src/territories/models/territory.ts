@@ -1,16 +1,23 @@
 import { prisma } from '../../config/connection';
 import { NumberTerritoryAlreadyRegistry, TerritoryNotFount } from './errors';
-import { PartialTerritory, Territory, TerritoryEntity } from './types';
+import {
+  Entity,
+  PartialTerritory,
+  Territory,
+  TerritoryEntity,
+  TerritoryEntityWithMeetingPlaces
+} from './types';
 
-export class TerritoryModel {
-  static async getAll() {
+class TerritoryModel {
+  async getAll() {
     const territories = await prisma.territories.findMany();
     return territories.map((t) => this.#toModel(t));
   }
 
-  static async getByNumber(number: number) {
+  async getByNumber(number: number) {
     const territory = await prisma.territories.findUnique({
-      where: { number }
+      where: { number },
+      include: { MeetingPlaces: true }
     });
 
     if (territory === null)
@@ -21,7 +28,7 @@ export class TerritoryModel {
     return this.#toModel(territory);
   }
 
-  static async getById(id: string) {
+  async getById(id: string) {
     const territory = await prisma.territories.findUnique({
       where: { id }
     });
@@ -33,8 +40,8 @@ export class TerritoryModel {
     return this.#toModel(territory);
   }
 
-  static async create(data: Territory) {
-    const exist = await TerritoryModel.#ensureExistNumber(data.number);
+  async create(data: Territory) {
+    const exist = await this.#ensureExistNumber(data.number);
 
     if (exist) {
       throw new NumberTerritoryAlreadyRegistry(
@@ -50,21 +57,31 @@ export class TerritoryModel {
         south_limit: data.limits.SOUTH ?? '',
         east_limit: data.limits.EAST ?? '',
         west_limit: data.limits.WEST ?? '',
-        last_date_completed: data.lastDateCompleted
+        last_date_completed: data.lastDateCompleted,
+        MeetingPlaces: {
+          create: data.meetingPlaces?.map((m) => {
+            return {
+              place: m.place,
+              latitude: m.latitude,
+              longitude: m.longitude
+            };
+          })
+        }
       }
     });
 
     return this.#toModel(newTerritory);
   }
 
-  static async update(number: number, data: PartialTerritory) {
-    const exist = await TerritoryModel.#ensureExistNumber(number);
+  async update(number: number, data: PartialTerritory) {
+    const exist = await this.#ensureExistNumber(number);
 
     if (!exist) {
       throw new TerritoryNotFount(
         `Territory number '${data.number}' not found`
       );
     }
+
     const updatedTerritory = await prisma.territories.update({
       where: { number },
       data: {
@@ -75,41 +92,63 @@ export class TerritoryModel {
     return this.#toModel(updatedTerritory);
   }
 
-  static async delete(id: string) {
-    const exist = await TerritoryModel.#ensureExistId(id);
+  async delete(id: string) {
+    const exist = await this.#ensureExistId(id);
 
     if (exist) {
       await prisma.territories.delete({ where: { id } });
     }
   }
 
-  static async #ensureExistNumber(number: number) {
+  async #ensureExistNumber(number: number) {
     return (
       (await prisma.territories.findUnique({ where: { number } })) !== null
     );
   }
 
-  static async #ensureExistId(id: string) {
+  async #ensureExistId(id: string) {
     return (await prisma.territories.findUnique({ where: { id } })) !== null;
   }
 
-  static #toModel(entity: TerritoryEntity): Territory {
-    return {
-      id: entity.id,
-      number: entity.number,
-      label: entity.label,
-      lastDateCompleted: entity.last_date_completed,
-      isLocked: entity.assigned_lock,
-      limits: {
-        NORTH: entity.north_limit,
-        SOUTH: entity.south_limit,
-        EAST: entity.east_limit,
-        WEST: entity.west_limit
-      }
-    };
+  #toModel(entity: Entity): Territory {
+    return this.#checkIsTerritoryEntityWithMeetingPlaces(entity)
+      ? {
+          id: entity.id,
+          number: entity.number,
+          label: entity.label,
+          lastDateCompleted: entity.last_date_completed,
+          isLocked: entity.assigned_lock,
+          limits: {
+            NORTH: entity.north_limit,
+            SOUTH: entity.south_limit,
+            EAST: entity.east_limit,
+            WEST: entity.west_limit
+          },
+          meetingPlaces: entity.MeetingPlaces.map((m) => {
+            return {
+              id: m.id,
+              place: m.place,
+              latitude: m.latitude ?? undefined,
+              longitude: m.longitude ?? undefined
+            };
+          })
+        }
+      : {
+          id: entity.id,
+          number: entity.number,
+          label: entity.label,
+          lastDateCompleted: entity.last_date_completed,
+          isLocked: entity.assigned_lock,
+          limits: {
+            NORTH: entity.north_limit,
+            SOUTH: entity.south_limit,
+            EAST: entity.east_limit,
+            WEST: entity.west_limit
+          }
+        };
   }
 
-  static #toEntity(model: PartialTerritory): Partial<TerritoryEntity> {
+  #toEntity(model: PartialTerritory): Partial<TerritoryEntity> {
     return {
       number: model.number,
       label: model.label,
@@ -118,7 +157,22 @@ export class TerritoryModel {
       east_limit: model.limits?.EAST,
       west_limit: model.limits?.WEST,
       last_date_completed: model.lastDateCompleted,
-      assigned_lock: model.isLocked
+      assigned_lock: model.isLocked,
+      url_map_image: '' // TODO: Map url
     };
   }
+
+  /**
+   * Check guard
+   */
+  #checkIsTerritoryEntityWithMeetingPlaces(
+    entity: TerritoryEntity
+  ): entity is TerritoryEntityWithMeetingPlaces {
+    return (
+      typeof (entity as TerritoryEntityWithMeetingPlaces).MeetingPlaces !==
+      'undefined'
+    );
+  }
 }
+
+export const territoryModel = new TerritoryModel();

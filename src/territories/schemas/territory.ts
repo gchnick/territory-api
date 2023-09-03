@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { CardinalPoint } from '../models/types';
+import { meetingPlacesSchema } from './meeting-place';
 
 const territorySchema = z.object({
   number: z
@@ -39,7 +40,9 @@ export const getByNumberSchema = z.object({
 });
 
 export const createSchema = z.object({
-  body: territorySchema
+  body: territorySchema.extend({
+    meetingPlaces: meetingPlacesSchema
+  })
 });
 
 export const updateSchema = z.object({

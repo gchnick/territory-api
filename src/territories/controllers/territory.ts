@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 import { asyncErrorHandler } from '../../shared/controllers/async-error-handler';
-import { TerritoryModel } from '../models/territory';
+import { territoryModel } from '../models/territory';
 
 export class TerritoryController {
   static getAll = asyncErrorHandler(async (_: Request, response: Response) => {
-    const territories = await TerritoryModel.getAll();
+    const territories = await territoryModel.getAll();
     response.json(territories);
   });
 
@@ -13,7 +13,7 @@ export class TerritoryController {
       const { number } = request.params;
       const numberTerritory = Number(number);
 
-      const territory = await TerritoryModel.getByNumber(numberTerritory);
+      const territory = await territoryModel.getByNumber(numberTerritory);
 
       response.json(territory);
     }
@@ -21,7 +21,7 @@ export class TerritoryController {
 
   static create = asyncErrorHandler(
     async (request: Request, response: Response) => {
-      const newTerritory = await TerritoryModel.create(request.body);
+      const newTerritory = await territoryModel.create(request.body);
 
       response.status(201).json(newTerritory);
     }
@@ -32,7 +32,7 @@ export class TerritoryController {
       const { number } = request.params;
       const numberTerritory = Number(number);
 
-      const updatedTerritory = await TerritoryModel.update(
+      const updatedTerritory = await territoryModel.update(
         numberTerritory,
         request.body
       );
@@ -44,7 +44,7 @@ export class TerritoryController {
   static delete = async (request: Request, response: Response) => {
     const { id } = request.params;
 
-    await TerritoryModel.delete(id);
+    await territoryModel.delete(id);
 
     response.status(204).send(null);
   };
