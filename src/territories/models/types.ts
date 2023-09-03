@@ -7,6 +7,13 @@ export enum CardinalPoint {
 
 export type Limits = Partial<Record<CardinalPoint, string>>;
 
+export type MeetingPlace = {
+  id?: string;
+  place: string;
+  latitude?: string;
+  longitude?: string;
+};
+
 export type Territory = {
   id?: string;
   number: number;
@@ -14,9 +21,17 @@ export type Territory = {
   limits: Limits;
   lastDateCompleted: Date;
   isLocked: boolean;
+  meetingPlaces?: MeetingPlace[];
 };
 
 export type PartialTerritory = Partial<Territory>;
+
+export type MeetingPlaceEntity = {
+  id?: string;
+  place: string;
+  latitude: string | null;
+  longitude: string | null;
+};
 
 export type TerritoryEntity = {
   id: string;
@@ -30,3 +45,9 @@ export type TerritoryEntity = {
   url_map_image: string | null;
   assigned_lock: boolean;
 };
+
+export type TerritoryEntityWithMeetingPlaces = {
+  MeetingPlaces: MeetingPlaceEntity[];
+} & TerritoryEntity;
+
+export type Entity = TerritoryEntity | TerritoryEntityWithMeetingPlaces;

@@ -1,6 +1,6 @@
 ## TERRITORIES 
 
-### Recuperar todos localhost territorios registrados
+### Recuperar todos territorios registrados
 GET http://localhost:7070/api/v1/territories
 
 ### Recuperar un territorio por numero
@@ -23,13 +23,37 @@ Content-Type: application/json
 }
 
 ### Actualizar un territorio
-## TODO: Update error messages
 PATCH http://localhost:7070/api/v1/territories/10
 Content-Type: application/json
 
 {
-  "lastDateCompleted": "2024-04-10"
+  "lastDateCompleted": "2023-03-1"
 }
+
+### Cambiar lugares de encuentro
+PUT http://localhost:7070/api/v1/territories/10/meeting-places
+Content-Type: application/json
+
+{
+  "meetingPlaces": [
+    { "place": "Place 1", "latitude": "7.841722", "longitude": "-72.226129" },
+    { "place": "Place 2", "latitude": "7.841722", "longitude": "72.226129" },
+    { "place": "Place 3", "latitude": "7.841722", "longitude": "72.226129" }
+  ]
+}
+
+### Modificar lugar de encuentro
+PATCH http://localhost:7070/api/v1/territories/meeting-places/a30bc7b6-7d96-4e13-b0b3-f34e913d7f89
+Content-Type: application/json
+
+{
+  "place": "Place Update",
+  "latitude": "8.841722", 
+  "longitude": "-82.226129"
+}
+
+### Borrar lugar de encuentro
+DELETE http://localhost:7070/api/v1/territories/meeting-places/34b0649c-de3a-491c-b5ea-eec36f7cc58b
 
 ### Borrar un territorio
 DELETE http://localhost:7070/api/v1/territories/b54ff557-eb62-4fe1-bcc8-c62088a980df
@@ -58,7 +82,7 @@ Content-Type: application/json
 }
 
 ### Actualizar un conductor
-PATCH http://localhost:7070/api/v1/conductors/424ec997-f02e-4b77-8384-1816432c9037
+PATCH http://localhost:7070/api/v1/conductors/aeae0ff8-f5b0-46a1-b844-79dbabe9c951
 Content-Type: application/json
 
 {
