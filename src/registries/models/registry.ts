@@ -1,4 +1,4 @@
-import { ConductorModel } from '../../conductors/models/conductor';
+import { conductorModel } from '../../conductors/models/conductor';
 import { Conductor } from '../../conductors/models/types';
 import { prisma } from '../../config/connection';
 import { Territory } from '../../territories/models/types';
@@ -14,8 +14,8 @@ import {
   RegistryEntity
 } from './types';
 
-export class RegistryModel {
-  static async getLastByTerritory(territory: Territory) {
+class RegistryModel {
+  async getLastByTerritory(territory: Territory) {
     const lastRegistry = await prisma.registries.findFirst({
       where: { territory_id: territory.id },
       include: {
@@ -36,12 +36,12 @@ export class RegistryModel {
       territory,
       lastRegistry: this.#toModel({
         entity: lastRegistry,
-        assignedTo: ConductorModel.toModel(lastRegistry.conductor)
+        assignedTo: conductorModel.toModel(lastRegistry.conductor)
       })
     };
   }
 
-  static async getAllByTerritory(territory: Territory) {
+  async getAllByTerritory(territory: Territory) {
     const registries = await prisma.registries.findMany({
       where: { territory_id: territory.id },
       include: { conductor: true }
@@ -51,13 +51,13 @@ export class RegistryModel {
       registries: registries.map((r) =>
         this.#toModel({
           entity: r,
-          assignedTo: ConductorModel.toModel(r.conductor)
+          assignedTo: conductorModel.toModel(r.conductor)
         })
       )
     };
   }
 
-  static async create(data: Registry) {
+  async create(data: Registry) {
     if (!data.territoryAssigned?.id || !data.assignedTo?.id)
       throw new InvalidParams('Invalid params to create registry');
 
@@ -88,7 +88,7 @@ export class RegistryModel {
     });
   }
 
-  static async closeLastRecord(territory: Territory) {
+  async closeLastRecord(territory: Territory) {
     if (!territory.id)
       throw new InvalidParams('Invalid param to close registry');
 
@@ -107,7 +107,7 @@ export class RegistryModel {
     return this.#toModel({ entity: closedRegistry });
   }
 
-  static async updateLastRegistry(territory: Territory, data: PartialRegistry) {
+  async updateLastRegistry(territory: Territory, data: PartialRegistry) {
     const lastRegistryId = await this.#getLastRegistryIdByTerritory(territory);
     await prisma.registries.update({
       where: { id: lastRegistryId },
@@ -117,7 +117,7 @@ export class RegistryModel {
     });
   }
 
-  static async update(id: string, data: PartialRegistry) {
+  async update(id: string, data: PartialRegistry) {
     const updatedRegistry = await prisma.registries.update({
       where: { id },
       data: {
@@ -128,12 +128,12 @@ export class RegistryModel {
     return this.#toModel({ entity: updatedRegistry });
   }
 
-  static async delete(id: string) {
+  async delete(id: string) {
     const exist = await this.#ensureExistRegistry(id);
     exist && (await prisma.registries.delete({ where: { id } }));
   }
 
-  static #toModel({
+  #toModel({
     entity,
     territoryAssigned,
     assignedTo
@@ -152,7 +152,7 @@ export class RegistryModel {
     };
   }
 
-  static #toEntity(model: PartialRegistry): PartialRegistryEntity {
+  #toEntity(model: PartialRegistry): PartialRegistryEntity {
     return {
       id: model.id,
       territory_id: model.territoryAssigned?.id,
@@ -162,25 +162,25 @@ export class RegistryModel {
     };
   }
 
-  static async #ensureExistRegistry(id: string) {
+  async #ensureExistRegistry(id: string) {
     return (await prisma.registries.findUnique({ where: { id } })) !== null;
   }
 
-  static async #assignedLockTerritory(id: string) {
+  async #assignedLockTerritory(id: string) {
     await prisma.territories.update({
       where: { id },
       data: { assigned_lock: true }
     });
   }
 
-  static async #assignedUnlockTerritory(id: string, dateAssigned: Date) {
+  async #assignedUnlockTerritory(id: string, dateAssigned: Date) {
     await prisma.territories.update({
       where: { id },
       data: { last_date_completed: dateAssigned, assigned_lock: false }
     });
   }
 
-  static async #getLastRegistryIdByTerritory(territory: Territory) {
+  async #getLastRegistryIdByTerritory(territory: Territory) {
     const id = await prisma.registries.findMany({
       where: { territory_id: territory.id },
       select: { id: true },
@@ -193,13 +193,12 @@ export class RegistryModel {
     return id[0].id;
   }
 
-  static async #updateLastDateAssignedConductor(
-    id: string,
-    dateAssigned: Date
-  ) {
+  async #updateLastDateAssignedConductor(id: string, dateAssigned: Date) {
     await prisma.conductors.update({
       where: { id },
       data: { last_date_assigned: dateAssigned }
     });
   }
 }
+
+export const registryModel = new RegistryModel();

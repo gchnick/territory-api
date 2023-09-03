@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { numberTerritoryParam } from '../../territories/schemas/territory';
 
-const territoryIdSchema = z.object({
+export const territoryIdSchema = z.object({
   territoryId: numberTerritoryParam
 });
 
