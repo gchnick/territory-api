@@ -1,14 +1,15 @@
 import { prisma } from '../../config/connection';
+import {
+  getAvailableCreateQuery,
+  toAvailabilityModel
+} from '../../shared/models/availability';
+import { Availability, Days } from '../../shared/models/types';
 import { ConductorNotFount, MobilePhoneAlreadyRegistry } from './errors';
 import {
-  Availability,
-  AvailabilityEntity,
   Conductor,
   ConductorEntity,
   ConductorWithAvailability,
-  Days,
   Entity,
-  Moments,
   PartialConductor,
   Privilegies
 } from './types';
@@ -22,7 +23,7 @@ class ConductorModel {
   async getById(id: string) {
     const conductor = await prisma.conductors.findUnique({
       where: { id },
-      include: { Availability: true }
+      include: { availability: true }
     });
 
     if (conductor === null) {
@@ -40,7 +41,7 @@ class ConductorModel {
         `Mobile phone '${data.mobilePhone}' already registry`
       );
     }
-    const availableQuery = this.#getAvailableCreateQuery(data.availability);
+    const availableQuery = getAvailableCreateQuery(data.availability);
     const newConductor = await prisma.conductors.create({
       data: {
         name: data.name,
@@ -48,7 +49,7 @@ class ConductorModel {
         service_group: data.serviceGroup,
         privilege: data.privilegie,
         last_date_assigned: data.lastDateAssigned ?? new Date(),
-        Availability: {
+        availability: {
           create: availableQuery
         }
       }
@@ -73,7 +74,7 @@ class ConductorModel {
       where: { id },
       data: {
         ...this.#toEntity(data),
-        Availability: {
+        availability: {
           updateMany: availabilityQueries
         }
       }
@@ -139,25 +140,6 @@ class ConductorModel {
     return prismaQueries;
   }
 
-  #getAvailableCreateQuery(availability: Availability | undefined) {
-    if (typeof availability === 'undefined') return [];
-
-    const availableArray: { day: string; frequency: string; moment: string }[] =
-      [];
-    for (const key in availability) {
-      const available = availability[key as Days];
-      if (available) {
-        availableArray.push({
-          day: key,
-          frequency: available.frequency,
-          moment: available.moment
-        });
-      }
-    }
-
-    return availableArray;
-  }
-
   toModel(entity: Entity): Conductor {
     return this.#checkIsConductorWithAvailability(entity)
       ? {
@@ -167,7 +149,7 @@ class ConductorModel {
           serviceGroup: entity.service_group,
           lastDateAssigned: entity.last_date_assigned,
           privilegie: Privilegies[entity.privilege as Privilegies],
-          availability: this.#toAvailabilityModel(entity.Availability)
+          availability: toAvailabilityModel(entity.Availability)
         }
       : {
           id: entity.id,
@@ -188,20 +170,6 @@ class ConductorModel {
     return (
       typeof (entity as ConductorWithAvailability).Availability !== 'undefined'
     );
-  }
-
-  #toAvailabilityModel(entity: AvailabilityEntity[] | undefined) {
-    if (!entity) return undefined;
-    const record: Availability = {};
-
-    entity.forEach((a) => {
-      record[a.day as Days] = {
-        frequency: a.frequency,
-        moment: Moments[a.moment as Moments]
-      };
-    });
-
-    return record;
   }
 
   #toEntity(model: PartialConductor): Partial<ConductorEntity> {

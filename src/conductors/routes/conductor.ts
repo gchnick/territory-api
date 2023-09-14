@@ -1,15 +1,16 @@
 import { Router } from 'express';
 import { ensureInputIsValid } from '../../shared/middlewares/ensure-input-is-valid';
 import { fieldsToDate } from '../../shared/middlewares/fields-to-date';
+import { uuidParamSchema } from '../../shared/schemas/id';
 import { conductorController } from '../controllers/conductor';
-import { byIdSchema, createSchema, updateSchema } from '../schemas/conductor';
+import { createSchema, updateSchema } from '../schemas/conductor';
 
 export const conductorRouter = Router();
 
 conductorRouter.get('/', conductorController.getAll);
 conductorRouter.get(
   '/:id',
-  ensureInputIsValid(byIdSchema),
+  ensureInputIsValid(uuidParamSchema),
   conductorController.getById
 );
 conductorRouter.post(
@@ -26,6 +27,6 @@ conductorRouter.patch(
 );
 conductorRouter.delete(
   '/:id',
-  ensureInputIsValid(byIdSchema),
+  ensureInputIsValid(uuidParamSchema),
   conductorController.delete
 );
