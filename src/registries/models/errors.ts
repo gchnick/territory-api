@@ -12,6 +12,12 @@ export class LastRegistryNotFount extends NotFount {
   }
 }
 
+export class LastPeriodNotFount extends NotFount {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 export class TerritoryIsLocked extends BadRequest {
   constructor(message: string) {
     super(message);

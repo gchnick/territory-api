@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { uuidSchema } from '../../shared/schemas/id';
 import { numberTerritoryParam } from '../../territories/schemas/territory';
 
 export const territoryIdSchema = z.object({
@@ -37,14 +38,8 @@ export const createSchema = z.object({
 export const updateSchema = z.object({
   params: z.object({
     territoryId: numberTerritoryParam,
-    id: z.string().uuid().optional()
+    id: uuidSchema.optional()
   }),
   body: registrySchema.optional(),
   query: lastQuery
-});
-
-export const deleteSchema = z.object({
-  params: z.object({
-    id: z.string().uuid()
-  })
 });

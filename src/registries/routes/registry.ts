@@ -1,14 +1,14 @@
 import { Router } from 'express';
 import { ensureInputIsValid } from '../../shared/middlewares/ensure-input-is-valid';
 import { fieldsToDate } from '../../shared/middlewares/fields-to-date';
+import { uuidParamSchema } from '../../shared/schemas/id';
 import { registryController } from '../controllers/registry';
 import {
   createSchema,
-  deleteSchema,
   getSchema,
   territoryIdParamSchema,
   updateSchema
-} from '../shemas/registry';
+} from '../schemas/registry';
 
 export const registryRouter = Router();
 
@@ -40,6 +40,6 @@ registryRouter.patch(
 
 registryRouter.delete(
   '/registries/:id',
-  ensureInputIsValid(deleteSchema),
+  ensureInputIsValid(uuidParamSchema),
   registryController.delete
 );

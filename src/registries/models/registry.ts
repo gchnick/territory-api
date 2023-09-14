@@ -4,6 +4,7 @@ import { prisma } from '../../config/connection';
 import { Territory } from '../../territories/models/types';
 import {
   InvalidParams,
+  LastPeriodNotFount,
   LastRegistryNotFount,
   TerritoryIsLocked
 } from './errors';
@@ -22,7 +23,7 @@ class RegistryModel {
         conductor: true
       },
       orderBy: {
-        date_assigned: 'desc'
+        assigned_date: 'desc'
       },
       take: 1
     });
@@ -66,19 +67,33 @@ class RegistryModel {
         `Territory number '${data.territoryAssigned.number}' is assigned now`
       );
 
+    const lastPeriod = await prisma.registry_periods.findFirst({
+      where: { finish_date: null },
+      select: { id: true }
+    });
+
+    if (!lastPeriod) {
+      throw new LastPeriodNotFount(
+        'Last registry period not found. Please, create a registry period'
+      );
+    }
+
+    // TODO: Implement 4 records maximun for territory in a period
+
     const newRegistry = await prisma.registries.create({
       data: {
+        registry_period_id: lastPeriod.id,
         territory_id: data.territoryAssigned.id,
         conductor_id: data.assignedTo.id,
-        date_assigned: data.dateAssigned,
-        date_completed: data.dateCompleted
+        assigned_date: data.assignedDate,
+        completion_date: data.completionDate
       }
     });
 
     await this.#assignedLockTerritory(data.territoryAssigned.id);
     await this.#updateLastDateAssignedConductor(
       data.assignedTo.id,
-      data.dateAssigned
+      data.assignedDate
     );
 
     return this.#toModel({
@@ -98,7 +113,7 @@ class RegistryModel {
     const closedRegistry = await prisma.registries.update({
       where: { id: lastRegistryId },
       data: {
-        date_completed: dateCompleted
+        completion_date: dateCompleted
       }
     });
 
@@ -146,9 +161,8 @@ class RegistryModel {
       id: entity.id,
       territoryAssigned: territoryAssigned,
       assignedTo: assignedTo,
-      dateAssigned: entity.date_assigned,
-      dateCompleted:
-        entity.date_completed === null ? undefined : entity.date_completed
+      assignedDate: entity.assigned_date,
+      completionDate: entity.completion_date ?? undefined
     };
   }
 
@@ -157,8 +171,8 @@ class RegistryModel {
       id: model.id,
       territory_id: model.territoryAssigned?.id,
       conductor_id: model.assignedTo?.id,
-      date_assigned: model.dateAssigned,
-      date_completed: model.dateCompleted
+      assigned_date: model.assignedDate,
+      completion_date: model.completionDate
     };
   }
 
@@ -185,7 +199,7 @@ class RegistryModel {
       where: { territory_id: territory.id },
       select: { id: true },
       orderBy: {
-        date_assigned: 'desc'
+        assigned_date: 'desc'
       },
       take: 1
     });
