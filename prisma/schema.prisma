@@ -7,9 +7,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Territories {
-  id                  String          @id @default(uuid())
-  number              Int             @unique
+model territories {
+  id                  String           @id @default(uuid())
+  number              Int              @unique
   label               String
   north_limit         String
   south_limit         String
@@ -17,47 +17,90 @@ model Territories {
   west_limit          String
   url_map_image       String?
   last_date_completed DateTime
-  assigned_lock       Boolean         @default(false)
-  MeetingPlaces       MeetingPlaces[]
-  Registry            Registries[]
+  assigned_lock       Boolean          @default(false)
+  meeting_place       meeting_places[]
+  registry            registries[]
 }
 
-model MeetingPlaces {
-  id           String      @id @default(uuid())
-  place        String
-  latitude     String?
-  longitude    String?
-  territory_id String
-  territory    Territories @relation(fields: [territory_id], references: [id], onDelete: Cascade)
+model meeting_places {
+  id            String                       @id @default(uuid())
+  place         String
+  phone         String?
+  field_service Boolean                      @default(false)
+  latitude      String?
+  longitude     String?
+  territory_id  String
+  territory     territories                  @relation(fields: [territory_id], references: [id], onDelete: Cascade)
+  availability  meeting_place_availability[]
+  assignaments  assignaments[]
 }
 
-model Registries {
-  id             String      @id @default(uuid())
-  date_assigned  DateTime
-  date_completed DateTime?
-  territory_id   String
-  conductor_id   String
-  conductor      Conductors  @relation(fields: [conductor_id], references: [id], onDelete: Cascade)
-  territory      Territories @relation(fields: [territory_id], references: [id], onDelete: Cascade)
+model meeting_place_availability {
+  day              String
+  frequency        String
+  moment           String
+  meeting_place_id String
+  meeting_place    meeting_places @relation(fields: [meeting_place_id], references: [id], onDelete: Cascade)
+
+  @@id([meeting_place_id, day])
 }
 
-model Conductors {
-  id                 String         @id @default(uuid())
+model registry_periods {
+  id          String       @id @default(uuid())
+  description String
+  start_date  DateTime
+  finish_date DateTime?
+  registries  registries[]
+}
+
+model registries {
+  id                 String           @id @default(uuid())
+  assigned_date      DateTime
+  completion_date    DateTime?
+  conductor_id       String
+  territory_id       String
+  registry_period_id String
+  conductor          conductors       @relation(fields: [conductor_id], references: [id], onDelete: Cascade)
+  territory          territories      @relation(fields: [territory_id], references: [id], onDelete: Cascade)
+  period             registry_periods @relation(fields: [registry_period_id], references: [id], onDelete: Cascade)
+}
+
+model conductors {
+  id                 String                   @id @default(uuid())
   name               String
-  mobile_phone       String         @unique
+  mobile_phone       String                   @unique
   service_group      Int
   privilege          String
   last_date_assigned DateTime
-  Availability       Availability[]
-  Registry           Registries[]
+  availability       conductor_availability[]
+  registry           registries[]
+  assignaments       assignaments[]
 }
 
-model Availability {
+model conductor_availability {
   day          String
   frequency    String
   moment       String
   conductor_id String
-  conductor    Conductors @relation(fields: [conductor_id], references: [id], onDelete: Cascade)
+  conductor    conductors @relation(fields: [conductor_id], references: [id], onDelete: Cascade)
 
   @@id([conductor_id, day])
+}
+
+model programs {
+  id           String         @id @default(uuid())
+  created_at   DateTime       @default(now())
+  updated_at   DateTime       @updatedAt
+  assignaments assignaments[]
+}
+
+model assignaments {
+  id               String         @id @default(uuid())
+  date             DateTime
+  meeting_place_id String
+  coductor_id      String
+  program_id       String
+  meeting_place    meeting_places @relation(fields: [meeting_place_id], references: [id], onDelete: Cascade)
+  conductor        conductors     @relation(fields: [coductor_id], references: [id], onDelete: Cascade)
+  program          programs       @relation(fields: [program_id], references: [id], onDelete: Cascade)
 }
