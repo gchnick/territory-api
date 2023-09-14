@@ -1,5 +1,7 @@
 import { prisma } from '../../config/connection';
+import { getAvailableCreateQuery } from '../../shared/models/availability';
 import { NumberTerritoryAlreadyRegistry, TerritoryNotFount } from './errors';
+import { meetingPlaceModel } from './meeting-place';
 import {
   Entity,
   PartialTerritory,
@@ -17,7 +19,7 @@ class TerritoryModel {
   async getByNumber(number: number) {
     const territory = await prisma.territories.findUnique({
       where: { number },
-      include: { MeetingPlaces: true }
+      include: { meeting_place: true }
     });
 
     if (territory === null)
@@ -58,12 +60,17 @@ class TerritoryModel {
         east_limit: data.limits.EAST ?? '',
         west_limit: data.limits.WEST ?? '',
         last_date_completed: data.lastDateCompleted,
-        MeetingPlaces: {
+        meeting_place: {
           create: data.meetingPlaces?.map((m) => {
             return {
               place: m.place,
+              phone: m.phone,
+              field_service: m.fieldService,
               latitude: m.latitude,
-              longitude: m.longitude
+              longitude: m.longitude,
+              availability: {
+                create: getAvailableCreateQuery(m.availavility)
+              }
             };
           })
         }
@@ -116,6 +123,7 @@ class TerritoryModel {
           id: entity.id,
           number: entity.number,
           label: entity.label,
+          urlMapImage: entity.url_map_image ?? undefined,
           lastDateCompleted: entity.last_date_completed,
           isLocked: entity.assigned_lock,
           limits: {
@@ -124,19 +132,15 @@ class TerritoryModel {
             EAST: entity.east_limit,
             WEST: entity.west_limit
           },
-          meetingPlaces: entity.MeetingPlaces.map((m) => {
-            return {
-              id: m.id,
-              place: m.place,
-              latitude: m.latitude ?? undefined,
-              longitude: m.longitude ?? undefined
-            };
-          })
+          meetingPlaces: entity.meeting_places.map((m) =>
+            meetingPlaceModel.toModel(m)
+          )
         }
       : {
           id: entity.id,
           number: entity.number,
           label: entity.label,
+          urlMapImage: entity.url_map_image ?? undefined,
           lastDateCompleted: entity.last_date_completed,
           isLocked: entity.assigned_lock,
           limits: {
@@ -152,13 +156,13 @@ class TerritoryModel {
     return {
       number: model.number,
       label: model.label,
+      url_map_image: model.urlMapImage,
       north_limit: model.limits?.NORTH,
       south_limit: model.limits?.SOUTH,
       east_limit: model.limits?.EAST,
       west_limit: model.limits?.WEST,
       last_date_completed: model.lastDateCompleted,
-      assigned_lock: model.isLocked,
-      url_map_image: '' // TODO: Map url
+      assigned_lock: model.isLocked
     };
   }
 
@@ -169,7 +173,7 @@ class TerritoryModel {
     entity: TerritoryEntity
   ): entity is TerritoryEntityWithMeetingPlaces {
     return (
-      typeof (entity as TerritoryEntityWithMeetingPlaces).MeetingPlaces !==
+      typeof (entity as TerritoryEntityWithMeetingPlaces).meeting_places !==
       'undefined'
     );
   }

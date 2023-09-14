@@ -2,6 +2,13 @@ import { z } from 'zod';
 import { CardinalPoint } from '../models/types';
 import { meetingPlacesSchema } from './meeting-place';
 
+export const numberTerritoryParam = z
+  .string()
+  .nonempty()
+  .min(1)
+  .max(2)
+  .transform((s) => Number(s));
+
 const territorySchema = z.object({
   number: z
     .number({
@@ -31,8 +38,6 @@ const territorySchema = z.object({
   })
 });
 
-export const numberTerritoryParam = z.string().nonempty().min(1).max(2);
-
 export const getByNumberSchema = z.object({
   params: z.object({
     number: numberTerritoryParam
@@ -50,10 +55,4 @@ export const updateSchema = z.object({
     number: numberTerritoryParam
   }),
   body: territorySchema.partial()
-});
-
-export const deleteSchema = z.object({
-  params: z.object({
-    id: z.string().uuid()
-  })
 });

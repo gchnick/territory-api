@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { ensureInputIsValid } from '../../shared/middlewares/ensure-input-is-valid';
+import { uuidParamSchema } from '../../shared/schemas/id';
 import { meetingPlaceController } from '../controllers/meeting-place';
 import {
-  deleteMeetingPlaceSchema,
   setMeetingPlacesSchema,
   updateMeetingPlaceSchema
 } from '../schemas/meeting-place';
@@ -23,6 +23,6 @@ meetingPlaceRouter.patch(
 
 meetingPlaceRouter.delete(
   '/meeting-places/:id',
-  ensureInputIsValid(deleteMeetingPlaceSchema),
+  ensureInputIsValid(uuidParamSchema),
   meetingPlaceController.delete
 );

@@ -7,12 +7,13 @@ class MeetingPlaceController {
   set = asyncErrorHandler(async (request: Request, response: Response) => {
     const { territoryId } = request.params;
     const territoryNumber = Number(territoryId);
+    const { meetingPlaces } = request.body;
 
     const territory = await territoryModel.getByNumber(territoryNumber);
 
     const updatedTerritory = await meetingPlaceModel.set(
       territory,
-      request.body.meetingPlaces
+      meetingPlaces
     );
     response.status(200).json(updatedTerritory);
   });
