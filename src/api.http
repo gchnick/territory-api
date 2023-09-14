@@ -30,13 +30,23 @@ Content-Type: application/json
   "lastDateCompleted": "2023-03-1"
 }
 
-### Cambiar lugares de encuentro
+### Cambiar lugares de encuentro (end point destructivo)
 PUT http://localhost:7070/api/v1/territories/10/meeting-places
 Content-Type: application/json
 
 {
   "meetingPlaces": [
-    { "place": "Place 1", "latitude": "7.841722", "longitude": "-72.226129" },
+    { 
+      "place": "Place 1",
+      "phone": "0000-0000000",
+      "latitude": "7.841722",
+      "longitude": "-72.226129",
+      "fieldService": true,
+      "availability": {
+        "SATURDAY": { "frequency": "2 week", "moment": "MORNING" },
+        "TUESDAY": { "frequency": "every", "moment": "AFTERNOON" }
+      }
+    },
     { "place": "Place 2", "latitude": "7.841722", "longitude": "72.226129" },
     { "place": "Place 3", "latitude": "7.841722", "longitude": "72.226129" }
   ]
@@ -99,6 +109,31 @@ Content-Type: application/json
 ### Borrar un conductor
 DELETE http://localhost:7070/api/v1/conductors/424ec997-f02e-4b77-8384-1816432c9037
 
+## REGISTRY PERIODS
+
+### Crear un periodo de registro
+POST http://localhost:7070/api/v1/territories/registries/periods
+Content-Type: application/json
+
+{
+  "description": "New period of preach"
+}
+
+### Actualizar un periodo de registro
+PATCH http://localhost:7070/api/v1/territories/registries/periods/424ec997-f02e-4b77-8384-1816432c9038
+Content-Type: application/json
+
+{
+  "description": "Special campain",
+  "finishDate": "2023-06-23"
+}
+
+### Finalizar el último periodo de registro
+POST http://localhost:7070/api/v1/territories/registries/periods/finish-last
+
+### Borrar un periodo de registro
+DELETE http://localhost:7070/api/v1/territories/registries/periods/4d43b5b5-cc78-41f7-b068-461fd7094ece
+
 ## REGISTRIES 
 
 ### Recuperar los registros del territorio
@@ -139,3 +174,56 @@ Content-Type: application/json
 
 ### Borrar un registro
 DELETE http://localhost:7070/api/v1/territories/registries/4d43b5b5-cc78-41f7-b068-461fd7094ece
+
+## PROGRAM
+
+### Crear un programa de predicación
+POST http://localhost:7070/api/v1/programs
+Content-Type: application/json
+
+{
+  "week": "2023-09-13"
+}
+
+### Recuperar el programa actual completo
+GET http://localhost:7070/api/v1/programs
+
+### Recuperar el programa completo por identificador
+GET http://localhost:7070/api/v1/programs/4d43b5b5-cc78-41f7-b068-461fd7094ece
+
+### Actualizar un programa de predicación
+PATCH http://localhost:7070/api/v1/programs/4d43b5b5-cc78-41f7-b068-461fd7094ece
+Content-Type: application/json
+
+{
+  "week": "2023-09-13"
+}
+
+### Borrar un programa de predicación
+DELETE http://localhost:7070/api/v1/programs/4d43b5b5-cc78-41f7-b068-461fd7094ece
+
+## ASSIGNAMENT
+
+### Crear una asignación
+### Si no envias el identificador el programa se asignará programa actual
+POST http://localhost:7070/api/v1/programs/assignaments
+Content-Type: application/json
+
+{
+  "meetingPlaceId": "a30bc7b6-7d96-4e13-b0b3-f34e913d7f89",
+  "conductorId": "aeae0ff8-f5b0-46a1-b844-79dbabe9c951",
+  "date": "2023-08-1",
+}
+
+### Actualizar una asignación
+PATCH http://localhost:7070/api/v1/programs/assignaments/b54ff557-eb62-4fe1-bcc8-c62088a980df
+Content-Type: application/json
+
+{
+  "meetingPlaceId": "a30bc7b6-7d96-4e13-b0b3-f34e913d7f89",
+  "conductorId": "aeae0ff8-f5b0-46a1-b844-79dbabe9c951",
+  "date": "2023-09-1",
+}
+
+### Borrar una asignación
+DELETE http://localhost:7070/api/v1/programs/assignaments/b54ff557-eb62-4fe1-bcc8-c62088a980df
