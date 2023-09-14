@@ -1,5 +1,6 @@
 import express, { json } from 'express';
 import { conductorRouter } from './conductors/routes/conductor';
+import { periodRouter } from './registries/routes/period';
 import { registryRouter } from './registries/routes/registry';
 import { corsMiddleware } from './shared/middlewares/cors';
 import { errorHandlerMiddleware } from './shared/middlewares/error-handler';
@@ -16,6 +17,7 @@ app.use('/api/v1/territories', territoryRouter);
 app.use('/api/v1/territories', meetingPlaceRouter);
 app.use('/api/v1/conductors', conductorRouter);
 app.use('/api/v1/territories', registryRouter);
+app.use('/api/v1/territories/registries/periods', periodRouter);
 
 app.all('*', invalidPathMiddleware);
 app.use(errorHandlerMiddleware);
