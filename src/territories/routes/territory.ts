@@ -1,40 +1,44 @@
 import { Router } from 'express';
 import { ensureInputIsValid } from '../../shared/middlewares/ensure-input-is-valid';
-import { fieldsToDate } from '../../shared/middlewares/fields-to-date';
 import { uuidParamSchema } from '../../shared/schemas/id';
-import { TerritoryController } from '../controllers/territory';
+import { territoryController } from '../controllers/territory';
 import {
   createSchema,
   getByNumberSchema,
+  setMeetingPlacesSchema,
   updateSchema
 } from '../schemas/territory';
 
 export const territoryRouter = Router();
 
-territoryRouter.get('/', TerritoryController.getAll);
+territoryRouter.get('', territoryController.getAll);
 
 territoryRouter.get(
   '/:number',
   ensureInputIsValid(getByNumberSchema),
-  TerritoryController.getByNumber
+  territoryController.getByNumber
 );
 
 territoryRouter.post(
-  '/',
-  fieldsToDate(['lastDateCompleted']),
+  '',
   ensureInputIsValid(createSchema),
-  TerritoryController.create
+  territoryController.create
 );
 
 territoryRouter.patch(
   '/:number',
-  fieldsToDate(['lastDateCompleted']),
   ensureInputIsValid(updateSchema),
-  TerritoryController.update
+  territoryController.update
+);
+
+territoryRouter.put(
+  '/:number/meeting-places',
+  ensureInputIsValid(setMeetingPlacesSchema),
+  territoryController.setMeetingPlaces
 );
 
 territoryRouter.delete(
   '/:id',
   ensureInputIsValid(uuidParamSchema),
-  TerritoryController.delete
+  territoryController.delete
 );

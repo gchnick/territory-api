@@ -1,9 +1,5 @@
 import { prisma } from '../../config/connection';
-import {
-  getAvailableCreateQuery,
-  toAvailabilityModel
-} from '../../shared/models/availability';
-import { Availability, Days } from '../../shared/models/types';
+import { toAvailabilityModel } from '../../shared/models/availability';
 import { ConductorNotFount, MobilePhoneAlreadyRegistry } from './errors';
 import {
   Conductor,
@@ -15,12 +11,14 @@ import {
 } from './types';
 
 class ConductorModel {
-  async getAll() {
-    const conductors = await prisma.conductors.findMany();
+  getAll = async () => {
+    const conductors = await prisma.conductors.findMany({
+      include: { availability: true }
+    });
     return conductors.map((c) => this.toModel(c));
-  }
+  };
 
-  async getById(id: string) {
+  getById = async (id: string) => {
     const conductor = await prisma.conductors.findUnique({
       where: { id },
       include: { availability: true }
@@ -31,114 +29,49 @@ class ConductorModel {
     }
 
     return this.toModel(conductor);
-  }
+  };
 
-  async create(data: Conductor) {
-    const unique = await this.#ensureIsMobilePhoneUnique(data.mobilePhone);
+  create = async (data: Conductor) => {
+    const unique = await this.#isMobilePhoneUnique(data.mobilePhone);
 
     if (!unique) {
       throw new MobilePhoneAlreadyRegistry(
         `Mobile phone '${data.mobilePhone}' already registry`
       );
     }
-    const availableQuery = getAvailableCreateQuery(data.availability);
     const newConductor = await prisma.conductors.create({
       data: {
         name: data.name,
         mobile_phone: data.mobilePhone,
         service_group: data.serviceGroup,
-        privilege: data.privilegie,
-        last_date_assigned: data.lastDateAssigned ?? new Date(),
-        availability: {
-          create: availableQuery
-        }
+        privilege: data.privilege,
+        last_date_assigned: data.lastDateAssigned ?? new Date()
       }
     });
 
     return this.toModel(newConductor);
-  }
+  };
 
-  async update(id: string, data: PartialConductor) {
-    const exist = await this.#ensureExistConductorId(id);
-
-    if (!exist) {
-      throw new ConductorNotFount(`Conductor with id '${id}' not fount`);
-    }
-
-    const availabilityQueries = this.#getAvailabilityUpdateQueries(
-      id,
-      data.availability
-    );
-
+  update = async (conductor: Conductor, data: PartialConductor) => {
     const updatedConductor = await prisma.conductors.update({
-      where: { id },
+      where: { id: conductor.id },
+      include: { availability: true },
       data: {
-        ...this.#toEntity(data),
-        availability: {
-          updateMany: availabilityQueries
-        }
+        ...this.#toEntity(data)
       }
     });
 
     return this.toModel(updatedConductor);
-  }
+  };
 
-  async delete(id: string) {
-    const exist = await this.#ensureExistConductorId(id);
-
-    if (exist) {
+  delete = async (id: string) => {
+    try {
       await prisma.conductors.delete({ where: { id } });
+    } catch (e) {
+      console.log(`Conductor with id '${id}' not found`);
+      console.log(e);
     }
-  }
-
-  async #ensureExistConductorId(id: string) {
-    const exist = await prisma.conductors.findUnique({
-      select: { id: true },
-      where: { id }
-    });
-
-    return exist !== null;
-  }
-
-  async #ensureIsMobilePhoneUnique(phone: string) {
-    const number = await prisma.conductors.findUnique({
-      select: { mobile_phone: true },
-      where: { mobile_phone: phone }
-    });
-    return number === null;
-  }
-
-  /**
-   * Method to get `prisma queries` to update availability fields in database
-   */
-  #getAvailabilityUpdateQueries(
-    coductorId: string,
-    availability: Availability | undefined
-  ) {
-    if (!availability) return [];
-
-    const prismaQueries: {
-      where: { conductor_id: string; AND: { day: string } };
-      data: { frequency: string; moment: string };
-    }[] = [];
-
-    for (const key in availability) {
-      const available = availability[key as Days];
-      available &&
-        prismaQueries.push({
-          where: {
-            conductor_id: coductorId,
-            AND: { day: key }
-          },
-          data: {
-            frequency: available.frequency,
-            moment: available.moment
-          }
-        });
-    }
-
-    return prismaQueries;
-  }
+  };
 
   toModel(entity: Entity): Conductor {
     return this.#checkIsConductorWithAvailability(entity)
@@ -148,8 +81,8 @@ class ConductorModel {
           mobilePhone: entity.mobile_phone,
           serviceGroup: entity.service_group,
           lastDateAssigned: entity.last_date_assigned,
-          privilegie: Privilegies[entity.privilege as Privilegies],
-          availability: toAvailabilityModel(entity.Availability)
+          privilege: Privilegies[entity.privilege as Privilegies],
+          availability: toAvailabilityModel(entity.availability)
         }
       : {
           id: entity.id,
@@ -157,7 +90,7 @@ class ConductorModel {
           mobilePhone: entity.mobile_phone,
           serviceGroup: entity.service_group,
           lastDateAssigned: entity.last_date_assigned,
-          privilegie: Privilegies[entity.privilege as Privilegies]
+          privilege: Privilegies[entity.privilege as Privilegies]
         };
   }
 
@@ -168,7 +101,7 @@ class ConductorModel {
     entity: Entity
   ): entity is ConductorWithAvailability {
     return (
-      typeof (entity as ConductorWithAvailability).Availability !== 'undefined'
+      typeof (entity as ConductorWithAvailability).availability !== 'undefined'
     );
   }
 
@@ -177,9 +110,24 @@ class ConductorModel {
       name: model.name,
       mobile_phone: model.mobilePhone,
       service_group: model.serviceGroup,
-      privilege: model.privilegie,
+      privilege: model.privilege,
       last_date_assigned: model.lastDateAssigned ?? new Date()
     };
+  }
+
+  async #isMobilePhoneUnique(phone: string) {
+    const number = await prisma.conductors.findUnique({
+      select: { mobile_phone: true },
+      where: { mobile_phone: phone }
+    });
+    return number === null;
+  }
+
+  async setLastDateAssigned(id: string, dateAssigned: Date) {
+    await prisma.conductors.update({
+      where: { id },
+      data: { last_date_assigned: dateAssigned }
+    });
   }
 }
 

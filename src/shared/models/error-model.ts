@@ -20,3 +20,9 @@ export class BadRequest extends ErrorModel {
     super(message, true);
   }
 }
+
+export class InvalidParams extends BadRequest {
+  constructor(message: string) {
+    super(message);
+  }
+}

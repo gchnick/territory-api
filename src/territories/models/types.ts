@@ -1,5 +1,4 @@
-import { Availability } from '../../shared/models/types';
-import { Entity as MeetingPlaceEntity } from './meeting-place/types';
+import { MeetingPlace, MeetingPlaceEntity } from '../../meeting-place/types';
 
 export enum CardinalPoint {
   NORTH = 'NORTH',
@@ -9,16 +8,6 @@ export enum CardinalPoint {
 }
 
 export type Limits = Partial<Record<CardinalPoint, string>>;
-
-export type MeetingPlace = {
-  id?: string;
-  place: string;
-  phone?: string;
-  latitude?: string;
-  longitude?: string;
-  fieldService: boolean;
-  availavility?: Availability;
-};
 
 export type Territory = {
   id?: string;
@@ -47,7 +36,7 @@ export type TerritoryEntity = {
 };
 
 export type TerritoryEntityWithMeetingPlaces = {
-  meeting_places: MeetingPlaceEntity[];
+  meeting_place: MeetingPlaceEntity[];
 } & TerritoryEntity;
 
 export type Entity = TerritoryEntity | TerritoryEntityWithMeetingPlaces;

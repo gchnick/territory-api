@@ -11,7 +11,7 @@ export type Conductor = {
   name: string;
   mobilePhone: string;
   serviceGroup: number;
-  privilegie: Privilegies;
+  privilege: Privilegies;
   lastDateAssigned?: Date;
   availability?: Availability;
 };
@@ -28,7 +28,7 @@ export type ConductorEntity = {
 };
 
 export type ConductorWithAvailability = {
-  Availability: AvailabilityEntity[];
+  availability: AvailabilityEntity[];
 } & ConductorEntity;
 
 export type Entity = ConductorEntity | ConductorWithAvailability;

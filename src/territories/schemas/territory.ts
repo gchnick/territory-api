@@ -1,6 +1,6 @@
 import { z } from 'zod';
+import { meetingPlacesSchema } from '../../meeting-place/schemas/meeting-place';
 import { CardinalPoint } from '../models/types';
-import { meetingPlacesSchema } from './meeting-place';
 
 export const numberTerritoryParam = z
   .string()
@@ -30,7 +30,8 @@ const territorySchema = z.object({
       required_error: 'Last date completed is required.'
     })
     .min(new Date('2023-01-01'), { message: 'Last date completed too old' })
-    .max(new Date(), { message: 'Last date completed must be past date' }),
+    .max(new Date(), { message: 'Last date completed must be past date' })
+    .transform((s) => new Date(s)),
   limits: z.record(z.nativeEnum(CardinalPoint), z.string().nonempty(), {
     required_error: 'Territory limits is required.',
     invalid_type_error:
@@ -45,9 +46,7 @@ export const getByNumberSchema = z.object({
 });
 
 export const createSchema = z.object({
-  body: territorySchema.extend({
-    meetingPlaces: meetingPlacesSchema
-  })
+  body: territorySchema
 });
 
 export const updateSchema = z.object({
@@ -55,4 +54,13 @@ export const updateSchema = z.object({
     number: numberTerritoryParam
   }),
   body: territorySchema.partial()
+});
+
+export const setMeetingPlacesSchema = z.object({
+  params: z.object({
+    number: numberTerritoryParam
+  }),
+  body: z.object({
+    meetingPlaces: meetingPlacesSchema
+  })
 });

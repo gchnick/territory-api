@@ -1,4 +1,16 @@
-import { AvailabilityEntity } from '../../../shared/models/types';
+import { Availability, AvailabilityEntity } from '../shared/models/types';
+
+export type MeetingPlace = {
+  id?: string;
+  place: string;
+  phone?: string;
+  latitude?: string;
+  longitude?: string;
+  fieldService: boolean;
+  availability?: Availability;
+};
+
+export type PartialMeetingPlace = Partial<MeetingPlace>;
 
 export type MeetingPlaceEntity = {
   id?: string;

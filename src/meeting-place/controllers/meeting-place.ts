@@ -1,28 +1,15 @@
 import { Request, Response } from 'express';
 import { asyncErrorHandler } from '../../shared/controllers/async-error-handler';
 import { meetingPlaceModel } from '../models/meeting-place';
-import { territoryModel } from '../models/territory';
 
 class MeetingPlaceController {
-  set = asyncErrorHandler(async (request: Request, response: Response) => {
-    const { territoryId } = request.params;
-    const territoryNumber = Number(territoryId);
-    const { meetingPlaces } = request.body;
-
-    const territory = await territoryModel.getByNumber(territoryNumber);
-
-    const updatedTerritory = await meetingPlaceModel.set(
-      territory,
-      meetingPlaces
-    );
-    response.status(200).json(updatedTerritory);
-  });
-
   update = asyncErrorHandler(async (request: Request, response: Response) => {
     const { id } = request.params;
 
+    const meetingPlace = await meetingPlaceModel.getById(id);
+
     const updatedMeetingPlace = await meetingPlaceModel.update(
-      id,
+      meetingPlace,
       request.body
     );
     response.status(200).json(updatedMeetingPlace);

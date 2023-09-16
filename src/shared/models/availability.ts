@@ -16,37 +16,35 @@ export const toAvailabilityModel = (
   return record;
 };
 
-export const getAvailableCreateQuery = (
-  availability: Availability | undefined
-) => {
-  if (typeof availability === 'undefined') return [];
+export const toAvailabilityEntity = (
+  model: Availability | undefined
+): AvailabilityEntity[] => {
+  if (typeof model === 'undefined') return [];
 
-  const availableArray: { day: string; frequency: string; moment: string }[] =
-    [];
+  const availabilityArray: AvailabilityEntity[] = [];
 
-  for (const key in availability) {
-    const available = availability[key as Days];
-    if (available) {
-      availableArray.push({
+  for (const key in model) {
+    const available = model[key as Days];
+    if (available && typeof Days[key as Days] !== 'undefined') {
+      availabilityArray.push({
         day: key,
         frequency: available.frequency,
         moment: available.moment
       });
     }
   }
-
-  return availableArray;
+  return availabilityArray;
 };
 
 export const setAvailability = (
-  availavility: Availability | undefined,
+  availability: Availability | undefined,
   newAvailability: Availability
 ) => {
-  if (typeof availavility === 'undefined') {
+  if (typeof availability === 'undefined') {
     return undefined;
   }
 
-  const current = structuredClone(availavility);
+  const current = structuredClone(availability);
 
   for (const key in newAvailability) {
     const available = newAvailability[key as Days];
