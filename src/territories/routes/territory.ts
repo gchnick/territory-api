@@ -4,6 +4,7 @@ import { uuidParamSchema } from '../../shared/schemas/id';
 import { territoryController } from '../controllers/territory';
 import {
   createSchema,
+  getAllSchema,
   getByNumberSchema,
   setMeetingPlacesSchema,
   updateSchema
@@ -11,7 +12,11 @@ import {
 
 export const territoryRouter = Router();
 
-territoryRouter.get('', territoryController.getAll);
+territoryRouter.get(
+  '',
+  ensureInputIsValid(getAllSchema),
+  territoryController.getAll
+);
 
 territoryRouter.get(
   '/:number',

@@ -18,6 +18,14 @@ class TerritoryModel {
     return territories.map((t) => this.toModel(t));
   };
 
+  getAvailables = async () => {
+    const availablesTerritories = await prisma.territories.findMany({
+      where: { assigned_lock: false },
+      include: { meeting_place: { include: { availability: true } } }
+    });
+    return availablesTerritories.map((t) => this.toModel(t));
+  };
+
   getByNumber = async (number: number) => {
     const territory = await prisma.territories.findUnique({
       where: { number },

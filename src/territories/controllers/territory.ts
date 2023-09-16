@@ -4,7 +4,14 @@ import { asyncErrorHandler } from '../../shared/controllers/async-error-handler'
 import { territoryModel } from '../models/territory';
 
 class TerritoryController {
-  getAll = asyncErrorHandler(async (_: Request, response: Response) => {
+  getAll = asyncErrorHandler(async (request: Request, response: Response) => {
+    const { available } = request.query;
+
+    if (available) {
+      const availablesTerritories = await territoryModel.getAvailables();
+      return response.json(availablesTerritories);
+    }
+
     const territories = await territoryModel.getAll();
     response.json(territories);
   });

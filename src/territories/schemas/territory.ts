@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { meetingPlacesSchema } from '../../meeting-place/schemas/meeting-place';
+import { booleanSchema } from '../../shared/schemas/boolean';
 import { CardinalPoint } from '../models/types';
 
 export const numberTerritoryParam = z
@@ -37,6 +38,14 @@ const territorySchema = z.object({
     invalid_type_error:
       'Territory limits must be an record of enum CardinalPoints'
   })
+});
+
+export const getAllSchema = z.object({
+  query: z
+    .object({
+      available: booleanSchema
+    })
+    .optional()
 });
 
 export const getByNumberSchema = z.object({

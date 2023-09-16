@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { booleanSchema } from '../../shared/schemas/boolean';
 import { uuidSchema } from '../../shared/schemas/id';
 import { numberTerritoryParam } from '../../territories/schemas/territory';
 
@@ -12,10 +13,7 @@ export const territoryIdParamSchema = z.object({
 
 const lastQuery = z
   .object({
-    last: z
-      .enum(['true', 'false'])
-      .transform((value) => value === 'true')
-      .optional()
+    last: booleanSchema
   })
   .optional();
 
