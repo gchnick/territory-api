@@ -20,9 +20,9 @@ const lastQuery = z
   .optional();
 
 const registrySchema = z.object({
-  assignedToId: z.string().uuid(),
-  dateAssigned: z.coerce.date().transform((s) => new Date(s)),
-  dateCompleted: z.coerce
+  assignedToId: uuidSchema,
+  assignedDate: z.coerce.date().transform((s) => new Date(s)),
+  completionDate: z.coerce
     .date()
     .transform((s) => new Date(s))
     .optional()

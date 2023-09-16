@@ -35,6 +35,12 @@ registryRouter.patch(
   registryController.update
 );
 
+registryRouter.patch(
+  '/territories/:territoryId/registries',
+  ensureInputIsValid(updateSchema),
+  registryController.update
+);
+
 registryRouter.delete(
   '/registries/:id',
   ensureInputIsValid(uuidParamSchema),
