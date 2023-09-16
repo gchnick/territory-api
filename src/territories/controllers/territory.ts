@@ -1,14 +1,15 @@
 import { Request, Response } from 'express';
+import { meetingPlaceModel } from '../../meeting-place/models/meeting-place';
 import { asyncErrorHandler } from '../../shared/controllers/async-error-handler';
 import { territoryModel } from '../models/territory';
 
-export class TerritoryController {
-  static getAll = asyncErrorHandler(async (_: Request, response: Response) => {
+class TerritoryController {
+  getAll = asyncErrorHandler(async (_: Request, response: Response) => {
     const territories = await territoryModel.getAll();
     response.json(territories);
   });
 
-  static getByNumber = asyncErrorHandler(
+  getByNumber = asyncErrorHandler(
     async (request: Request, response: Response) => {
       const { number } = request.params;
       const numberTerritory = Number(number);
@@ -19,29 +20,41 @@ export class TerritoryController {
     }
   );
 
-  static create = asyncErrorHandler(
-    async (request: Request, response: Response) => {
-      const newTerritory = await territoryModel.create(request.body);
+  create = asyncErrorHandler(async (request: Request, response: Response) => {
+    const newTerritory = await territoryModel.create(request.body);
 
-      response.status(201).json(newTerritory);
-    }
-  );
+    response.status(201).json(newTerritory);
+  });
 
-  static update = asyncErrorHandler(
+  update = asyncErrorHandler(async (request: Request, response: Response) => {
+    const { number } = request.params;
+    const numberTerritory = Number(number);
+
+    const updatedTerritory = await territoryModel.update(
+      numberTerritory,
+      request.body
+    );
+
+    response.status(200).json(updatedTerritory);
+  });
+
+  setMeetingPlaces = asyncErrorHandler(
     async (request: Request, response: Response) => {
       const { number } = request.params;
-      const numberTerritory = Number(number);
+      const territoryNumber = Number(number);
+      const { meetingPlaces } = request.body;
 
-      const updatedTerritory = await territoryModel.update(
-        numberTerritory,
-        request.body
+      const territory = await territoryModel.getByNumber(territoryNumber);
+
+      const updatedTerritory = await meetingPlaceModel.set(
+        territory,
+        meetingPlaces
       );
-
       response.status(200).json(updatedTerritory);
     }
   );
 
-  static delete = async (request: Request, response: Response) => {
+  delete = async (request: Request, response: Response) => {
     const { id } = request.params;
 
     await territoryModel.delete(id);
@@ -49,3 +62,5 @@ export class TerritoryController {
     response.status(204).send(null);
   };
 }
+
+export const territoryController = new TerritoryController();

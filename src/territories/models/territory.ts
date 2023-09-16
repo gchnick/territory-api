@@ -1,7 +1,7 @@
 import { prisma } from '../../config/connection';
-import { getAvailableCreateQuery } from '../../shared/models/availability';
+import { meetingPlaceModel } from '../../meeting-place/models/meeting-place';
+import { toAvailabilityEntity } from '../../shared/models/availability';
 import { NumberTerritoryAlreadyRegistry, TerritoryNotFount } from './errors';
-import { meetingPlaceModel } from './meeting-place';
 import {
   Entity,
   PartialTerritory,
@@ -11,15 +11,17 @@ import {
 } from './types';
 
 class TerritoryModel {
-  async getAll() {
-    const territories = await prisma.territories.findMany();
+  getAll = async () => {
+    const territories = await prisma.territories.findMany({
+      include: { meeting_place: { include: { availability: true } } }
+    });
     return territories.map((t) => this.#toModel(t));
-  }
+  };
 
-  async getByNumber(number: number) {
+  getByNumber = async (number: number) => {
     const territory = await prisma.territories.findUnique({
       where: { number },
-      include: { meeting_place: true }
+      include: { meeting_place: { include: { availability: true } } }
     });
 
     if (territory === null)
@@ -28,11 +30,12 @@ class TerritoryModel {
       );
 
     return this.#toModel(territory);
-  }
+  };
 
-  async getById(id: string) {
+  getById = async (id: string) => {
     const territory = await prisma.territories.findUnique({
-      where: { id }
+      where: { id },
+      include: { meeting_place: true }
     });
 
     if (territory === null) {
@@ -40,10 +43,10 @@ class TerritoryModel {
     }
 
     return this.#toModel(territory);
-  }
+  };
 
-  async create(data: Territory) {
-    const exist = await this.#ensureExistNumber(data.number);
+  create = async (data: Territory) => {
+    const exist = await this.#existTerritoryNumber(data.number);
 
     if (exist) {
       throw new NumberTerritoryAlreadyRegistry(
@@ -69,7 +72,7 @@ class TerritoryModel {
               latitude: m.latitude,
               longitude: m.longitude,
               availability: {
-                create: getAvailableCreateQuery(m.availavility)
+                create: toAvailabilityEntity(m.availability)
               }
             };
           })
@@ -78,10 +81,10 @@ class TerritoryModel {
     });
 
     return this.#toModel(newTerritory);
-  }
+  };
 
-  async update(number: number, data: PartialTerritory) {
-    const exist = await this.#ensureExistNumber(number);
+  update = async (number: number, data: PartialTerritory) => {
+    const exist = await this.#existTerritoryNumber(number);
 
     if (!exist) {
       throw new TerritoryNotFount(
@@ -97,23 +100,23 @@ class TerritoryModel {
     });
 
     return this.#toModel(updatedTerritory);
-  }
+  };
 
-  async delete(id: string) {
-    const exist = await this.#ensureExistId(id);
+  delete = async (id: string) => {
+    const exist = await this.#existTerritoryId(id);
 
     if (exist) {
       await prisma.territories.delete({ where: { id } });
     }
-  }
+  };
 
-  async #ensureExistNumber(number: number) {
+  async #existTerritoryNumber(number: number) {
     return (
       (await prisma.territories.findUnique({ where: { number } })) !== null
     );
   }
 
-  async #ensureExistId(id: string) {
+  async #existTerritoryId(id: string) {
     return (await prisma.territories.findUnique({ where: { id } })) !== null;
   }
 
@@ -132,7 +135,7 @@ class TerritoryModel {
             EAST: entity.east_limit,
             WEST: entity.west_limit
           },
-          meetingPlaces: entity.meeting_places.map((m) =>
+          meetingPlaces: entity.meeting_place.map((m) =>
             meetingPlaceModel.toModel(m)
           )
         }
@@ -170,12 +173,26 @@ class TerritoryModel {
    * Check guard
    */
   #checkIsTerritoryEntityWithMeetingPlaces(
-    entity: TerritoryEntity
+    entity: Entity
   ): entity is TerritoryEntityWithMeetingPlaces {
     return (
-      typeof (entity as TerritoryEntityWithMeetingPlaces).meeting_places !==
+      typeof (entity as TerritoryEntityWithMeetingPlaces).meeting_place !==
       'undefined'
     );
+  }
+
+  async assignedLock(id: string) {
+    await prisma.territories.update({
+      where: { id },
+      data: { assigned_lock: true }
+    });
+  }
+
+  async assignedUnlock(id: string, dateAssigned: Date) {
+    await prisma.territories.update({
+      where: { id },
+      data: { last_date_completed: dateAssigned, assigned_lock: false }
+    });
   }
 }
 
