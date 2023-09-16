@@ -5,7 +5,10 @@ const descriptionPeriod = z.string().nonempty().max(255);
 
 export const createSchema = z.object({
   body: z.object({
-    startDate: z.coerce.date().optional(),
+    startDate: z.coerce
+      .date()
+      .transform((s) => new Date(s))
+      .optional(),
     description: descriptionPeriod
   })
 });
@@ -16,6 +19,9 @@ export const updateSchema = z.object({
   }),
   body: z.object({
     description: descriptionPeriod.optional(),
-    finishDate: z.coerce.date().optional()
+    finishDate: z.coerce
+      .date()
+      .transform((s) => new Date(s))
+      .optional()
   })
 });

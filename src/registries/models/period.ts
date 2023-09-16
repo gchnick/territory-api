@@ -1,9 +1,35 @@
 import { prisma } from '../../config/connection';
-import { LastPeriodNotFount } from './errors';
+import { LastPeriodNotFount, PeriodNotFount } from './errors';
 import { PartialPeriod, Period, PeriodEntity } from './types';
 
 class PeriodModel {
-  async create(data: Period) {
+  getById = async (id: string) => {
+    const period = await prisma.registry_periods.findFirst({
+      where: { id }
+    });
+
+    if (!period) {
+      throw new PeriodNotFount(`Period with id '${id}' not found`);
+    }
+
+    return this.#toModel(period);
+  };
+
+  getCurrent = async () => {
+    const currentPeriod = await prisma.registry_periods.findFirst({
+      where: { finish_date: null }
+    });
+
+    if (!currentPeriod) {
+      throw new LastPeriodNotFount(
+        `Current registry period not found. Please, create a period`
+      );
+    }
+
+    return this.#toModel(currentPeriod);
+  };
+
+  create = async (data: Period) => {
     const newPeriod = await prisma.registry_periods.create({
       data: {
         start_date: data.startDate ?? new Date(),
@@ -12,11 +38,11 @@ class PeriodModel {
     });
 
     return this.#toModel(newPeriod);
-  }
+  };
 
-  async update(id: string, data: PartialPeriod) {
+  update = async (period: Period, data: PartialPeriod) => {
     const updatedPeriod = await prisma.registry_periods.update({
-      where: { id },
+      where: { id: period.id },
       data: {
         description: data.description,
         finish_date: data.finishDate
@@ -24,31 +50,25 @@ class PeriodModel {
     });
 
     return this.#toModel(updatedPeriod);
-  }
+  };
 
-  async finishLast() {
-    const lastPeriod = await prisma.registry_periods.findFirst({
-      where: { finish_date: null },
-      select: { id: true }
-    });
-
-    if (!lastPeriod) {
-      throw new LastPeriodNotFount(`Last registry period not found`);
-    }
-
+  finishLast = async (currentPeriod: Period) => {
     const finishedPeriod = await prisma.registry_periods.update({
-      where: { id: lastPeriod.id },
+      where: { id: currentPeriod.id },
       data: { finish_date: new Date() }
     });
 
     return this.#toModel(finishedPeriod);
-  }
+  };
 
-  async delete(id: string) {
-    const period = await prisma.registry_periods.findFirst({ where: { id } });
-    period &&
-      (await prisma.registry_periods.delete({ where: { id: period.id } }));
-  }
+  delete = async (id: string) => {
+    try {
+      await prisma.registry_periods.delete({ where: { id } });
+    } catch (e) {
+      console.log(`Period with id '${id}' not found`);
+      console.log(e);
+    }
+  };
 
   #toModel(entity: PeriodEntity): Period {
     return {

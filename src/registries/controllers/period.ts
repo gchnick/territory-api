@@ -11,12 +11,15 @@ class PeriodController {
   update = asyncErrorHandler(async (request: Request, response: Response) => {
     const { id } = request.params;
 
-    const updatedPeriod = await periodModel.update(id, request.body);
+    const period = await periodModel.getById(id);
+
+    const updatedPeriod = await periodModel.update(period, request.body);
     response.json(updatedPeriod);
   });
 
   finishLast = asyncErrorHandler(async (_: Request, response: Response) => {
-    const closedPeriod = await periodModel.finishLast();
+    const currentPeriod = await periodModel.getCurrent();
+    const closedPeriod = await periodModel.finishLast(currentPeriod);
     response.json(closedPeriod);
   });
 
