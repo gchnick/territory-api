@@ -8,6 +8,16 @@ class PeriodController {
     response.status(201).json(newPeriod);
   });
 
+  finishAndInit = asyncErrorHandler(
+    async (request: Request, response: Response) => {
+      const currentPeriod = await periodModel.getCurrent();
+      await periodModel.finishLast(currentPeriod);
+
+      const newPeriod = await periodModel.create(request.body);
+      response.status(201).json(newPeriod);
+    }
+  );
+
   update = asyncErrorHandler(async (request: Request, response: Response) => {
     const { id } = request.params;
 

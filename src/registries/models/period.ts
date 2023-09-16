@@ -1,5 +1,5 @@
 import { prisma } from '../../config/connection';
-import { LastPeriodNotFount, PeriodNotFount } from './errors';
+import { LastPeriodNotFount, PeriodIsStart, PeriodNotFount } from './errors';
 import { PartialPeriod, Period, PeriodEntity } from './types';
 
 class PeriodModel {
@@ -30,6 +30,14 @@ class PeriodModel {
   };
 
   create = async (data: Period) => {
+    const isStartPeriod = await prisma.registry_periods.findFirst({
+      where: { finish_date: null }
+    });
+
+    if (isStartPeriod) {
+      throw new PeriodIsStart(`Period is start. Please, use current period`);
+    }
+
     const newPeriod = await prisma.registry_periods.create({
       data: {
         start_date: data.startDate ?? new Date(),

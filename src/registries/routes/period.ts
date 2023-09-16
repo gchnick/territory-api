@@ -12,6 +12,12 @@ periodRouter.post(
   periodController.create
 );
 
+periodRouter.post(
+  '/finish-and-init',
+  ensureInputIsValid(createSchema),
+  periodController.finishAndInit
+);
+
 periodRouter.patch(
   '/:id',
   ensureInputIsValid(updateSchema),
