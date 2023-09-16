@@ -24,9 +24,9 @@ registryRouter.post(
 );
 
 registryRouter.post(
-  '/territories/:territoryId/registries/complete',
+  '/territories/:territoryId/registries/completion',
   ensureInputIsValid(territoryIdParamSchema),
-  registryController.complete
+  registryController.completion
 );
 
 registryRouter.patch(

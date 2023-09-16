@@ -42,17 +42,21 @@ class RegistryController {
     response.status(201).json(newRegistry);
   });
 
-  complete = asyncErrorHandler(async (request: Request, response: Response) => {
-    const { territoryId } = request.params;
-    const numberTerritory = Number(territoryId);
+  completion = asyncErrorHandler(
+    async (request: Request, response: Response) => {
+      const { territoryId } = request.params;
+      const numberTerritory = Number(territoryId);
 
-    const territory = await territoryModel.getByNumber(numberTerritory);
-    const lastRegistry = await registryModel.getLastByTerritory(territory);
+      const territory = await territoryModel.getByNumber(numberTerritory);
+      const noCompletionRegistry =
+        await registryModel.getNoCompletionByTerritory(territory);
 
-    const completedRegistry = await registryModel.completeLast(lastRegistry);
+      const completiondRegistry =
+        await registryModel.completionLast(noCompletionRegistry);
 
-    response.status(200).json(completedRegistry);
-  });
+      response.status(200).json(completiondRegistry);
+    }
+  );
 
   update = asyncErrorHandler(async (request: Request, response: Response) => {
     const { territoryId, id } = request.params;
@@ -71,7 +75,9 @@ class RegistryController {
       return response.status(200).json(updatedLastRegistry);
     }
 
-    const updatedRegistry = await registryModel.update(id, request.body);
+    const registry = await registryModel.getById(id);
+
+    const updatedRegistry = await registryModel.update(registry, request.body);
     response.status(200).json(updatedRegistry);
   });
 
