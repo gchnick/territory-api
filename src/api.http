@@ -1,4 +1,4 @@
-## TERRITORIES 
+##  TERRITORIES 
 
 ### Recuperar todos territorios registrados
 GET http://localhost:7070/api/v1/territories
@@ -27,33 +27,29 @@ PATCH http://localhost:7070/api/v1/territories/10
 Content-Type: application/json
 
 {
-  "lastDateCompleted": "2023-03-1"
+  "lastDateCompleted": "2023-09-1"
 }
 
-### Cambiar lugares de encuentro (end point destructivo)
+### Reemplazar lugares de encuentro en un territorio
 PUT http://localhost:7070/api/v1/territories/10/meeting-places
 Content-Type: application/json
 
 {
   "meetingPlaces": [
-    { 
-      "place": "Place 1",
-      "phone": "0000-0000000",
-      "latitude": "7.841722",
-      "longitude": "-72.226129",
-      "fieldService": true,
-      "availability": {
-        "SATURDAY": { "frequency": "2 week", "moment": "MORNING" },
-        "TUESDAY": { "frequency": "every", "moment": "AFTERNOON" }
-      }
-    },
+    { "place": "Place 1", "latitude": "7.841722", "longitude": "-72.226129" },
     { "place": "Place 2", "latitude": "7.841722", "longitude": "72.226129" },
     { "place": "Place 3", "latitude": "7.841722", "longitude": "72.226129" }
   ]
 }
 
+### Borrar un territorio
+DELETE http://localhost:7070/api/v1/territories/130928d6-c4a1-42c3-8d54-31f70734b6d3
+
+
+## MEETING PLACES
+
 ### Modificar lugar de encuentro
-PATCH http://localhost:7070/api/v1/territories/meeting-places/a30bc7b6-7d96-4e13-b0b3-f34e913d7f89
+PATCH http://localhost:7070/api/v1/meeting-places/5b2dfbcf-37d8-4a55-94ce-cfc1330a021c
 Content-Type: application/json
 
 {
@@ -63,10 +59,25 @@ Content-Type: application/json
 }
 
 ### Borrar lugar de encuentro
-DELETE http://localhost:7070/api/v1/territories/meeting-places/34b0649c-de3a-491c-b5ea-eec36f7cc58b
+DELETE http://localhost:7070/api/v1/meeting-places/83859656-fe69-48ab-bf51-68bdae0c45b4
 
-### Borrar un territorio
-DELETE http://localhost:7070/api/v1/territories/b54ff557-eb62-4fe1-bcc8-c62088a980df
+
+### Reemplazar disponibilidad del lugar de encuentro
+PUT http://localhost:7070/api/v1/meeting-places/5b2dfbcf-37d8-4a55-94ce-cfc1330a021c/availability
+Content-Type: application/json
+
+{
+  "phone": "0000-0000000",
+  "fieldService": true,
+  "availability": {
+    "SATURDAY": { "frequency": "2 week", "moment": "MORNING" },
+    "TUESDAY": { "frequency": "every", "moment": "AFTERNOON" }
+  }
+}
+
+### Borrar disponiblidad del lugar de encuentro
+DELETE http://localhost:7070/api/v1/meeting-places/3179f605-4d64-4f6b-b80b-9d9843149aa2/availability
+
 
 ## CONDUCTORS 
 
@@ -74,7 +85,7 @@ DELETE http://localhost:7070/api/v1/territories/b54ff557-eb62-4fe1-bcc8-c62088a9
 GET http://localhost:7070/api/v1/conductors
 
 ### Recuperar conductor por id
-GET http://localhost:7070/api/v1/conductors/aeae0ff8-f5b0-46a1-b844-79dbabe9c951
+GET http://localhost:7070/api/v1/conductors/6691fdca-7548-4c3d-8703-3846b2d8a0cd
 
 ### Crear un conductor
 POST http://localhost:7070/api/v1/conductors
@@ -82,37 +93,43 @@ Content-Type: application/json
 
 {
   "name": "Julio A.",
-  "mobilePhone": "000-000000",
+  "mobilePhone": "3333-000000",
   "serviceGroup": 3,
-  "privilegie": "QUALIFIED_BROTHER",
-  "availability": {
-    "SATURDAY": { "frequency": "2 week", "moment": "MORNING" },
-    "TUESDAY": { "frequency": "every", "moment": "AFTERNOON" }
-  }
+  "privilege": "QUALIFIED_BROTHER"
 }
 
 ### Actualizar un conductor
-PATCH http://localhost:7070/api/v1/conductors/aeae0ff8-f5b0-46a1-b844-79dbabe9c951
+PATCH http://localhost:7070/api/v1/conductors/6691fdca-7548-4c3d-8703-3846b2d8a0cd
 Content-Type: application/json
 
 {
   "name": "Julio Amoroso",
-  "privilegie": "GROUP_SERVANT",
-  "availability": {
-    "SATURDAY": {
-      "frequency": "3 week",
-      "moment": "AFTERNOON"
-    }
-  }
+  "mobilePhone": "1111-000000",
+  "serviceGroup": 1,
+  "privilege": "GROUP_SERVANT"
 }
 
 ### Borrar un conductor
-DELETE http://localhost:7070/api/v1/conductors/424ec997-f02e-4b77-8384-1816432c9037
+DELETE http://localhost:7070/api/v1/conductors/5d74a457-bcc3-435e-9418-fce7ad39da68
+
+
+### Reemplazar disponibilidad del conductor
+PUT http://localhost:7070/api/v1/conductors/6691fdca-7548-4c3d-8703-3846b2d8a0cd/availability
+Content-Type: application/json
+
+{
+  "SATURDAY": { "frequency": "2 week", "moment": "MORNING" },
+  "TUESDAY": { "frequency": "every", "moment": "AFTERNOON" }
+}
+
+### Borrar disponiblidad del conductor
+DELETE http://localhost:7070/api/v1/conductors/6691fdca-7548-4c3d-8703-3846b2d8a0cd/availability
+
 
 ## REGISTRY PERIODS
 
 ### Crear un periodo de registro
-POST http://localhost:7070/api/v1/territories/registries/periods
+POST http://localhost:7070/api/v1/registries/periods
 Content-Type: application/json
 
 {
@@ -120,7 +137,7 @@ Content-Type: application/json
 }
 
 ### Actualizar un periodo de registro
-PATCH http://localhost:7070/api/v1/territories/registries/periods/424ec997-f02e-4b77-8384-1816432c9038
+PATCH http://localhost:7070/api/v1/registries/periods/424ec997-f02e-4b77-8384-1816432c9038
 Content-Type: application/json
 
 {
@@ -128,11 +145,11 @@ Content-Type: application/json
   "finishDate": "2023-06-23"
 }
 
-### Finalizar el último periodo de registro
-POST http://localhost:7070/api/v1/territories/registries/periods/finish-last
+### Finalizar periodo de registro actual
+POST http://localhost:7070/api/v1/registries/periods/finish
 
 ### Borrar un periodo de registro
-DELETE http://localhost:7070/api/v1/territories/registries/periods/4d43b5b5-cc78-41f7-b068-461fd7094ece
+DELETE http://localhost:7070/api/v1/registries/periods/4d43b5b5-cc78-41f7-b068-461fd7094ece
 
 ## REGISTRIES 
 
@@ -143,6 +160,7 @@ GET http://localhost:7070/api/v1/territories/10/registries
 GET http://localhost:7070/api/v1/territories/10/registries?last=true
 
 ### Crear un registro
+### TODO: Asegurar el maximo de registros por periodo
 POST http://localhost:7070/api/v1/territories/10/registries
 Content-Type: application/json
 
@@ -151,20 +169,22 @@ Content-Type: application/json
   "dateAssigned": "2023-08-1"
 }
 
-### Cerrar el ultimo registro del territorio con la fecha de hoy
-POST http://localhost:7070/api/v1/territories/10/registries/closed
+### Actualizar como completado el último registro del territorio con la fecha de hoy
+POST http://localhost:7070/api/v1/territories/10/registries/complete
 
 ### Actualizar el ultimo registro del territorio
+### FIXME: Asegurar que la fecha de completado es mayor a la de asignación
 PATCH http://localhost:7070/api/v1/territories/10/registries?last=true
 Content-Type: application/json
 
 {
-  "territoryAssigned": "b54ff557-eb62-4fe1-bcc8-c62088a980df",
-  "dateCompleted": "2023-7-20"
+  "assignedToId": "b54ff557-eb62-4fe1-bcc8-c62088a980df",
+  "dateAssigned": "2023-7-20",
+  "dateCompleted": "2023-8-20"
 }
 
 ### Actualizar un registro
-PATCH http://localhost:7070/api/v1/territories/registries/424ec997-f02e-4b77-8384-1816432c9038
+PATCH http://localhost:7070/api/v1/registries/424ec997-f02e-4b77-8384-1816432c9038
 Content-Type: application/json
 
 {
@@ -173,7 +193,7 @@ Content-Type: application/json
 }
 
 ### Borrar un registro
-DELETE http://localhost:7070/api/v1/territories/registries/4d43b5b5-cc78-41f7-b068-461fd7094ece
+DELETE http://localhost:7070/api/v1/registries/4d43b5b5-cc78-41f7-b068-461fd7094ece
 
 ## PROGRAM
 
