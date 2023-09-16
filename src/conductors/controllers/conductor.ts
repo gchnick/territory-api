@@ -22,7 +22,12 @@ class ConductorController {
   update = asyncErrorHandler(async (request: Request, response: Response) => {
     const { id } = request.params;
 
-    const updatedConductor = await conductorModel.update(id, request.body);
+    const conductor = await conductorModel.getById(id);
+
+    const updatedConductor = await conductorModel.update(
+      conductor,
+      request.body
+    );
     response.json(updatedConductor);
   });
 
