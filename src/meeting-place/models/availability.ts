@@ -43,6 +43,11 @@ class AvailabilityModel {
       await prisma.meeting_place_availability.deleteMany({
         where: { meeting_place_id: meetingPlaceId }
       });
+
+      await prisma.meeting_places.update({
+        where: { id: meetingPlaceId },
+        data: { phone: null, field_service: false }
+      });
     } catch (e) {
       console.log(`Meeting place with id '${meetingPlaceId} not found.'`);
       console.log(e);
@@ -51,18 +56,3 @@ class AvailabilityModel {
 }
 
 export const availabilityModel = new AvailabilityModel();
-
-// TO UPDATE AVAILABILITY
-// if (meetingPlace.availability) {
-//   const currentAvailability = toAvailabilityModel(
-//     meetingPlace.availability
-//   );
-//   updatedAvailability = setAvailability(
-//     currentAvailability,
-//     data
-//   );
-
-//   await prisma.meeting_place_availability.deleteMany({
-//     where: { meeting_place_id: meetingPlaceId }
-//   });
-// }
