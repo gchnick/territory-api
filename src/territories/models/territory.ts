@@ -15,7 +15,7 @@ class TerritoryModel {
     const territories = await prisma.territories.findMany({
       include: { meeting_place: { include: { availability: true } } }
     });
-    return territories.map((t) => this.#toModel(t));
+    return territories.map((t) => this.toModel(t));
   };
 
   getByNumber = async (number: number) => {
@@ -29,7 +29,7 @@ class TerritoryModel {
         `Territory with number: '${number}' not found`
       );
 
-    return this.#toModel(territory);
+    return this.toModel(territory);
   };
 
   getById = async (id: string) => {
@@ -42,7 +42,7 @@ class TerritoryModel {
       throw new TerritoryNotFount(`Territory with id: '${id}' not found`);
     }
 
-    return this.#toModel(territory);
+    return this.toModel(territory);
   };
 
   create = async (data: Territory) => {
@@ -80,7 +80,7 @@ class TerritoryModel {
       }
     });
 
-    return this.#toModel(newTerritory);
+    return this.toModel(newTerritory);
   };
 
   update = async (number: number, data: PartialTerritory) => {
@@ -99,7 +99,7 @@ class TerritoryModel {
       }
     });
 
-    return this.#toModel(updatedTerritory);
+    return this.toModel(updatedTerritory);
   };
 
   delete = async (id: string) => {
@@ -120,7 +120,7 @@ class TerritoryModel {
     return (await prisma.territories.findUnique({ where: { id } })) !== null;
   }
 
-  #toModel(entity: Entity): Territory {
+  toModel(entity: Entity): Territory {
     return this.#checkIsTerritoryEntityWithMeetingPlaces(entity)
       ? {
           id: entity.id,

@@ -11,3 +11,9 @@ export class NumberTerritoryAlreadyRegistry extends BadRequest {
     super(message);
   }
 }
+
+export class TerritoryIsLocked extends BadRequest {
+  constructor(message: string) {
+    super(message);
+  }
+}
