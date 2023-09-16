@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { ensureInputIsValid } from '../../shared/middlewares/ensure-input-is-valid';
-import { fieldsToDate } from '../../shared/middlewares/fields-to-date';
 import { uuidParamSchema } from '../../shared/schemas/id';
 import { registryController } from '../controllers/registry';
 import {
@@ -13,27 +12,25 @@ import {
 export const registryRouter = Router();
 
 registryRouter.get(
-  '/:territoryId/registries',
+  '/territories/:territoryId/registries',
   ensureInputIsValid(getSchema),
   registryController.getByTerritory
 );
 
 registryRouter.post(
-  '/:territoryId/registries',
-  fieldsToDate(['dateAssigned', 'dateCompleted']),
+  '/territories/:territoryId/registries',
   ensureInputIsValid(createSchema),
   registryController.create
 );
 
 registryRouter.post(
-  '/:territoryId/registries/close',
+  '/territories/:territoryId/registries/complete',
   ensureInputIsValid(territoryIdParamSchema),
-  registryController.close
+  registryController.complete
 );
 
 registryRouter.patch(
-  '/:territoryId/registries/:id',
-  fieldsToDate(['dateAssigned', 'dateCompleted']),
+  '/registries/:id',
   ensureInputIsValid(updateSchema),
   registryController.update
 );

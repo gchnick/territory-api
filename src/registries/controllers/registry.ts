@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { conductorModel } from '../../conductors/models/conductor';
 import { asyncErrorHandler } from '../../shared/controllers/async-error-handler';
 import { territoryModel } from '../../territories/models/territory';
+import { periodModel } from '../models/period';
 import { registryModel } from '../models/registry';
 
 class RegistryController {
@@ -15,13 +16,11 @@ class RegistryController {
 
       if (last) {
         const lastRegistry = await registryModel.getLastByTerritory(territory);
-        response.json(lastRegistry);
+        return response.json(lastRegistry);
       }
 
-      if (!last) {
-        const territories = await registryModel.getAllByTerritory(territory);
-        response.json(territories);
-      }
+      const territories = await registryModel.getAllByTerritory(territory);
+      response.json(territories);
     }
   );
 
@@ -32,23 +31,27 @@ class RegistryController {
     const conductorId = String(assignedToId);
     delete request.body.assignedTo;
 
+    const currentPeriod = await periodModel.getCurrent();
+
     request.body.territoryAssigned =
       await territoryModel.getByNumber(numberTerritory);
     request.body.assignedTo = await conductorModel.getById(conductorId);
 
-    const newRegistry = await registryModel.create(request.body);
+    const newRegistry = await registryModel.create(currentPeriod, request.body);
 
     response.status(201).json(newRegistry);
   });
 
-  close = asyncErrorHandler(async (request: Request, response: Response) => {
+  complete = asyncErrorHandler(async (request: Request, response: Response) => {
     const { territoryId } = request.params;
     const numberTerritory = Number(territoryId);
 
     const territory = await territoryModel.getByNumber(numberTerritory);
-    const closedRegistry = await registryModel.closeLastRecord(territory);
+    const lastRegistry = await registryModel.getLastByTerritory(territory);
 
-    response.status(200).json(closedRegistry);
+    const completedRegistry = await registryModel.completeLast(lastRegistry);
+
+    response.status(200).json(completedRegistry);
   });
 
   update = asyncErrorHandler(async (request: Request, response: Response) => {
@@ -58,18 +61,18 @@ class RegistryController {
 
     if (last) {
       const territory = await territoryModel.getByNumber(numberTerritory);
+      const lastRegistry = await registryModel.getLastByTerritory(territory);
+
       const updatedLastRegistry = await registryModel.updateLastRegistry(
-        territory,
+        lastRegistry,
         request.body
       );
 
-      response.status(200).json(updatedLastRegistry);
+      return response.status(200).json(updatedLastRegistry);
     }
 
-    if (!last) {
-      const updatedRegistry = await registryModel.update(id, request.body);
-      response.status(200).json(updatedRegistry);
-    }
+    const updatedRegistry = await registryModel.update(id, request.body);
+    response.status(200).json(updatedRegistry);
   });
 
   delete = async (request: Request, response: Response) => {
