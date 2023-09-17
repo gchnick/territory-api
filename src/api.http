@@ -1,7 +1,10 @@
 ##  TERRITORIES 
 
-### Recuperar todos territorios registrados
+### Recuperar todos territorios
 GET http://localhost:7070/api/v1/territories
+
+### Recuperar todos territorios disponibles
+GET http://localhost:7070/api/v1/territories?available=true
 
 ### Recuperar un territorio por numero
 GET http://localhost:7070/api/v1/territories/10
@@ -136,20 +139,28 @@ Content-Type: application/json
   "description": "New period of preach"
 }
 
+### Finalizar periodo actual y crear nuevo periodo
+POST http://localhost:7070/api/v1/registries/periods/finish-and-init
+Content-Type: application/json
+
+{
+  "description": "Period of preach before finish"
+}
+
 ### Actualizar un periodo de registro
-PATCH http://localhost:7070/api/v1/registries/periods/424ec997-f02e-4b77-8384-1816432c9038
+PATCH http://localhost:7070/api/v1/registries/periods/f07abbd9-157a-4ac6-987d-b7ec28f63036
 Content-Type: application/json
 
 {
   "description": "Special campain",
-  "finishDate": "2023-06-23"
+  "finishDate": "2023-09-23"
 }
 
 ### Finalizar periodo de registro actual
 POST http://localhost:7070/api/v1/registries/periods/finish
 
 ### Borrar un periodo de registro
-DELETE http://localhost:7070/api/v1/registries/periods/4d43b5b5-cc78-41f7-b068-461fd7094ece
+DELETE http://localhost:7070/api/v1/registries/periods/292edda1-ea9e-4ed5-a39b-c77c31fed6e5
 
 ## REGISTRIES 
 
@@ -165,64 +176,95 @@ POST http://localhost:7070/api/v1/territories/10/registries
 Content-Type: application/json
 
 {
-  "assignedToId": "aeae0ff8-f5b0-46a1-b844-79dbabe9c951",
-  "dateAssigned": "2023-08-1"
+  "assignedToId": "6691fdca-7548-4c3d-8703-3846b2d8a0cd",
+  "assignedDate": "2023-08-1"
 }
 
 ### Actualizar como completado el último registro del territorio con la fecha de hoy
-POST http://localhost:7070/api/v1/territories/10/registries/complete
+POST http://localhost:7070/api/v1/territories/10/registries/completion
 
 ### Actualizar el ultimo registro del territorio
 ### FIXME: Asegurar que la fecha de completado es mayor a la de asignación
-PATCH http://localhost:7070/api/v1/territories/10/registries?last=true
+PATCH http://localhost:7070/api/v1/territories/1/registries?last=true
 Content-Type: application/json
 
 {
-  "assignedToId": "b54ff557-eb62-4fe1-bcc8-c62088a980df",
-  "dateAssigned": "2023-7-20",
-  "dateCompleted": "2023-8-20"
+  "assignedToId": "d04e57f9-1f55-40fa-b9a2-106193bbafdf",
+  "assignedDate": "2023-8-20",
+  "completionDate": "2023-9-20"
 }
 
 ### Actualizar un registro
-PATCH http://localhost:7070/api/v1/registries/424ec997-f02e-4b77-8384-1816432c9038
+PATCH http://localhost:7070/api/v1/registries/25e6a514-ee5f-4301-a84f-48a80072db2c
 Content-Type: application/json
 
 {
-  "assignedTo": "Junior Publisher",
-  "dateCompleted": "2023-7-20"
+  "assignedToId": "aceb5fb4-22c3-4ef3-a5c6-f3572c770fa6",
+  "assignedDate": "2023-7-20",
+  "completionDate": "2023-7-20"
 }
 
 ### Borrar un registro
 DELETE http://localhost:7070/api/v1/registries/4d43b5b5-cc78-41f7-b068-461fd7094ece
 
-## PROGRAM
+## PROGRAMS
 
-### Crear un programa de predicación
+### Recuperar todos programas completos sin incluir los futuros
+### Tipo de paginación: cursor-based pagination
+### Por defecto cada página contiene 2 programas
+### Ordenado por fecha de inicio de forma desendiente
+GET http://localhost:7070/api/v1/programs
+
+### Recuperar todos programas completos desde cursor
+GET http://localhost:7070/api/v1/programs?cursor=b032f09a-8ece-4bbe-b4d6-6338b0807e99
+
+### Recuperar todos programas completos incluyendo los futuros
+GET http://localhost:7070/api/v1/programs?future=true
+
+### Recuperar todos programas completos incluyendo los futuros desde cursor
+GET http://localhost:7070/api/v1/programs?future=true&cursor=77df4698-a0ef-428b-8b0a-8ef8d70c1040
+
+### Recuperar el programa actual completo
+GET http://localhost:7070/api/v1/programs?current=true
+
+### Recuperar el programa completo por identificador
+GET http://localhost:7070/api/v1/programs/b032f09a-8ece-4bbe-b4d6-6338b0807e99
+
+### Crear un programa
+### TODO: Asegurarse que no haya dos programas para una misma semana
 POST http://localhost:7070/api/v1/programs
 Content-Type: application/json
 
 {
-  "week": "2023-09-13"
+  "sinceWeek": "2024-01-13",
+  "daysDuration": 7
 }
 
-### Recuperar el programa actual completo
-GET http://localhost:7070/api/v1/programs
-
-### Recuperar el programa completo por identificador
-GET http://localhost:7070/api/v1/programs/4d43b5b5-cc78-41f7-b068-461fd7094ece
-
-### Actualizar un programa de predicación
-PATCH http://localhost:7070/api/v1/programs/4d43b5b5-cc78-41f7-b068-461fd7094ece
+### Actualizar un programa
+PATCH http://localhost:7070/api/v1/programs/97704c93-55a7-4766-a2ec-97171ee8735a
 Content-Type: application/json
 
 {
-  "week": "2023-09-13"
+  "sinceWeek": "2023-09-17",
+  "untilWeek": "2023-09-23"
 }
 
-### Borrar un programa de predicación
-DELETE http://localhost:7070/api/v1/programs/4d43b5b5-cc78-41f7-b068-461fd7094ece
+### Borrar un programa
+DELETE http://localhost:7070/api/v1/programs/d0948a4d-80e1-4262-9c19-aefe6de51468
 
-## ASSIGNAMENT
+## ASSIGNAMENTS
+
+### Recuperar todas las asignaciones sin incluir las futuras
+### Tipo de paginación: cursor-based pagination
+### Por defecto cada página contiene 10 asignaciones
+### Ordenado por fecha de asignaciones de forma desendiente
+GET http://localhost:7070/api/v1/programs/assignaments
+
+### Recuperar todas las asignaciones desde cursor
+GET http://localhost:7070/api/v1/programs/assignaments?cursor=4d43b5b5-cc78-41f7-b068-461fd7094ece
+
+### Recuperar todas las asignaciones incluyendo las futuras
+GET http://localhost:7070/api/v1/programs/assignaments?future=true
 
 ### Crear una asignación
 ### Si no envias el identificador el programa se asignará programa actual
