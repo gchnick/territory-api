@@ -91,6 +91,8 @@ model programs {
   id           String         @id @default(uuid())
   created_at   DateTime       @default(now())
   updated_at   DateTime       @updatedAt
+  since_week   DateTime
+  until_week   DateTime
   assignaments assignaments[]
 }
 
