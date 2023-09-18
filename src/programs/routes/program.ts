@@ -1,12 +1,9 @@
 import { Router } from 'express';
 import { ensureInputIsValid } from '../../shared/middlewares/ensure-input-is-valid';
 import { uuidParamSchema } from '../../shared/schemas/id';
+import { getPaginationSchema } from '../../shared/schemas/pagination';
 import { programController } from '../controllers/program';
-import {
-  createSchema,
-  getPaginationSchema,
-  updateSchema
-} from '../schemas/program';
+import { createSchema, updateSchema } from '../schemas/program';
 
 export const programRouter = Router();
 

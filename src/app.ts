@@ -3,6 +3,7 @@ import { availabilityRouter as conductorAvailabilityRouter } from './conductors/
 import { conductorRouter } from './conductors/routes/conductor';
 import { availabilityRouter as meetingPlaceAvailabilityRouter } from './meeting-place/routes/availability';
 import { meetingPlaceRouter } from './meeting-place/routes/meeting-place';
+import { assignamentRouter } from './programs/routes/assignament';
 import { programRouter } from './programs/routes/program';
 import { periodRouter } from './registries/routes/period';
 import { registryRouter } from './registries/routes/registry';
@@ -24,6 +25,7 @@ app.use('/api/v1/conductors', conductorAvailabilityRouter);
 app.use('/api/v1/registries/periods', periodRouter);
 app.use('/api/v1', registryRouter);
 app.use('/api/v1/programs', programRouter);
+app.use('/api/v1/programs', assignamentRouter);
 
 app.all('*', invalidPathMiddleware);
 app.use(errorHandlerMiddleware);

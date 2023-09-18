@@ -1,6 +1,7 @@
 import { prisma } from '../../config/connection';
 import { currentDateWithoutHours, increseDays } from '../../shared/models/date';
-import { CURSOR_INDEX, PROGRAMS_FOR_PAGE } from './constants';
+import { assignamentModel } from './assignament';
+import { PROGRAMS_FOR_PAGE, PROGRAM_CURSOR_INDEX } from './constants';
 import { ProgramNotFount } from './errors';
 import {
   Entity,
@@ -11,6 +12,19 @@ import {
 } from './types';
 
 class ProgramModel {
+  getById = async (id: string) => {
+    const program = await prisma.programs.findUnique({
+      where: { id },
+      include: { assignaments: true }
+    });
+
+    if (program === null) {
+      throw new ProgramNotFount(`Program with id '${id}' not found`);
+    }
+
+    return this.toModel(program);
+  };
+
   getCurrent = async () => {
     const currentDate = currentDateWithoutHours();
 
@@ -71,21 +85,8 @@ class ProgramModel {
       ? page[0]
       : {
           data: page.map((p) => this.toModel(p)),
-          cursor: page[CURSOR_INDEX].id
+          cursor: page[PROGRAM_CURSOR_INDEX].id
         };
-  };
-
-  getById = async (id: string) => {
-    const program = await prisma.programs.findUnique({
-      where: { id },
-      include: { assignaments: true }
-    });
-
-    if (program === null) {
-      throw new ProgramNotFount(`Program with id '${id}' not found`);
-    }
-
-    return this.toModel(program);
   };
 
   create = async (sinceWeek: Date, daysDuration: number) => {
@@ -138,7 +139,13 @@ class ProgramModel {
           updatedAt: entity.updated_at,
           sinceWeek: entity.since_week,
           untilWeek: entity.until_week,
-          assignaments: [] // assignamentModel.toModel(entity.assignaments)
+          assignaments: entity.assignaments.map((a) =>
+            assignamentModel.toModel({
+              entity: a,
+              conductor: a.conductor,
+              meetingPlace: a.meeting_place
+            })
+          )
         }
       : {
           id: entity.id,

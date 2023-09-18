@@ -1,14 +1,5 @@
 import { z } from 'zod';
-import { booleanSchema } from '../../shared/schemas/boolean';
 import { uuidSchema } from '../../shared/schemas/id';
-
-export const getPaginationSchema = z.object({
-  query: z.object({
-    cursor: uuidSchema.optional(),
-    future: booleanSchema.optional(),
-    current: booleanSchema.optional()
-  })
-});
 
 export const createSchema = z.object({
   body: z.object({

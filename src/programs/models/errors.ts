@@ -5,3 +5,9 @@ export class ProgramNotFount extends NotFount {
     super(message);
   }
 }
+
+export class AssignamentNotFount extends NotFount {
+  constructor(message: string) {
+    super(message);
+  }
+}

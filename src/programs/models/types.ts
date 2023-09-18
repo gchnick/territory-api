@@ -1,5 +1,5 @@
-import { Conductor } from '../../conductors/models/types';
-import { MeetingPlace } from '../../meeting-place/types';
+import { Conductor, ConductorEntity } from '../../conductors/models/types';
+import { MeetingPlace, MeetingPlaceEntity } from '../../meeting-place/types';
 
 export type Assignament = {
   id?: string;
@@ -37,8 +37,14 @@ export type AssignamentEntity = {
   program_id: string;
 };
 
+export type AssignamentEntityWithConductorAndMeetingPlace =
+  AssignamentEntity & {
+    conductor: ConductorEntity;
+    meeting_place: MeetingPlaceEntity;
+  };
+
 export type ProgramEntityWithAssignaments = ProgramEntity & {
-  assignaments: AssignamentEntity[];
+  assignaments: AssignamentEntityWithConductorAndMeetingPlace[];
 };
 
 export type Entity = ProgramEntity | ProgramEntityWithAssignaments;

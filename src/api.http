@@ -266,9 +266,18 @@ GET http://localhost:7070/api/v1/programs/assignaments?cursor=4d43b5b5-cc78-41f7
 ### Recuperar todas las asignaciones incluyendo las futuras
 GET http://localhost:7070/api/v1/programs/assignaments?future=true
 
-### Crear una asignación
-### Si no envias el identificador el programa se asignará programa actual
+### Crear una asignación en el programa actual
 POST http://localhost:7070/api/v1/programs/assignaments
+Content-Type: application/json
+
+{
+  "meetingPlaceId": "a30bc7b6-7d96-4e13-b0b3-f34e913d7f89",
+  "conductorId": "aeae0ff8-f5b0-46a1-b844-79dbabe9c951",
+  "date": "2023-08-1",
+}
+
+### Crear una asignación en el programa por identificador
+POST http://localhost:7070/api/v1/programs/b032f09a-8ece-4bbe-b4d6-6338b0807e99/assignaments
 Content-Type: application/json
 
 {
