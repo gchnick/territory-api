@@ -101,7 +101,7 @@ class ConductorModel {
     entity: Entity
   ): entity is ConductorWithAvailability {
     return (
-      typeof (entity as ConductorWithAvailability).availability !== 'undefined'
+      typeof (entity as ConductorWithAvailability)?.availability !== 'undefined'
     );
   }
 
@@ -121,13 +121,6 @@ class ConductorModel {
       where: { mobile_phone: phone }
     });
     return number === null;
-  }
-
-  async setLastDateAssigned(id: string, dateAssigned: Date) {
-    await prisma.conductors.update({
-      where: { id },
-      data: { last_date_assigned: dateAssigned }
-    });
   }
 }
 
