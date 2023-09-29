@@ -67,7 +67,7 @@ class RegistryController {
       const territory = await territoryModel.getByNumber(numberTerritory);
       const lastRegistry = await registryModel.getLastByTerritory(territory);
 
-      const updatedLastRegistry = await registryModel.updateLastRegistry(
+      const updatedLastRegistry = await registryModel.update(
         lastRegistry,
         request.body
       );

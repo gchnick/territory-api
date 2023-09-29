@@ -1,0 +1,1 @@
+export const MAX_REGISTRIES_PER_PERIOD = 4;

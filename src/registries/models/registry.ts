@@ -4,6 +4,7 @@ import {
   Entity as ConductorEntity
 } from '../../conductors/models/types';
 import { prisma } from '../../config/connection';
+import { currentDateWithoutHours } from '../../shared/models/date';
 import { InvalidParams } from '../../shared/models/error-model';
 import { TerritoryIsLocked } from '../../territories/models/errors';
 import { territoryModel } from '../../territories/models/territory';
@@ -11,7 +12,23 @@ import {
   Territory,
   Entity as TerritoryEntity
 } from '../../territories/models/types';
-import { LastRegistryNotFount, RegistryNotFount } from './errors';
+import { MAX_REGISTRIES_PER_PERIOD } from './constants';
+import {
+  LastRegistryNotFount,
+  MaximumRecordsReached,
+  RegistryNotFount
+} from './errors';
+import {
+  completionRegistryQuery,
+  createQuery,
+  deleteQuery,
+  getAllByTerritoryQuery,
+  getByIdQuery,
+  lastRegistryQuery,
+  noCompletionByTerritoryQuery,
+  registriesPerPeriodCountQuery,
+  updateLastRegistryQuery
+} from './queries';
 import {
   PartialRegistry,
   PartialRegistryEntity,
@@ -22,10 +39,7 @@ import {
 
 class RegistryModel {
   getById = async (id: string) => {
-    const registry = await prisma.registries.findUnique({
-      where: { id },
-      include: { territory: true, conductor: true }
-    });
+    const [registry] = await prisma.$transaction([getByIdQuery(id)]);
 
     if (registry === null) {
       throw new RegistryNotFount(`Registry with id '${id} not found'`);
@@ -39,16 +53,9 @@ class RegistryModel {
   };
 
   getLastByTerritory = async (territory: Territory) => {
-    const lastRegistry = await prisma.registries.findFirst({
-      where: { territory_id: territory.id },
-      include: {
-        conductor: true
-      },
-      orderBy: {
-        assigned_date: 'desc'
-      },
-      take: 1
-    });
+    const [lastRegistry] = await prisma.$transaction([
+      lastRegistryQuery(territory.id)
+    ]);
 
     if (lastRegistry === null)
       throw new LastRegistryNotFount(
@@ -66,16 +73,9 @@ class RegistryModel {
   };
 
   getNoCompletionByTerritory = async (territory: Territory) => {
-    const noCompletionRegistry = await prisma.registries.findFirst({
-      where: { territory_id: territory.id, completion_date: null },
-      include: {
-        conductor: true
-      },
-      orderBy: {
-        assigned_date: 'desc'
-      },
-      take: 1
-    });
+    const [noCompletionRegistry] = await prisma.$transaction([
+      noCompletionByTerritoryQuery(territory.id)
+    ]);
 
     if (noCompletionRegistry === null)
       throw new LastRegistryNotFount(
@@ -93,10 +93,10 @@ class RegistryModel {
   };
 
   getAllByTerritory = async (territory: Territory) => {
-    const registries = await prisma.registries.findMany({
-      where: { territory_id: territory.id },
-      include: { conductor: true }
-    });
+    const [registries] = await prisma.$transaction([
+      getAllByTerritoryQuery(territory.id)
+    ]);
+
     return {
       territory,
       registries: registries.map((r) =>
@@ -121,27 +121,28 @@ class RegistryModel {
         `Territory number '${data.territoryAssigned.number}' is assigned now`
       );
 
-    // TODO: Implement 4 records maximun for territory in a period
+    const [registriesPerPeriod] = await prisma.$transaction([
+      registriesPerPeriodCountQuery(currentPeriod.id, data.territoryAssigned.id)
+    ]);
 
-    const newRegistry = await prisma.registries.create({
-      data: {
-        registry_period_id: currentPeriod.id,
-        territory_id: data.territoryAssigned.id,
-        conductor_id: data.assignedTo.id,
-        assigned_date: data.assignedDate,
-        completion_date: data.completionDate
-      }
-    });
+    if (registriesPerPeriod >= MAX_REGISTRIES_PER_PERIOD) {
+      throw new MaximumRecordsReached(
+        `The maximum of registrations per period has been reached`
+      );
+    }
 
-    await territoryModel.assignedLock(data.territoryAssigned.id);
-    await conductorModel.setLastDateAssigned(
-      data.assignedTo.id,
-      data.assignedDate
+    const [newRegistry] = await prisma.$transaction(
+      createQuery(
+        currentPeriod.id,
+        data.territoryAssigned.id,
+        data.assignedTo.id,
+        data.assignedDate,
+        data.completionDate
+      )
     );
 
-    const registryModel = this.#toModel({ entity: newRegistry });
-    registryModel.territoryAssigned = data.territoryAssigned;
-    registryModel.assignedTo = data.assignedTo;
+    const registryModel = structuredClone(data);
+    registryModel.id = newRegistry.id;
 
     return registryModel;
   };
@@ -151,73 +152,57 @@ class RegistryModel {
       throw new InvalidParams('Invalid params to complete last registry');
     }
 
-    const completionDate = new Date();
+    const noCompletionRegistryId = noCompletionRegistry.territoryAssigned.id;
 
-    await territoryModel.assignedUnlock(
-      noCompletionRegistry.territoryAssigned.id,
-      completionDate
+    const completionDate = currentDateWithoutHours();
+
+    await prisma.$transaction(
+      completionRegistryQuery(
+        noCompletionRegistry.territoryAssigned.id,
+        noCompletionRegistryId,
+        completionDate
+      )
     );
 
-    const completionRegistry = await prisma.registries.update({
-      where: { id: noCompletionRegistry.id },
-      data: {
-        completion_date: completionDate
-      }
-    });
+    const completionRegistry = structuredClone(noCompletionRegistry);
+    completionRegistry.completionDate = completionDate;
 
-    return this.#toModel({ entity: completionRegistry });
-  };
-
-  updateLastRegistry = async (
-    lastRegistry: Registry,
-    data: PartialRegistry
-  ) => {
-    if (!lastRegistry.territoryAssigned?.id) {
-      throw new InvalidParams('Invalid params to complete last registry');
-    }
-
-    if (data.completionDate) {
-      await territoryModel.assignedUnlock(
-        lastRegistry.territoryAssigned.id,
-        data.completionDate
-      );
-    }
-
-    const updatedRegistry = await prisma.registries.update({
-      where: { id: lastRegistry.id },
-      data: {
-        ...this.#toEntity(data)
-      }
-    });
-
-    return this.#toModel({ entity: updatedRegistry });
+    return completionRegistry;
   };
 
   update = async (registry: Registry, data: PartialRegistry) => {
     if (!registry.territoryAssigned?.id) {
-      throw new InvalidParams('Invalid params to update registry');
+      throw new InvalidParams('Invalid params to complete last registry');
     }
 
-    if (data.completionDate) {
-      await territoryModel.assignedUnlock(
+    const test = {
+      ...registry,
+      ...data
+    };
+
+    if (test.completionDate && test.assignedDate > test.completionDate) {
+      throw new InvalidParams(`Competion date is incongruent`);
+    }
+
+    await prisma.$transaction(
+      updateLastRegistryQuery(
         registry.territoryAssigned.id,
-        data.completionDate
-      );
-    }
+        registry.id,
+        this.#toEntity(data)
+      )
+    );
 
-    const updatedRegistry = await prisma.registries.update({
-      where: { id: registry.id },
-      data: {
-        ...this.#toEntity(data)
-      }
-    });
+    const updatedRegistry = {
+      ...registry,
+      ...data
+    };
 
-    return this.#toModel({ entity: updatedRegistry });
+    return updatedRegistry;
   };
 
   delete = async (id: string) => {
     try {
-      await prisma.registries.delete({ where: { id } });
+      await prisma.$transaction([deleteQuery(id)]);
     } catch (e) {
       console.log(`Registry with id '${id}' not found`);
       console.log(e);

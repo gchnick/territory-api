@@ -29,3 +29,9 @@ export class PeriodIsStart extends BadRequest {
     super(message);
   }
 }
+
+export class MaximumRecordsReached extends BadRequest {
+  constructor(message: string) {
+    super(message);
+  }
+}
