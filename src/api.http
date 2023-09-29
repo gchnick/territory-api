@@ -52,7 +52,7 @@ DELETE http://localhost:7070/api/v1/territories/130928d6-c4a1-42c3-8d54-31f70734
 ## MEETING PLACES
 
 ### Modificar lugar de encuentro
-PATCH http://localhost:7070/api/v1/meeting-places/5b2dfbcf-37d8-4a55-94ce-cfc1330a021c
+PATCH http://localhost:7070/api/v1/meeting-places/842ae545-5194-44b0-8742-060fae82270b
 Content-Type: application/json
 
 {
@@ -66,7 +66,7 @@ DELETE http://localhost:7070/api/v1/meeting-places/83859656-fe69-48ab-bf51-68bda
 
 
 ### Reemplazar disponibilidad del lugar de encuentro
-PUT http://localhost:7070/api/v1/meeting-places/5b2dfbcf-37d8-4a55-94ce-cfc1330a021c/availability
+PUT http://localhost:7070/api/v1/meeting-places/842ae545-5194-44b0-8742-060fae82270b/availability
 Content-Type: application/json
 
 {
@@ -102,7 +102,7 @@ Content-Type: application/json
 }
 
 ### Actualizar un conductor
-PATCH http://localhost:7070/api/v1/conductors/6691fdca-7548-4c3d-8703-3846b2d8a0cd
+PATCH http://localhost:7070/api/v1/conductors/7aa6cb01-ebcf-4ccb-838d-dc23c1836e67
 Content-Type: application/json
 
 {
@@ -117,7 +117,7 @@ DELETE http://localhost:7070/api/v1/conductors/5d74a457-bcc3-435e-9418-fce7ad39d
 
 
 ### Reemplazar disponibilidad del conductor
-PUT http://localhost:7070/api/v1/conductors/6691fdca-7548-4c3d-8703-3846b2d8a0cd/availability
+PUT http://localhost:7070/api/v1/conductors/7aa6cb01-ebcf-4ccb-838d-dc23c1836e67/availability
 Content-Type: application/json
 
 {
@@ -171,7 +171,6 @@ GET http://localhost:7070/api/v1/territories/10/registries
 GET http://localhost:7070/api/v1/territories/10/registries?last=true
 
 ### Crear un registro
-### TODO: Asegurar el maximo de registros por periodo
 POST http://localhost:7070/api/v1/territories/10/registries
 Content-Type: application/json
 
@@ -184,7 +183,6 @@ Content-Type: application/json
 POST http://localhost:7070/api/v1/territories/10/registries/completion
 
 ### Actualizar el ultimo registro del territorio
-### FIXME: Asegurar que la fecha de completado es mayor a la de asignación
 PATCH http://localhost:7070/api/v1/territories/1/registries?last=true
 Content-Type: application/json
 
@@ -231,26 +229,28 @@ GET http://localhost:7070/api/v1/programs?current=true
 GET http://localhost:7070/api/v1/programs/b032f09a-8ece-4bbe-b4d6-6338b0807e99
 
 ### Crear un programa
-### TODO: Asegurarse que no haya dos programas para una misma semana
 POST http://localhost:7070/api/v1/programs
 Content-Type: application/json
 
 {
-  "sinceWeek": "2024-01-13",
+  "sinceWeek": "2023-09-28",
   "daysDuration": 7
 }
 
+### Actualizar el campo "published" de un programa
+POST http://localhost:7070/api/v1/programs/156329d6-1e51-457a-8830-956b61477ee5/published
+
 ### Actualizar un programa
-PATCH http://localhost:7070/api/v1/programs/97704c93-55a7-4766-a2ec-97171ee8735a
+PATCH http://localhost:7070/api/v1/programs/faacea25-b62b-4920-ac22-7fabfaea8ba8
 Content-Type: application/json
 
 {
-  "sinceWeek": "2023-09-17",
-  "untilWeek": "2023-09-23"
+  "sinceWeek": "2023-09-28",
+  "untilWeek": "2023-10-05"
 }
 
 ### Borrar un programa
-DELETE http://localhost:7070/api/v1/programs/d0948a4d-80e1-4262-9c19-aefe6de51468
+DELETE http://localhost:7070/api/v1/programs/156329d6-1e51-457a-8830-956b61477ee5
 
 ## ASSIGNAMENTS
 
@@ -271,9 +271,9 @@ POST http://localhost:7070/api/v1/programs/assignaments
 Content-Type: application/json
 
 {
-  "meetingPlaceId": "a30bc7b6-7d96-4e13-b0b3-f34e913d7f89",
-  "conductorId": "aeae0ff8-f5b0-46a1-b844-79dbabe9c951",
-  "date": "2023-08-1",
+  "meetingPlaceId": "842ae545-5194-44b0-8742-060fae82270b",
+  "conductorId": "7aa6cb01-ebcf-4ccb-838d-dc23c1836e67",
+  "date": "2023-09-30 15:00"
 }
 
 ### Crear una asignación en el programa por identificador
@@ -283,18 +283,26 @@ Content-Type: application/json
 {
   "meetingPlaceId": "a30bc7b6-7d96-4e13-b0b3-f34e913d7f89",
   "conductorId": "aeae0ff8-f5b0-46a1-b844-79dbabe9c951",
-  "date": "2023-08-1",
+  "date": "2023-08-1 15:00"
+}
+
+### Actualizar asignación como cubierta y registrar
+POST http://localhost:7070/api/v1/programs/assignaments/7c5b60f7-d8f4-4040-880b-f661dd5f0b92/covered
+Content-Type: application/json
+
+{
+  "completionDate": "2023-09-30"
 }
 
 ### Actualizar una asignación
-PATCH http://localhost:7070/api/v1/programs/assignaments/b54ff557-eb62-4fe1-bcc8-c62088a980df
+PATCH http://localhost:7070/api/v1/programs/assignaments/db0e7d63-c97f-4b74-bf12-dc86b3233461
 Content-Type: application/json
 
 {
   "meetingPlaceId": "a30bc7b6-7d96-4e13-b0b3-f34e913d7f89",
   "conductorId": "aeae0ff8-f5b0-46a1-b844-79dbabe9c951",
-  "date": "2023-09-1",
+  "date": "2023-09-30 14:00"
 }
 
 ### Borrar una asignación
-DELETE http://localhost:7070/api/v1/programs/assignaments/b54ff557-eb62-4fe1-bcc8-c62088a980df
+DELETE http://localhost:7070/api/v1/programs/assignaments/d76de462-d690-4900-952e-93848e456d42
