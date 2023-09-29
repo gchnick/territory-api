@@ -25,7 +25,7 @@ export const errorHandlerMiddleware = (
     httpCode = _error.httpCode;
     message = _error.message;
     name = _error.name;
-    stack = _error.stack;
+    // stack = _error.stack;
   }
 
   if (_error instanceof ZodError) {
