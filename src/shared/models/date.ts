@@ -18,3 +18,15 @@ export const increseDays = (date: Date, daysIncrese: number) => {
   value.setDate(dayOfMonth + daysIncrese);
   return value;
 };
+
+export const firthHours = (date: Date) => {
+  const value = new Date(date);
+  value.setHours(23, 60);
+  return value;
+};
+
+export const lastHours = (date: Date) => {
+  const value = new Date(date);
+  value.setHours(23, 59);
+  return value;
+};
