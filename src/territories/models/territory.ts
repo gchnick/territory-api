@@ -188,20 +188,6 @@ class TerritoryModel {
       'undefined'
     );
   }
-
-  async assignedLock(id: string) {
-    await prisma.territories.update({
-      where: { id },
-      data: { assigned_lock: true }
-    });
-  }
-
-  async assignedUnlock(id: string, dateAssigned: Date) {
-    await prisma.territories.update({
-      where: { id },
-      data: { last_date_completed: dateAssigned, assigned_lock: false }
-    });
-  }
 }
 
 export const territoryModel = new TerritoryModel();
