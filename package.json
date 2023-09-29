@@ -4,21 +4,25 @@
   "description": "API Rest to assigning of territories registry",
   "main": "src/app.ts",
   "scripts": {
-    "start": "yarn build && node dist/app.js",
+    "start": "node app.js",
     "start:dev": "ts-node-dev src/app.ts",
-    "build": "rimraf ./dist && tsc",
+    "build": "npm run compile && npm run copy-assets",
+    "compile": "rimraf ./dist && tsc",
+    "copy-assets": "npx copyfiles package.json ./dist && npx copyfiles *.lock ./dist && npx copyfiles README.md ./dist && npx copyfiles ./prisma/* ./dist && npx copyfiles ./prisma/**/* ./dist && npx copyfiles ./prisma/**/**/* ./dist",
     "test": "jest",
     "lint": "eslint . --ext .ts",
     "lint-fix": "eslint . --ext .ts --fix",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}"
+    "prettier-watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
+    "generate-db": "npx prisma migrate deploy"
   },
   "keywords": [
     "assignin",
     "territory",
-    "registry"
+    "registry",
+    "program"
   ],
-  "author": "Nick Galán",
+  "author": "Nick Galán - email: gnick.alan@gmail.com",
   "license": "GPL-3.0",
   "devDependencies": {
     "@types/cors": "2.8.13",
@@ -26,6 +30,7 @@
     "@types/node": "20.5.4",
     "@typescript-eslint/eslint-plugin": "6.4.1",
     "@typescript-eslint/parser": "6.4.1",
+    "copyfiles": "2.4.1",
     "eslint": "8.47.0",
     "eslint-config-prettier": "9.0.0",
     "eslint-plugin-prettier": "5.0.0",
