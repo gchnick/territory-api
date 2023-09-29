@@ -93,12 +93,14 @@ model programs {
   updated_at   DateTime       @updatedAt
   since_week   DateTime
   until_week   DateTime
+  published    Boolean        @default(false)
   assignaments assignaments[]
 }
 
 model assignaments {
   id               String         @id @default(uuid())
   date             DateTime
+  covered          Boolean        @default(false)
   meeting_place_id String
   coductor_id      String
   program_id       String
