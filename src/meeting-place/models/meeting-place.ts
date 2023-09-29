@@ -1,6 +1,8 @@
 import { prisma } from '../../config/connection';
 import { toAvailabilityModel } from '../../shared/models/availability';
 import { InvalidParams } from '../../shared/models/error-model';
+import { TerritoryNotFount } from '../../territories/models/errors';
+import { territoryModel } from '../../territories/models/territory';
 import { Territory } from '../../territories/models/types';
 import {
   Entity,
@@ -22,6 +24,21 @@ class MeetingPlaceModel {
       throw new MeetingPlaceNotFount(`Meeting place with id '${id}' not found`);
 
     return this.toModel(meetingPlace);
+  };
+
+  getTerritory = async (meetingPlace: MeetingPlace) => {
+    const search = await prisma.meeting_places.findUnique({
+      where: { id: meetingPlace.id },
+      select: { territory: true }
+    });
+
+    if (!search) {
+      throw new TerritoryNotFount(
+        `Territory with meeting place: "${meetingPlace.place} not found"`
+      );
+    }
+
+    return territoryModel.toModel(search.territory);
   };
 
   /**
