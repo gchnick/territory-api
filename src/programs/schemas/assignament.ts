@@ -19,5 +19,17 @@ export const createWithProgramSchema = z.object({
 });
 
 export const updateSchema = z.object({
+  params: z.object({
+    id: uuidSchema
+  }),
   body: createSchema.partial()
+});
+
+export const coveredSchema = z.object({
+  params: z.object({
+    id: uuidSchema
+  }),
+  body: z.object({
+    completionDate: z.coerce.date().transform((s) => new Date(s))
+  })
 });

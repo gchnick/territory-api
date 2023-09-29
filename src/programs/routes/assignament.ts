@@ -4,7 +4,7 @@ import { uuidParamSchema } from '../../shared/schemas/id';
 import { getPaginationSchema } from '../../shared/schemas/pagination';
 import { assignamentController } from '../controllers/assignament';
 import {
-  createWithProgramSchema,
+  coveredSchema,
   currentCreateSchema,
   updateSchema
 } from '../schemas/assignament';
@@ -12,31 +12,31 @@ import {
 export const assignamentRouter = Router();
 
 assignamentRouter.get(
-  '/assignaments',
+  '',
   ensureInputIsValid(getPaginationSchema),
   assignamentController.getPagination
 );
 
 assignamentRouter.post(
-  '/assignaments',
+  '',
   ensureInputIsValid(currentCreateSchema),
   assignamentController.create
 );
 
 assignamentRouter.post(
-  '/:programId/assignaments',
-  ensureInputIsValid(createWithProgramSchema),
-  assignamentController.create
+  '/:id/covered',
+  ensureInputIsValid(coveredSchema),
+  assignamentController.covered
 );
 
 assignamentRouter.patch(
-  '/assignaments/:id',
+  '/:id',
   ensureInputIsValid(updateSchema),
   assignamentController.update
 );
 
 assignamentRouter.delete(
-  '/assignaments/:id',
+  '/:id',
   ensureInputIsValid(uuidParamSchema),
   assignamentController.delete
 );
