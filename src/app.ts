@@ -24,8 +24,8 @@ app.use('/api/v1/conductors', conductorRouter);
 app.use('/api/v1/conductors', conductorAvailabilityRouter);
 app.use('/api/v1/registries/periods', periodRouter);
 app.use('/api/v1', registryRouter);
+app.use('/api/v1/programs/assignaments', assignamentRouter);
 app.use('/api/v1/programs', programRouter);
-app.use('/api/v1/programs', assignamentRouter);
 
 app.all('*', invalidPathMiddleware);
 app.use(errorHandlerMiddleware);
