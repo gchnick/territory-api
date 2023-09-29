@@ -6,6 +6,7 @@ export type Assignament = {
   date: Date;
   meetingPlace: MeetingPlace;
   conductor: Conductor;
+  covered: boolean;
 };
 
 export type PartialAssignament = Partial<Assignament>;
@@ -16,6 +17,7 @@ export type Program = {
   updatedAt: Date;
   sinceWeek: Date;
   untilWeek: Date;
+  published: boolean;
   assignaments?: Assignament[];
 };
 
@@ -27,6 +29,7 @@ export type ProgramEntity = {
   updated_at: Date;
   since_week: Date;
   until_week: Date;
+  published: boolean;
 };
 
 export type AssignamentEntity = {
@@ -35,6 +38,7 @@ export type AssignamentEntity = {
   meeting_place_id: string;
   coductor_id: string;
   program_id: string;
+  covered: boolean;
 };
 
 export type AssignamentEntityWithConductorAndMeetingPlace =

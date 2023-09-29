@@ -1,9 +1,22 @@
 import { prisma } from '../../config/connection';
-import { currentDateWithoutHours, increseDays } from '../../shared/models/date';
+import { firthHours, increseDays, lastHours } from '../../shared/models/date';
+import { InvalidParams } from '../../shared/models/error-model';
 import { assignamentModel } from './assignament';
 import { PROGRAMS_FOR_PAGE, PROGRAM_CURSOR_INDEX } from './constants';
-import { ProgramNotFount } from './errors';
+import { AlreadyProgram, ProgramNotFount } from './errors';
 import {
+  createProgramQuery,
+  deleteProgramQuery,
+  getCurrentProgramQuery,
+  getProgramBetweenDaysQuery,
+  getProgramByAssignamentQuery,
+  getProgramByIdQuery,
+  getProgramPaginationQuery,
+  publishedProgramQuery,
+  updateProgramQuery
+} from './queries';
+import {
+  Assignament,
   Entity,
   PartialProgram,
   Program,
@@ -13,10 +26,7 @@ import {
 
 class ProgramModel {
   getById = async (id: string) => {
-    const program = await prisma.programs.findUnique({
-      where: { id },
-      include: { assignaments: true }
-    });
+    const [program] = await prisma.$transaction([getProgramByIdQuery(id)]);
 
     if (program === null) {
       throw new ProgramNotFount(`Program with id '${id}' not found`);
@@ -25,22 +35,29 @@ class ProgramModel {
     return this.toModel(program);
   };
 
-  getCurrent = async () => {
-    const currentDate = currentDateWithoutHours();
+  getByAssignament = async (assignament: Assignament) => {
+    if (!assignament.id) {
+      throw new InvalidParams(`Invalid params to get program`);
+    }
+    const [program] = await prisma.$transaction([
+      getProgramByAssignamentQuery(assignament.id)
+    ]);
 
-    const currentProgram = await prisma.programs.findMany({
-      where: {
-        since_week: {
-          lte: currentDate // menor o igual
-        },
-        until_week: {
-          gte: currentDate // mayor o igual
-        }
-      },
-      include: { assignaments: true },
-      orderBy: { created_at: 'desc' },
-      take: 1
-    });
+    if (program.length === 0) {
+      throw new ProgramNotFount(
+        `Program with assignament id '${assignament.id}' not found`
+      );
+    }
+
+    return this.toModel(program[0]);
+  };
+
+  getCurrent = async () => {
+    const today = new Date();
+
+    const [currentProgram] = await prisma.$transaction([
+      getCurrentProgramQuery(today)
+    ]);
 
     if (currentProgram.length === 0) {
       throw new ProgramNotFount(
@@ -51,85 +68,103 @@ class ProgramModel {
     return this.toModel(currentProgram[0]);
   };
 
-  getPagination = async (cursor: string | undefined, future: any) => {
-    const currentDate = currentDateWithoutHours();
+  getPagination = async (future: any, cursor?: string) => {
+    const today = firthHours(new Date());
     let page: Entity[] = [];
 
     if (!cursor) {
-      page = await prisma.programs.findMany({
-        take: PROGRAMS_FOR_PAGE,
-        where: future ? {} : { since_week: { lte: currentDate } },
-        include: { assignaments: true },
-        orderBy: { created_at: 'desc' }
-      });
+      [page] = await prisma.$transaction([
+        getProgramPaginationQuery(today, future)
+      ]);
     }
 
     if (cursor) {
-      page = await prisma.programs.findMany({
-        take: PROGRAMS_FOR_PAGE,
-        skip: 1,
-        cursor: {
-          id: cursor
-        },
-        where: future ? {} : { since_week: { lte: currentDate } },
-        include: { assignaments: true },
-        orderBy: { created_at: 'desc' }
-      });
+      [page] = await prisma.$transaction([
+        getProgramPaginationQuery(today, future, cursor)
+      ]);
     }
 
     if (page.length === 0) {
       throw new ProgramNotFount(`Page of programs not fount.`);
     }
 
+    const _cursor =
+      page.length === PROGRAMS_FOR_PAGE
+        ? page[PROGRAM_CURSOR_INDEX].id
+        : undefined;
+
     return page.length === 1
       ? page[0]
       : {
           data: page.map((p) => this.toModel(p)),
-          cursor: page[PROGRAM_CURSOR_INDEX].id
+          cursor: _cursor
         };
   };
 
   create = async (sinceWeek: Date, daysDuration: number) => {
-    const newProgra = await prisma.programs.create({
-      data: {
-        since_week: sinceWeek,
-        until_week: increseDays(sinceWeek, daysDuration)
-      }
-    });
+    let untilWeek = increseDays(sinceWeek, daysDuration);
+    untilWeek = lastHours(untilWeek);
+
+    const [exist] = await prisma.$transaction([
+      getProgramBetweenDaysQuery(sinceWeek)
+    ]);
+
+    if (exist[0]?.id) {
+      throw new AlreadyProgram(
+        `There is already a program during the days: [${exist[0].since_week} - ${exist[0].until_week}]`
+      );
+    }
+
+    const [newProgra] = await prisma.$transaction([
+      createProgramQuery(sinceWeek, untilWeek)
+    ]);
 
     return this.toModel(newProgra);
   };
 
   update = async (program: Program, data: PartialProgram) => {
-    const updatedProgram = await prisma.programs.update({
-      where: { id: program.id },
-      data: {
-        ...this.#toEntity(data)
-      }
-    });
+    if (!program.id) {
+      throw new InvalidParams(`Invalid params to update program`);
+    }
+
+    const test = {
+      ...program,
+      ...data
+    };
+
+    if (test.sinceWeek >= test.untilWeek) {
+      throw new InvalidParams(
+        `The start and end dates of the program are incongruent`
+      );
+    }
+
+    const [updatedProgram] = await prisma.$transaction([
+      updateProgramQuery(program.id, this.#toEntity(data))
+    ]);
 
     return this.toModel(updatedProgram);
   };
 
+  published = async (program: Program) => {
+    if (!program.id) {
+      throw new InvalidParams(`Invalid params to set published program`);
+    }
+
+    const [programPublished] = await prisma.$transaction([
+      publishedProgramQuery(program.id)
+    ]);
+
+    return this.toModel(programPublished);
+  };
+
   delete = async (id: string) => {
     try {
-      await prisma.programs.delete({ where: { id } });
+      await prisma.$transaction([deleteProgramQuery(id)]);
     } catch (e) {
       console.log(`Programs with id '${id}' not found`);
       console.log(e);
     }
   };
-
-  async setUpdatedAt(id: string, updateAt: Date) {
-    await prisma.programs.update({
-      where: { id },
-      data: { updated_at: updateAt }
-    });
-  }
-
-  async setUpdatedAtNow(id: string) {
-    await this.setUpdatedAt(id, new Date());
-  }
 
   toModel(entity: ProgramEntity): Program {
     return this.#checkIsProgramWithAssignaments(entity)
@@ -139,6 +174,7 @@ class ProgramModel {
           updatedAt: entity.updated_at,
           sinceWeek: entity.since_week,
           untilWeek: entity.until_week,
+          published: entity.published,
           assignaments: entity.assignaments.map((a) =>
             assignamentModel.toModel({
               entity: a,
@@ -152,7 +188,8 @@ class ProgramModel {
           createdAt: entity.created_at,
           updatedAt: entity.updated_at,
           sinceWeek: entity.since_week,
-          untilWeek: entity.until_week
+          untilWeek: entity.until_week,
+          published: entity.published
         };
   }
 

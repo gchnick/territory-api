@@ -1,4 +1,4 @@
-import { NotFount } from '../../shared/models/error-model';
+import { BadRequest, NotFount } from '../../shared/models/error-model';
 
 export class ProgramNotFount extends NotFount {
   constructor(message: string) {
@@ -7,6 +7,18 @@ export class ProgramNotFount extends NotFount {
 }
 
 export class AssignamentNotFount extends NotFount {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+export class DateOutsideProgram extends BadRequest {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+export class AlreadyProgram extends BadRequest {
   constructor(message: string) {
     super(message);
   }

@@ -1,5 +1,8 @@
 import { Request, Response } from 'express';
+import { conductorModel } from '../../conductors/models/conductor';
+import { meetingPlaceModel } from '../../meeting-place/models/meeting-place';
 import { asyncErrorHandler } from '../../shared/controllers/async-error-handler';
+import { assignamentModel } from '../models/assignament';
 import { programModel } from '../models/program';
 
 class ProgramController {
@@ -13,8 +16,8 @@ class ProgramController {
       }
 
       const page = await programModel.getPagination(
-        cursor as string | undefined,
-        future
+        future,
+        cursor as string | undefined
       );
       response.json(page);
     }
@@ -32,6 +35,39 @@ class ProgramController {
     const newProgram = await programModel.create(sinceWeek, daysDuration);
     response.status(201).json(newProgram);
   });
+
+  published = asyncErrorHandler(
+    async (request: Request, response: Response) => {
+      const { id } = request.params;
+
+      let program = await programModel.getById(id);
+      program = await programModel.published(program);
+      response.json(program);
+    }
+  );
+
+  addAssignament = asyncErrorHandler(
+    async (request: Request, response: Response) => {
+      const { programId } = request.params;
+      const { meetingPlaceId, conductorId } = request.body;
+      const _conductorId = String(conductorId);
+      const _meetingPlaceId = String(meetingPlaceId);
+      delete request.body.meetingPlaceId;
+      delete request.body.conductorId;
+
+      const program = await programModel.getById(programId);
+
+      request.body.meetingPlace =
+        await meetingPlaceModel.getById(_meetingPlaceId);
+      request.body.conductor = await conductorModel.getById(_conductorId);
+
+      const newAssignament = await assignamentModel.create(
+        program,
+        request.body
+      );
+      response.status(201).json(newAssignament);
+    }
+  );
 
   update = asyncErrorHandler(async (request: Request, response: Response) => {
     const { id } = request.params;
