@@ -7,7 +7,7 @@ import { prisma } from '../../config/connection';
 export const assignedLockQuery = (id: string) => {
   return prisma.territories.update({
     where: { id },
-    data: { assigned_lock: true }
+    data: { assigned_lock: true },
   });
 };
 
@@ -19,6 +19,6 @@ export const assignedLockQuery = (id: string) => {
 export const assignedUnlockQuery = (id: string, last_date_completed: Date) => {
   return prisma.territories.update({
     where: { id },
-    data: { last_date_completed, assigned_lock: false }
+    data: { last_date_completed, assigned_lock: false },
   });
 };

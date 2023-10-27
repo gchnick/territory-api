@@ -4,7 +4,7 @@ export enum CardinalPoint {
   NORTH = 'NORTH',
   SOUTH = 'SOUTH',
   EAST = 'EAST',
-  WEST = 'WEST'
+  WEST = 'WEST',
 }
 
 export type Limits = Partial<Record<CardinalPoint, string>>;

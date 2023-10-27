@@ -6,6 +6,6 @@ export const getPaginationSchema = z.object({
   query: z.object({
     cursor: uuidSchema.optional(),
     future: booleanSchema.optional(),
-    current: booleanSchema.optional()
-  })
+    current: booleanSchema.optional(),
+  }),
 });

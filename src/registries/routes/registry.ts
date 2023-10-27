@@ -6,7 +6,7 @@ import {
   createSchema,
   getSchema,
   territoryIdParamSchema,
-  updateSchema
+  updateSchema,
 } from '../schemas/registry';
 
 export const registryRouter = Router();

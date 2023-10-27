@@ -2,6 +2,14 @@
 
 This ia a backend that serves as the basis for developing an application for territory servant records.
 
+## Comming soon
+
+- Add Swagger documentation Api
+- Add end to end test per endpoint
+- Add unit test
+- Use Domain Driven Design methodology
+- Use Port and Adapter Architecture
+
 ## Requirements to install
 
 You need to have installed:
@@ -13,7 +21,7 @@ You need to have installed:
 ### 1. Clone the repository
 
 ```
-git clone https://
+git clone https://github.com/gchnick/territory-api.git
 ```
 
 ### 2. Compile the project

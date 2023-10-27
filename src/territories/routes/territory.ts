@@ -7,7 +7,7 @@ import {
   getAllSchema,
   getByNumberSchema,
   setMeetingPlacesSchema,
-  updateSchema
+  updateSchema,
 } from '../schemas/territory';
 
 export const territoryRouter = Router();

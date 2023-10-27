@@ -6,10 +6,10 @@ export const toAvailabilityModel = (
   if (!entity) return undefined;
   const record: Availability = {};
 
-  entity.forEach((a) => {
+  entity.forEach(a => {
     record[a.day as Days] = {
       frequency: a.frequency,
-      moment: Moments[a.moment as Moments]
+      moment: Moments[a.moment as Moments],
     };
   });
 
@@ -29,7 +29,7 @@ export const toAvailabilityEntity = (
       availabilityArray.push({
         day: key,
         frequency: available.frequency,
-        moment: available.moment
+        moment: available.moment,
       });
     }
   }

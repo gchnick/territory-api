@@ -7,21 +7,21 @@ export const createSchema = z.object({
   body: z.object({
     startDate: z.coerce
       .date()
-      .transform((s) => new Date(s))
+      .transform(s => new Date(s))
       .optional(),
-    description: descriptionPeriod
-  })
+    description: descriptionPeriod,
+  }),
 });
 
 export const updateSchema = z.object({
   params: z.object({
-    id: uuidSchema
+    id: uuidSchema,
   }),
   body: z.object({
     description: descriptionPeriod.optional(),
     finishDate: z.coerce
       .date()
-      .transform((s) => new Date(s))
-      .optional()
-  })
+      .transform(s => new Date(s))
+      .optional(),
+  }),
 });

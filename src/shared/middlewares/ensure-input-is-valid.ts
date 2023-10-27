@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject } from 'zod';
 
@@ -7,7 +8,7 @@ export const ensureInputIsValid =
     const result = schema.safeParse({
       params: request.params,
       body: request.body,
-      query: request.query
+      query: request.query,
     });
 
     if (!result.success) {

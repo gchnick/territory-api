@@ -6,7 +6,7 @@ import { assignamentController } from '../controllers/assignament';
 import {
   coveredSchema,
   currentCreateSchema,
-  updateSchema
+  updateSchema,
 } from '../schemas/assignament';
 
 export const assignamentRouter = Router();

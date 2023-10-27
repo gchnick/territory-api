@@ -5,7 +5,7 @@ import { PartialPeriod, Period, PeriodEntity } from './types';
 class PeriodModel {
   getById = async (id: string) => {
     const period = await prisma.registry_periods.findFirst({
-      where: { id }
+      where: { id },
     });
 
     if (!period) {
@@ -17,12 +17,12 @@ class PeriodModel {
 
   getCurrent = async () => {
     const currentPeriod = await prisma.registry_periods.findFirst({
-      where: { finish_date: null }
+      where: { finish_date: null },
     });
 
     if (!currentPeriod) {
       throw new LastPeriodNotFount(
-        `Current registry period not found. Please, create a period`
+        'Current registry period not found. Please, create a period'
       );
     }
 
@@ -31,18 +31,18 @@ class PeriodModel {
 
   create = async (data: Period) => {
     const isStartPeriod = await prisma.registry_periods.findFirst({
-      where: { finish_date: null }
+      where: { finish_date: null },
     });
 
     if (isStartPeriod) {
-      throw new PeriodIsStart(`Period is start. Please, use current period`);
+      throw new PeriodIsStart('Period is start. Please, use current period');
     }
 
     const newPeriod = await prisma.registry_periods.create({
       data: {
         start_date: data.startDate ?? new Date(),
-        description: data.description
-      }
+        description: data.description,
+      },
     });
 
     return this.#toModel(newPeriod);
@@ -53,8 +53,8 @@ class PeriodModel {
       where: { id: period.id },
       data: {
         description: data.description,
-        finish_date: data.finishDate
-      }
+        finish_date: data.finishDate,
+      },
     });
 
     return this.#toModel(updatedPeriod);
@@ -63,7 +63,7 @@ class PeriodModel {
   finishLast = async (currentPeriod: Period) => {
     const finishedPeriod = await prisma.registry_periods.update({
       where: { id: currentPeriod.id },
-      data: { finish_date: new Date() }
+      data: { finish_date: new Date() },
     });
 
     return this.#toModel(finishedPeriod);
@@ -83,7 +83,7 @@ class PeriodModel {
       id: entity.id,
       description: entity.description,
       startDate: entity.start_date,
-      finishDate: entity.finish_date ?? undefined
+      finishDate: entity.finish_date ?? undefined,
     };
   }
 }

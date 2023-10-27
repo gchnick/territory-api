@@ -4,32 +4,32 @@ import { uuidSchema } from '../../shared/schemas/id';
 const createSchema = z.object({
   meetingPlaceId: uuidSchema,
   conductorId: uuidSchema,
-  date: z.coerce.date().transform((s) => new Date(s))
+  date: z.coerce.date().transform(s => new Date(s)),
 });
 
 export const currentCreateSchema = z.object({
-  body: createSchema
+  body: createSchema,
 });
 
 export const createWithProgramSchema = z.object({
   params: z.object({
-    programId: uuidSchema
+    programId: uuidSchema,
   }),
-  body: createSchema
+  body: createSchema,
 });
 
 export const updateSchema = z.object({
   params: z.object({
-    id: uuidSchema
+    id: uuidSchema,
   }),
-  body: createSchema.partial()
+  body: createSchema.partial(),
 });
 
 export const coveredSchema = z.object({
   params: z.object({
-    id: uuidSchema
+    id: uuidSchema,
   }),
   body: z.object({
-    completionDate: z.coerce.date().transform((s) => new Date(s))
-  })
+    completionDate: z.coerce.date().transform(s => new Date(s)),
+  }),
 });
