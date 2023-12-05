@@ -1,6 +1,6 @@
 {
   "name": "territory-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "API Rest to assigning of territories registry",
   "main": "src/app.ts",
   "scripts": {
@@ -13,8 +13,6 @@
     "test:watch": "npm run test -- --watch --silent",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
-    "prettier:format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "prettier:watch": "onchange 'src/**/*.ts' -- prettier --write {{changed}}",
     "generate-db": "npx prisma migrate deploy"
   },
   "keywords": [

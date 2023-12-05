@@ -28,21 +28,13 @@ git clone https://github.com/gchnick/territory-api.git
 
 Run following command:
 
-**To npm**
-
-```
-npm run build
-```
-
-**To yarn**
-
 ```
 yarn build
 ```
 
-### 3. Copy the dist folder
+### 3. Go to dist folder
 
-Copy the dist folder created in your personal path. Now work into this folder.
+Now work into dist folder.
 
 ### 4. Create a `.env` file
 
@@ -57,14 +49,6 @@ PORT=8000
 
 Run following command:
 
-To npm
-
-```
-npm install --production
-```
-
-To yarn
-
 ```
 yarn install --production=true
 ```
@@ -73,14 +57,6 @@ yarn install --production=true
 
 To create the database files of `SQLITE` following command:
 
-**To npm**
-
-```
-npm run generate-db
-```
-
-**To yarn**
-
 ```
 yarn generate-db
 ```
@@ -88,14 +64,6 @@ yarn generate-db
 ### 6. Run server
 
 Run following command:
-
-**To npm**
-
-```
-npm run start
-```
-
-**To yarn**
 
 ```
 yarn start
