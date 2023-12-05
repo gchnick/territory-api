@@ -5,14 +5,14 @@ export enum Days {
   THURSDAY = 'THURSDAY',
   FRIDAY = 'FRIDAY',
   SATURDAY = 'SATURDAY',
-  SUNDAY = 'SUNDAY'
+  SUNDAY = 'SUNDAY',
 }
 
 export enum Moments {
   MORNING = 'MORNING',
   AFTERNOON = 'AFTERNOON',
   EVENING = 'EVENING',
-  NIGHT = 'NIGHT'
+  NIGHT = 'NIGHT',
 }
 
 export type Available = {

@@ -6,6 +6,6 @@ export const setLastDateAssignedQuery = (
 ) => {
   return prisma.conductors.update({
     where: { id },
-    data: { last_date_assigned }
+    data: { last_date_assigned },
   });
 };

@@ -1,7 +1,8 @@
+/* eslint-disable indent */
 import { prisma } from '../../config/connection';
 import {
   completionRegistryQuery,
-  createQuery as createRegistryQuery
+  createQuery as createRegistryQuery,
 } from '../../registries/models/queries';
 import { ASSIGNAMENS_FOR_PAGE, PROGRAMS_FOR_PAGE } from './constants';
 import { AssignamentEntity, ProgramEntity } from './types';
@@ -9,7 +10,7 @@ import { AssignamentEntity, ProgramEntity } from './types';
 // PROGRAMS QUERIES
 export const getProgramByIdQuery = (id: string) => {
   return prisma.programs.findUnique({
-    where: { id }
+    where: { id },
   });
 };
 
@@ -17,8 +18,8 @@ export const getProgramByIdWithAssignamentsQuery = (id: string) => {
   return prisma.programs.findUnique({
     where: { id },
     include: {
-      assignaments: { include: { conductor: true, meeting_place: true } }
-    }
+      assignaments: { include: { conductor: true, meeting_place: true } },
+    },
   });
 };
 
@@ -26,7 +27,7 @@ export const getProgramByAssignamentQuery = (assignamentId: string) => {
   return prisma.programs.findMany({
     where: { assignaments: { some: { id: assignamentId } } },
     orderBy: { created_at: 'desc' },
-    take: 1
+    take: 1,
   });
 };
 
@@ -34,17 +35,17 @@ export const getCurrentProgramQuery = (today: Date) => {
   return prisma.programs.findMany({
     where: {
       since_week: {
-        lte: today // since_week is minor or equal to today
+        lte: today, // since_week is minor or equal to today
       },
       until_week: {
-        gte: today // until_week is mayor or equal to today
-      }
+        gte: today, // until_week is mayor or equal to today
+      },
     },
     include: {
-      assignaments: { include: { conductor: true, meeting_place: true } }
+      assignaments: { include: { conductor: true, meeting_place: true } },
     },
     orderBy: { created_at: 'desc' },
-    take: 1
+    take: 1,
   });
 };
 
@@ -52,20 +53,20 @@ export const getProgramBetweenDaysQuery = (sinceWeek: Date) => {
   return prisma.programs.findMany({
     where: {
       since_week: {
-        lte: sinceWeek // since_week is menor or equal to sinceWeek
+        lte: sinceWeek, // since_week is menor or equal to sinceWeek
       },
       until_week: {
-        gte: sinceWeek // since_week is mayor or equel to untilWeek
-      }
+        gte: sinceWeek, // since_week is mayor or equel to untilWeek
+      },
     },
     orderBy: { created_at: 'desc' },
-    take: 1
+    take: 1,
   });
 };
 
 export const getProgramPaginationQuery = (
   today: Date,
-  future: any,
+  future: unknown,
   cursor?: string
 ) => {
   return !cursor
@@ -75,19 +76,19 @@ export const getProgramPaginationQuery = (
           ? { since_week: { gte: today }, until_week: { gte: today } }
           : { since_week: { lte: today } },
         include: { assignaments: true },
-        orderBy: { created_at: 'desc' }
+        orderBy: { created_at: 'desc' },
       })
     : prisma.programs.findMany({
         take: PROGRAMS_FOR_PAGE,
         skip: 1,
         cursor: {
-          id: cursor
+          id: cursor,
         },
         where: future
           ? { since_week: { gte: today }, until_week: { gte: today } }
           : { since_week: { lte: today } },
         include: { assignaments: true },
-        orderBy: { created_at: 'desc' }
+        orderBy: { created_at: 'desc' },
       });
 };
 
@@ -95,8 +96,8 @@ export const createProgramQuery = (sinceWeek: Date, untilWeek: Date) => {
   return prisma.programs.create({
     data: {
       since_week: sinceWeek,
-      until_week: untilWeek
-    }
+      until_week: untilWeek,
+    },
   });
 };
 
@@ -107,8 +108,8 @@ export const updateProgramQuery = (
   return prisma.programs.update({
     where: { id },
     data: {
-      ...data
-    }
+      ...data,
+    },
   });
 };
 
@@ -116,8 +117,8 @@ export const publishedProgramQuery = (id: string) => {
   return prisma.programs.update({
     where: { id },
     data: {
-      published: true
-    }
+      published: true,
+    },
   });
 };
 
@@ -128,7 +129,7 @@ export const deleteProgramQuery = (id: string) => {
 export const setUpdatedAtProgramQuery = (id: string, updated_at: Date) => {
   return prisma.programs.update({
     where: { id },
-    data: { updated_at }
+    data: { updated_at },
   });
 };
 
@@ -137,7 +138,7 @@ export const setUpdatedAtProgramQuery = (id: string, updated_at: Date) => {
 export const getAssignamentByIdQuery = (id: string) => {
   return prisma.assignaments.findUnique({
     where: { id },
-    include: { conductor: true, meeting_place: true, program: true }
+    include: { conductor: true, meeting_place: true, program: true },
   });
 };
 
@@ -146,13 +147,13 @@ export const getCurrentAssignamentQuery = (currentMoment: Date) => {
     where: { date: { lte: currentMoment } },
     include: { conductor: true, meeting_place: true, program: true },
     orderBy: { date: 'desc' },
-    take: 1
+    take: 1,
   });
 };
 
 export const getAssignamentPaginationQuery = (
   untilWeek: Date,
-  future: any,
+  future: unknown,
   cursor?: string
 ) => {
   return !cursor
@@ -162,19 +163,19 @@ export const getAssignamentPaginationQuery = (
           ? { date: { gte: untilWeek } }
           : { date: { lte: untilWeek } },
         include: { conductor: true, meeting_place: true },
-        orderBy: { date: 'asc' }
+        orderBy: { date: 'asc' },
       })
     : prisma.assignaments.findMany({
         take: ASSIGNAMENS_FOR_PAGE,
         skip: 1,
         cursor: {
-          id: cursor
+          id: cursor,
         },
         where: future
           ? { date: { gte: untilWeek } }
           : { date: { lte: untilWeek } },
         include: { conductor: true, meeting_place: true },
-        orderBy: { date: 'asc' }
+        orderBy: { date: 'asc' },
       });
 };
 
@@ -189,9 +190,9 @@ export const createAssignamentQuery = (
       date,
       coductor_id,
       meeting_place_id,
-      program_id
+      program_id,
     },
-    include: { conductor: true, meeting_place: true }
+    include: { conductor: true, meeting_place: true },
   });
 };
 
@@ -216,7 +217,7 @@ export const createAssignamentWithNewRegistryQuery = (
       conductor_id,
       meeting_place_id,
       program_id
-    )
+    ),
   ];
 };
 
@@ -229,8 +230,8 @@ export const updateAssignamentQuery = (
   const updateQuery = prisma.assignaments.update({
     where: { id },
     data: {
-      ...data
-    }
+      ...data,
+    },
   });
   return programPublished
     ? [updateQuery, setUpdatedAtProgramQuery(programId, new Date())]
@@ -249,7 +250,7 @@ export const coveredAssignementQuery = (
       noCompletionRegistryId,
       completionDate
     ),
-    prisma.assignaments.update({ where: { id }, data: { covered: true } })
+    prisma.assignaments.update({ where: { id }, data: { covered: true } }),
   ];
 };
 

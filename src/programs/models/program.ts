@@ -13,7 +13,7 @@ import {
   getProgramByIdQuery,
   getProgramPaginationQuery,
   publishedProgramQuery,
-  updateProgramQuery
+  updateProgramQuery,
 } from './queries';
 import {
   Assignament,
@@ -21,7 +21,7 @@ import {
   PartialProgram,
   Program,
   ProgramEntity,
-  ProgramEntityWithAssignaments
+  ProgramEntityWithAssignaments,
 } from './types';
 
 class ProgramModel {
@@ -37,10 +37,10 @@ class ProgramModel {
 
   getByAssignament = async (assignament: Assignament) => {
     if (!assignament.id) {
-      throw new InvalidParams(`Invalid params to get program`);
+      throw new InvalidParams('Invalid params to get program');
     }
     const [program] = await prisma.$transaction([
-      getProgramByAssignamentQuery(assignament.id)
+      getProgramByAssignamentQuery(assignament.id),
     ]);
 
     if (program.length === 0) {
@@ -56,36 +56,36 @@ class ProgramModel {
     const today = new Date();
 
     const [currentProgram] = await prisma.$transaction([
-      getCurrentProgramQuery(today)
+      getCurrentProgramQuery(today),
     ]);
 
     if (currentProgram.length === 0) {
       throw new ProgramNotFount(
-        `Current program not fount. Please, create a program`
+        'Current program not fount. Please, create a program'
       );
     }
 
     return this.toModel(currentProgram[0]);
   };
 
-  getPagination = async (future: any, cursor?: string) => {
+  getPagination = async (future: unknown, cursor?: string) => {
     const today = firthHours(new Date());
     let page: Entity[] = [];
 
     if (!cursor) {
       [page] = await prisma.$transaction([
-        getProgramPaginationQuery(today, future)
+        getProgramPaginationQuery(today, future),
       ]);
     }
 
     if (cursor) {
       [page] = await prisma.$transaction([
-        getProgramPaginationQuery(today, future, cursor)
+        getProgramPaginationQuery(today, future, cursor),
       ]);
     }
 
     if (page.length === 0) {
-      throw new ProgramNotFount(`Page of programs not fount.`);
+      throw new ProgramNotFount('Page of programs not fount.');
     }
 
     const _cursor =
@@ -96,8 +96,8 @@ class ProgramModel {
     return page.length === 1
       ? page[0]
       : {
-          data: page.map((p) => this.toModel(p)),
-          cursor: _cursor
+          data: page.map(p => this.toModel(p)),
+          cursor: _cursor,
         };
   };
 
@@ -106,7 +106,7 @@ class ProgramModel {
     untilWeek = lastHours(untilWeek);
 
     const [exist] = await prisma.$transaction([
-      getProgramBetweenDaysQuery(sinceWeek)
+      getProgramBetweenDaysQuery(sinceWeek),
     ]);
 
     if (exist[0]?.id) {
@@ -116,7 +116,7 @@ class ProgramModel {
     }
 
     const [newProgra] = await prisma.$transaction([
-      createProgramQuery(sinceWeek, untilWeek)
+      createProgramQuery(sinceWeek, untilWeek),
     ]);
 
     return this.toModel(newProgra);
@@ -124,22 +124,22 @@ class ProgramModel {
 
   update = async (program: Program, data: PartialProgram) => {
     if (!program.id) {
-      throw new InvalidParams(`Invalid params to update program`);
+      throw new InvalidParams('Invalid params to update program');
     }
 
     const test = {
       ...program,
-      ...data
+      ...data,
     };
 
     if (test.sinceWeek >= test.untilWeek) {
       throw new InvalidParams(
-        `The start and end dates of the program are incongruent`
+        'The start and end dates of the program are incongruent'
       );
     }
 
     const [updatedProgram] = await prisma.$transaction([
-      updateProgramQuery(program.id, this.#toEntity(data))
+      updateProgramQuery(program.id, this.#toEntity(data)),
     ]);
 
     return this.toModel(updatedProgram);
@@ -147,11 +147,11 @@ class ProgramModel {
 
   published = async (program: Program) => {
     if (!program.id) {
-      throw new InvalidParams(`Invalid params to set published program`);
+      throw new InvalidParams('Invalid params to set published program');
     }
 
     const [programPublished] = await prisma.$transaction([
-      publishedProgramQuery(program.id)
+      publishedProgramQuery(program.id),
     ]);
 
     return this.toModel(programPublished);
@@ -175,13 +175,13 @@ class ProgramModel {
           sinceWeek: entity.since_week,
           untilWeek: entity.until_week,
           published: entity.published,
-          assignaments: entity.assignaments.map((a) =>
+          assignaments: entity.assignaments.map(a =>
             assignamentModel.toModel({
               entity: a,
               conductor: a.conductor,
-              meetingPlace: a.meeting_place
+              meetingPlace: a.meeting_place,
             })
-          )
+          ),
         }
       : {
           id: entity.id,
@@ -189,14 +189,14 @@ class ProgramModel {
           updatedAt: entity.updated_at,
           sinceWeek: entity.since_week,
           untilWeek: entity.until_week,
-          published: entity.published
+          published: entity.published,
         };
   }
 
   #toEntity(model: PartialProgram): Partial<ProgramEntity> {
     return {
       since_week: model.sinceWeek,
-      until_week: model.untilWeek
+      until_week: model.untilWeek,
     };
   }
 

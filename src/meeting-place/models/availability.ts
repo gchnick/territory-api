@@ -12,14 +12,14 @@ class AvailabilityModel {
   ) => {
     if (!meetingPlace.id) {
       throw new InvalidParams(
-        `Invalid params to set availability of meeting place`
+        'Invalid params to set availability of meeting place'
       );
     }
 
     // Delete all availability info
     if (meetingPlace.availability) {
       await prisma.meeting_place_availability.deleteMany({
-        where: { meeting_place_id: meetingPlace.id }
+        where: { meeting_place_id: meetingPlace.id },
       });
     }
 
@@ -30,9 +30,9 @@ class AvailabilityModel {
         phone: data.phone,
         field_service: data.fieldService,
         availability: {
-          create: toAvailabilityEntity(data.availability)
-        }
-      }
+          create: toAvailabilityEntity(data.availability),
+        },
+      },
     });
 
     return meetingPlaceModel.toModel(updatedMeetingPlace);
@@ -41,12 +41,12 @@ class AvailabilityModel {
   delete = async (meetingPlaceId: string) => {
     try {
       await prisma.meeting_place_availability.deleteMany({
-        where: { meeting_place_id: meetingPlaceId }
+        where: { meeting_place_id: meetingPlaceId },
       });
 
       await prisma.meeting_places.update({
         where: { id: meetingPlaceId },
-        data: { phone: null, field_service: false }
+        data: { phone: null, field_service: false },
       });
     } catch (e) {
       console.log(`Meeting place with id '${meetingPlaceId} not found.'`);

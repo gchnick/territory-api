@@ -16,7 +16,7 @@ export const errorHandlerMiddleware = (
   }
 
   let httpCode = HttpStatusCode.INTERNAL_SERVER_ERROR;
-  let message: any;
+  let message: unknown;
   let name = '';
   let stack: string | undefined;
 

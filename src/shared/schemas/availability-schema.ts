@@ -5,6 +5,6 @@ export const availabilitySchema = z.record(
   z.nativeEnum(Days),
   z.object({
     frequency: z.string().nonempty(),
-    moment: z.nativeEnum(Moments)
+    moment: z.nativeEnum(Moments),
   })
 );

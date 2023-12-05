@@ -3,7 +3,7 @@ import { Availability, AvailabilityEntity } from '../../shared/models/types';
 export enum Privilegies {
   GROUP_OVERSEER = 'GROUP_OVERSEER',
   GROUP_SERVANT = 'GROUP_SERVANT',
-  QUALIFIED_BROTHER = 'QUALIFIED_BROTHER'
+  QUALIFIED_BROTHER = 'QUALIFIED_BROTHER',
 }
 
 export type Conductor = {

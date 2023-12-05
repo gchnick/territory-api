@@ -7,21 +7,21 @@ import {
   ConductorWithAvailability,
   Entity,
   PartialConductor,
-  Privilegies
+  Privilegies,
 } from './types';
 
 class ConductorModel {
   getAll = async () => {
     const conductors = await prisma.conductors.findMany({
-      include: { availability: true }
+      include: { availability: true },
     });
-    return conductors.map((c) => this.toModel(c));
+    return conductors.map(c => this.toModel(c));
   };
 
   getById = async (id: string) => {
     const conductor = await prisma.conductors.findUnique({
       where: { id },
-      include: { availability: true }
+      include: { availability: true },
     });
 
     if (conductor === null) {
@@ -45,8 +45,8 @@ class ConductorModel {
         mobile_phone: data.mobilePhone,
         service_group: data.serviceGroup,
         privilege: data.privilege,
-        last_date_assigned: data.lastDateAssigned ?? new Date()
-      }
+        last_date_assigned: data.lastDateAssigned ?? new Date(),
+      },
     });
 
     return this.toModel(newConductor);
@@ -57,8 +57,8 @@ class ConductorModel {
       where: { id: conductor.id },
       include: { availability: true },
       data: {
-        ...this.#toEntity(data)
-      }
+        ...this.#toEntity(data),
+      },
     });
 
     return this.toModel(updatedConductor);
@@ -82,7 +82,7 @@ class ConductorModel {
           serviceGroup: entity.service_group,
           lastDateAssigned: entity.last_date_assigned,
           privilege: Privilegies[entity.privilege as Privilegies],
-          availability: toAvailabilityModel(entity.availability)
+          availability: toAvailabilityModel(entity.availability),
         }
       : {
           id: entity.id,
@@ -90,7 +90,7 @@ class ConductorModel {
           mobilePhone: entity.mobile_phone,
           serviceGroup: entity.service_group,
           lastDateAssigned: entity.last_date_assigned,
-          privilege: Privilegies[entity.privilege as Privilegies]
+          privilege: Privilegies[entity.privilege as Privilegies],
         };
   }
 
@@ -111,14 +111,14 @@ class ConductorModel {
       mobile_phone: model.mobilePhone,
       service_group: model.serviceGroup,
       privilege: model.privilege,
-      last_date_assigned: model.lastDateAssigned ?? new Date()
+      last_date_assigned: model.lastDateAssigned ?? new Date(),
     };
   }
 
   async #isMobilePhoneUnique(phone: string) {
     const number = await prisma.conductors.findUnique({
       select: { mobile_phone: true },
-      where: { mobile_phone: phone }
+      where: { mobile_phone: phone },
     });
     return number === null;
   }

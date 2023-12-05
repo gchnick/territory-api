@@ -8,23 +8,23 @@ const meetingPlaceSchema = z.object({
   place: z.string().nonempty().max(200),
   latitude: z
     .string()
-    .refine((s) => isLatitudeRegex.test(s), {
-      message: 'The string must be a latitude coordiante'
+    .refine(s => isLatitudeRegex.test(s), {
+      message: 'The string must be a latitude coordiante',
     })
     .optional(),
   longitude: z
     .string()
-    .refine((s) => isLongitudeRegex.test(s), {
-      message: 'The string must be a longitude coordiante'
+    .refine(s => isLongitudeRegex.test(s), {
+      message: 'The string must be a longitude coordiante',
     })
-    .optional()
+    .optional(),
 });
 
 export const meetingPlacesSchema = meetingPlaceSchema.array();
 
 export const updateMeetingPlaceSchema = z.object({
   params: z.object({
-    id: uuidSchema
+    id: uuidSchema,
   }),
-  body: meetingPlaceSchema
+  body: meetingPlaceSchema,
 });

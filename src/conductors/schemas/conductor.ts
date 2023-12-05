@@ -4,7 +4,7 @@ import { PhoneSchema } from '../../shared/schemas/phone';
 import { Privilegies } from '../models/types';
 
 const conductorIdParam = z.object({
-  id: uuidSchema
+  id: uuidSchema,
 });
 
 const conductorSchema = z.object({
@@ -15,15 +15,15 @@ const conductorSchema = z.object({
   lastDateAssigned: z.coerce
     .date()
     .max(new Date())
-    .transform((s) => new Date(s))
-    .optional()
+    .transform(s => new Date(s))
+    .optional(),
 });
 
 export const createSchema = z.object({
-  body: conductorSchema
+  body: conductorSchema,
 });
 
 export const updateSchema = z.object({
   params: conductorIdParam,
-  body: conductorSchema.partial()
+  body: conductorSchema.partial(),
 });

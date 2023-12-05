@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { json } from 'express';
 import { availabilityRouter as conductorAvailabilityRouter } from './conductors/routes/availability';
 import { conductorRouter } from './conductors/routes/conductor';
@@ -12,7 +13,7 @@ import { errorHandlerMiddleware } from './shared/middlewares/error-handler';
 import { invalidPathMiddleware } from './shared/middlewares/invalid-path';
 import { territoryRouter } from './territories/routes/territory';
 
-const app = express();
+export const app = express();
 app.use(json());
 app.use(corsMiddleware());
 app.disable('x-powered-by');

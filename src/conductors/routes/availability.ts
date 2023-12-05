@@ -4,7 +4,7 @@ import { ensureInputIsValid } from '../../shared/middlewares/ensure-input-is-val
 import { availabilityController } from '../controllers/availability';
 import {
   setAvailabilitySchema,
-  uuidParamSchema
+  uuidParamSchema,
 } from '../schemas/availability';
 
 export const availabilityRouter = Router();

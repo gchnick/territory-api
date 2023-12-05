@@ -2,21 +2,21 @@ import { setLastDateAssignedQuery } from '../../conductors/models/queries';
 import { prisma } from '../../config/connection';
 import {
   assignedLockQuery,
-  assignedUnlockQuery
+  assignedUnlockQuery,
 } from '../../territories/models/queries';
 import { PartialRegistryEntity } from './types';
 
 export const getAllByTerritoryQuery = (territory_id: string | undefined) => {
   return prisma.registries.findMany({
     where: { territory_id },
-    include: { conductor: true }
+    include: { conductor: true },
   });
 };
 
 export const getByIdQuery = (id: string) => {
   return prisma.registries.findUnique({
     where: { id },
-    include: { territory: true, conductor: true }
+    include: { territory: true, conductor: true },
   });
 };
 
@@ -24,12 +24,12 @@ export const lastRegistryQuery = (territory_id: string | undefined) => {
   return prisma.registries.findFirst({
     where: { territory_id },
     include: {
-      conductor: true
+      conductor: true,
     },
     orderBy: {
-      assigned_date: 'desc'
+      assigned_date: 'desc',
     },
-    take: 1
+    take: 1,
   });
 };
 
@@ -39,12 +39,12 @@ export const noCompletionByTerritoryQuery = (
   return prisma.registries.findFirst({
     where: { territory_id, completion_date: null },
     include: {
-      conductor: true
+      conductor: true,
     },
     orderBy: {
-      assigned_date: 'desc'
+      assigned_date: 'desc',
     },
-    take: 1
+    take: 1,
   });
 };
 
@@ -53,7 +53,7 @@ export const registriesPerPeriodCountQuery = (
   territory_id: string | undefined
 ) => {
   return prisma.registries.count({
-    where: { registry_period_id, territory_id }
+    where: { registry_period_id, territory_id },
   });
 };
 
@@ -71,11 +71,11 @@ export const createQuery = (
         territory_id,
         conductor_id,
         assigned_date,
-        completion_date
-      }
+        completion_date,
+      },
     }),
     assignedLockQuery(territory_id),
-    setLastDateAssignedQuery(conductor_id, assigned_date)
+    setLastDateAssignedQuery(conductor_id, assigned_date),
   ];
 };
 
@@ -89,9 +89,9 @@ export const completionRegistryQuery = (
     prisma.registries.update({
       where: { id: noCompletionRegistryId },
       data: {
-        completion_date
-      }
-    })
+        completion_date,
+      },
+    }),
   ];
 };
 
@@ -103,8 +103,8 @@ export const updateLastRegistryQuery = (
   const updateQuery = prisma.registries.update({
     where: { id: lastRegistryId },
     data: {
-      ...data
-    }
+      ...data,
+    },
   });
   return data.completion_date
     ? [assignedUnlockQuery(territoryId, data.completion_date), updateQuery]

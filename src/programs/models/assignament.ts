@@ -18,20 +18,20 @@ import {
   getAssignamentByIdQuery,
   getAssignamentPaginationQuery,
   getCurrentAssignamentQuery,
-  updateAssignamentQuery
+  updateAssignamentQuery,
 } from './queries';
 import {
   Assignament,
   AssignamentEntity,
   AssignamentEntityWithConductorAndMeetingPlace,
   PartialAssignament,
-  Program
+  Program,
 } from './types';
 
 class AssignamentModel {
   getById = async (id: string) => {
     const [assignament] = await prisma.$transaction([
-      getAssignamentByIdQuery(id)
+      getAssignamentByIdQuery(id),
     ]);
 
     if (assignament === null) {
@@ -41,27 +41,27 @@ class AssignamentModel {
     const {
       id: _id,
       sinceWeek,
-      untilWeek
+      untilWeek,
     } = programModel.toModel(assignament.program);
 
     return {
       ...this.toModel({
         entity: assignament,
         conductor: assignament.conductor,
-        meetingPlace: assignament.meeting_place
+        meetingPlace: assignament.meeting_place,
       }),
       program: {
         id: _id,
         sinceWeek,
-        untilWeek
-      }
+        untilWeek,
+      },
     };
   };
 
   getCurrent = async () => {
     const currentMoment = new Date();
     const [currentAssignament] = await prisma.$transaction([
-      getCurrentAssignamentQuery(currentMoment)
+      getCurrentAssignamentQuery(currentMoment),
     ]);
 
     const assignament = currentAssignament[0];
@@ -69,44 +69,44 @@ class AssignamentModel {
     const {
       id: _id,
       sinceWeek,
-      untilWeek
+      untilWeek,
     } = programModel.toModel(assignament.program);
 
     return {
       ...this.toModel({
         entity: assignament,
         conductor: assignament.conductor,
-        meetingPlace: assignament.meeting_place
+        meetingPlace: assignament.meeting_place,
       }),
       program: {
         id: _id,
         sinceWeek,
-        untilWeek
-      }
+        untilWeek,
+      },
     };
   };
 
   getPagination = async (
     program: Program,
     cursor: string | undefined,
-    future: any
+    future: unknown
   ) => {
     let page: AssignamentEntityWithConductorAndMeetingPlace[] = [];
 
     if (!cursor) {
       [page] = await prisma.$transaction([
-        getAssignamentPaginationQuery(program.untilWeek, future)
+        getAssignamentPaginationQuery(program.untilWeek, future),
       ]);
     }
 
     if (cursor) {
       [page] = await prisma.$transaction([
-        getAssignamentPaginationQuery(program.untilWeek, future, cursor)
+        getAssignamentPaginationQuery(program.untilWeek, future, cursor),
       ]);
     }
 
     if (page.length === 0) {
-      throw new AssignamentNotFount(`Page of assignaments not fount.`);
+      throw new AssignamentNotFount('Page of assignaments not fount.');
     }
 
     const _cursor =
@@ -119,18 +119,18 @@ class AssignamentModel {
           ...this.toModel({
             entity: page[0],
             conductor: page[0].conductor,
-            meetingPlace: page[0].meeting_place
-          })
+            meetingPlace: page[0].meeting_place,
+          }),
         }
       : {
-          data: page.map((a) =>
+          data: page.map(a =>
             this.toModel({
               entity: a,
               conductor: a.conductor,
-              meetingPlace: a.meeting_place
+              meetingPlace: a.meeting_place,
             })
           ),
-          cursor: _cursor
+          cursor: _cursor,
         };
   };
 
@@ -146,7 +146,7 @@ class AssignamentModel {
     const conductorId = assignament.conductor.id;
 
     if (!programId || !meetingPlaceId || !conductorId) {
-      throw new InvalidParams(`Invalid params to create assignament`);
+      throw new InvalidParams('Invalid params to create assignament');
     }
 
     if (
@@ -164,7 +164,7 @@ class AssignamentModel {
     const territoryId = territory.id;
 
     if (!territoryId) {
-      throw new InvalidParams(`Invalid params to create assignament`);
+      throw new InvalidParams('Invalid params to create assignament');
     }
 
     if (!territory.isLocked) {
@@ -194,13 +194,13 @@ class AssignamentModel {
         conductorId,
         meetingPlaceId,
         programId
-      )
+      ),
     ]);
 
     return this.toModel({
       entity: newAssignament,
       conductor: newAssignament.conductor,
-      meetingPlace: newAssignament.meeting_place
+      meetingPlace: newAssignament.meeting_place,
     });
   };
 
@@ -215,7 +215,7 @@ class AssignamentModel {
     const program = await programModel.getByAssignament(assignament);
 
     if (!program.id) {
-      throw new InvalidParams(`Invalid params to update assignament`);
+      throw new InvalidParams('Invalid params to update assignament');
     }
 
     if (
@@ -238,7 +238,7 @@ class AssignamentModel {
 
     const assignamentModel: Assignament = {
       ...assignament,
-      ...data
+      ...data,
     };
 
     return assignamentModel;
@@ -251,11 +251,11 @@ class AssignamentModel {
     completionDate: Date
   ) => {
     if (!assignament.id || !territory.id || !noCompletionRegistry.id) {
-      throw new InvalidParams(`Invalid params to update covered assignament`);
+      throw new InvalidParams('Invalid params to update covered assignament');
     }
 
     if (assignament.date > completionDate) {
-      throw new InvalidParams(`The completion date is incongruent`);
+      throw new InvalidParams('The completion date is incongruent');
     }
 
     await prisma.$transaction(
@@ -284,7 +284,7 @@ class AssignamentModel {
   toModel({
     entity,
     conductor,
-    meetingPlace
+    meetingPlace,
   }: {
     entity: AssignamentEntity;
     conductor: ConductorEntity;
@@ -295,7 +295,7 @@ class AssignamentModel {
       date: entity.date,
       conductor: conductorModel.toModel(conductor),
       meetingPlace: meetingPlaceModel.toModel(meetingPlace),
-      covered: entity.covered
+      covered: entity.covered,
     };
   }
 
@@ -304,7 +304,7 @@ class AssignamentModel {
       date: model.date,
       coductor_id: model.conductor?.id,
       meeting_place_id: model.meetingPlace?.id,
-      covered: model.covered
+      covered: model.covered,
     };
   }
 }

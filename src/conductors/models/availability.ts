@@ -1,7 +1,7 @@
 import { prisma } from '../../config/connection';
 import {
   toAvailabilityEntity,
-  toAvailabilityModel
+  toAvailabilityModel,
 } from '../../shared/models/availability';
 import { Availability } from '../../shared/models/types';
 import { Conductor } from './types';
@@ -11,7 +11,7 @@ class AvailabilityModel {
     // Delete all availability info
     if (conductor.availability) {
       await prisma.meeting_place_availability.deleteMany({
-        where: { meeting_place_id: conductor.id }
+        where: { meeting_place_id: conductor.id },
       });
     }
 
@@ -20,9 +20,9 @@ class AvailabilityModel {
       select: { availability: true },
       data: {
         availability: {
-          create: toAvailabilityEntity(data)
-        }
-      }
+          create: toAvailabilityEntity(data),
+        },
+      },
     });
 
     const updatedConductor = structuredClone(conductor);
@@ -34,7 +34,7 @@ class AvailabilityModel {
   delete = async (conductorId: string) => {
     try {
       await prisma.conductor_availability.deleteMany({
-        where: { conductor_id: conductorId }
+        where: { conductor_id: conductorId },
       });
     } catch (e) {
       console.log(`Conductor with id '${conductorId} not found.'`);

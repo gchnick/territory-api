@@ -9,7 +9,7 @@ import {
   MeetingPlace,
   MeetingPlaceEntity,
   MeetingPlaceEntityWithAvailability,
-  PartialMeetingPlace
+  PartialMeetingPlace,
 } from '../types';
 import { MeetingPlaceNotFount } from './errors';
 
@@ -17,7 +17,7 @@ class MeetingPlaceModel {
   getById = async (id: string) => {
     const meetingPlace = await prisma.meeting_places.findFirst({
       where: { id },
-      include: { availability: true }
+      include: { availability: true },
     });
 
     if (!meetingPlace)
@@ -29,7 +29,7 @@ class MeetingPlaceModel {
   getTerritory = async (meetingPlace: MeetingPlace) => {
     const search = await prisma.meeting_places.findUnique({
       where: { id: meetingPlace.id },
-      select: { territory: true }
+      select: { territory: true },
     });
 
     if (!search) {
@@ -55,20 +55,20 @@ class MeetingPlaceModel {
     // Delete all meeting places of territory in database
     if (territory.meetingPlaces && territory.meetingPlaces.length > 0) {
       await prisma.meeting_places.deleteMany({
-        where: { territory_id: territoryId }
+        where: { territory_id: territoryId },
       });
     }
 
     // Create new meeting places of territory in databse
-    for (let value of data) {
+    for (const value of data) {
       const meeting = await prisma.meeting_places.create({
         include: { availability: true },
         data: {
           territory_id: territoryId,
           place: value.place,
           latitude: value.latitude,
-          longitude: value.longitude
-        }
+          longitude: value.longitude,
+        },
       });
 
       meetingPlaces.push(this.toModel(meeting));
@@ -86,8 +86,8 @@ class MeetingPlaceModel {
       data: {
         place: data.place,
         latitude: data.latitude,
-        longitude: data.longitude
-      }
+        longitude: data.longitude,
+      },
     });
 
     return this.toModel(updatedMeetingPlace);
@@ -96,12 +96,12 @@ class MeetingPlaceModel {
   delete = async (id: string) => {
     const exist = await prisma.meeting_places.findFirst({
       where: { id },
-      select: { id: true }
+      select: { id: true },
     });
 
     exist &&
       (await prisma.meeting_places.delete({
-        where: { id }
+        where: { id },
       }));
   };
 
@@ -114,7 +114,7 @@ class MeetingPlaceModel {
           fieldService: entity.field_service,
           latitude: entity.latitude ?? undefined,
           longitude: entity.longitude ?? undefined,
-          availability: toAvailabilityModel(entity.availability)
+          availability: toAvailabilityModel(entity.availability),
         }
       : {
           id: entity.id,
@@ -122,7 +122,7 @@ class MeetingPlaceModel {
           phone: entity.phone ?? undefined,
           fieldService: entity.field_service,
           latitude: entity.latitude ?? undefined,
-          longitude: entity.longitude ?? undefined
+          longitude: entity.longitude ?? undefined,
         };
   }
 
@@ -133,7 +133,7 @@ class MeetingPlaceModel {
       phone: model.phone,
       latitude: model.latitude,
       longitude: model.longitude,
-      field_service: model.fieldService
+      field_service: model.fieldService,
     };
   }
 

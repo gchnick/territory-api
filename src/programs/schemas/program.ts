@@ -4,23 +4,23 @@ import { uuidSchema } from '../../shared/schemas/id';
 
 export const createSchema = z.object({
   body: z.object({
-    sinceWeek: z.coerce.date().transform((s) => firthHours(s)),
-    daysDuration: z.number().int().min(1).max(10).default(7)
-  })
+    sinceWeek: z.coerce.date().transform(s => firthHours(s)),
+    daysDuration: z.number().int().min(1).max(10).default(7),
+  }),
 });
 
 export const updateSchema = z.object({
   params: z.object({
-    id: uuidSchema
+    id: uuidSchema,
   }),
   body: z.object({
     sinceWeek: z.coerce
       .date()
-      .transform((s) => new Date(s))
+      .transform(s => new Date(s))
       .optional(),
     untilWeek: z.coerce
       .date()
-      .transform((s) => lastHours(s))
-      .optional()
-  })
+      .transform(s => lastHours(s))
+      .optional(),
+  }),
 });

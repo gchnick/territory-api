@@ -5,9 +5,9 @@ export const asyncErrorHandler = (
     request: Request,
     response: Response,
     next: NextFunction
-  ) => Promise<any>
+  ) => Promise<unknown>
 ) => {
   return async (request: Request, response: Response, next: NextFunction) => {
-    func(request, response, next).catch((error) => next(error));
+    func(request, response, next).catch(error => next(error));
   };
 };

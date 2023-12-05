@@ -1,7 +1,7 @@
 import { conductorModel } from '../../conductors/models/conductor';
 import {
   Conductor,
-  Entity as ConductorEntity
+  Entity as ConductorEntity,
 } from '../../conductors/models/types';
 import { prisma } from '../../config/connection';
 import { currentDateWithoutHours } from '../../shared/models/date';
@@ -10,13 +10,13 @@ import { TerritoryIsLocked } from '../../territories/models/errors';
 import { territoryModel } from '../../territories/models/territory';
 import {
   Territory,
-  Entity as TerritoryEntity
+  Entity as TerritoryEntity,
 } from '../../territories/models/types';
 import { MAX_REGISTRIES_PER_PERIOD } from './constants';
 import {
   LastRegistryNotFount,
   MaximumRecordsReached,
-  RegistryNotFount
+  RegistryNotFount,
 } from './errors';
 import {
   completionRegistryQuery,
@@ -27,14 +27,14 @@ import {
   lastRegistryQuery,
   noCompletionByTerritoryQuery,
   registriesPerPeriodCountQuery,
-  updateLastRegistryQuery
+  updateLastRegistryQuery,
 } from './queries';
 import {
   PartialRegistry,
   PartialRegistryEntity,
   Period,
   Registry,
-  RegistryEntity
+  RegistryEntity,
 } from './types';
 
 class RegistryModel {
@@ -48,13 +48,13 @@ class RegistryModel {
     return this.#toModel({
       entity: registry,
       territoryAssigned: registry.territory,
-      assignedTo: registry.conductor
+      assignedTo: registry.conductor,
     });
   };
 
   getLastByTerritory = async (territory: Territory) => {
     const [lastRegistry] = await prisma.$transaction([
-      lastRegistryQuery(territory.id)
+      lastRegistryQuery(territory.id),
     ]);
 
     if (lastRegistry === null)
@@ -64,7 +64,7 @@ class RegistryModel {
 
     const registryModel = this.#toModel({
       entity: lastRegistry,
-      assignedTo: lastRegistry.conductor
+      assignedTo: lastRegistry.conductor,
     });
 
     registryModel.territoryAssigned = territory;
@@ -74,7 +74,7 @@ class RegistryModel {
 
   getNoCompletionByTerritory = async (territory: Territory) => {
     const [noCompletionRegistry] = await prisma.$transaction([
-      noCompletionByTerritoryQuery(territory.id)
+      noCompletionByTerritoryQuery(territory.id),
     ]);
 
     if (noCompletionRegistry === null)
@@ -84,7 +84,7 @@ class RegistryModel {
 
     const registryModel = this.#toModel({
       entity: noCompletionRegistry,
-      assignedTo: noCompletionRegistry.conductor
+      assignedTo: noCompletionRegistry.conductor,
     });
 
     registryModel.territoryAssigned = territory;
@@ -94,17 +94,17 @@ class RegistryModel {
 
   getAllByTerritory = async (territory: Territory) => {
     const [registries] = await prisma.$transaction([
-      getAllByTerritoryQuery(territory.id)
+      getAllByTerritoryQuery(territory.id),
     ]);
 
     return {
       territory,
-      registries: registries.map((r) =>
+      registries: registries.map(r =>
         this.#toModel({
           entity: r,
-          assignedTo: r.conductor
+          assignedTo: r.conductor,
         })
-      )
+      ),
     };
   };
 
@@ -122,12 +122,15 @@ class RegistryModel {
       );
 
     const [registriesPerPeriod] = await prisma.$transaction([
-      registriesPerPeriodCountQuery(currentPeriod.id, data.territoryAssigned.id)
+      registriesPerPeriodCountQuery(
+        currentPeriod.id,
+        data.territoryAssigned.id
+      ),
     ]);
 
     if (registriesPerPeriod >= MAX_REGISTRIES_PER_PERIOD) {
       throw new MaximumRecordsReached(
-        `The maximum of registrations per period has been reached`
+        'The maximum of registrations per period has been reached'
       );
     }
 
@@ -177,11 +180,11 @@ class RegistryModel {
 
     const test = {
       ...registry,
-      ...data
+      ...data,
     };
 
     if (test.completionDate && test.assignedDate > test.completionDate) {
-      throw new InvalidParams(`Competion date is incongruent`);
+      throw new InvalidParams('Competion date is incongruent');
     }
 
     await prisma.$transaction(
@@ -194,7 +197,7 @@ class RegistryModel {
 
     const updatedRegistry = {
       ...registry,
-      ...data
+      ...data,
     };
 
     return updatedRegistry;
@@ -212,7 +215,7 @@ class RegistryModel {
   #toModel({
     entity,
     territoryAssigned,
-    assignedTo
+    assignedTo,
   }: {
     entity: RegistryEntity;
     territoryAssigned?: TerritoryEntity;
@@ -234,7 +237,7 @@ class RegistryModel {
       territoryAssigned: territory,
       assignedTo: conductor,
       assignedDate: entity.assigned_date,
-      completionDate: entity.completion_date ?? undefined
+      completionDate: entity.completion_date ?? undefined,
     };
   }
 
@@ -244,7 +247,7 @@ class RegistryModel {
       territory_id: model.territoryAssigned?.id,
       conductor_id: model.assignedTo?.id,
       assigned_date: model.assignedDate,
-      completion_date: model.completionDate
+      completion_date: model.completionDate,
     };
   }
 }
