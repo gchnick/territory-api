@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { NEST_ROOT_PROVIDERS } from './shared/infrastructure/dependencies/constants';
+import { TerritoryModule } from './territories/infrastructure/controllers/territory.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [TerritoryModule],
+  controllers: [],
+  providers: NEST_ROOT_PROVIDERS,
 })
 export class AppModule {}
