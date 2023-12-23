@@ -1,8 +1,6 @@
 import { Nullable } from 'src/shared/domain/nullable';
-import {
-  Availability,
-  MeetingPlaceAvailability,
-} from './meeting-place-availability';
+import { Availability } from '../interfaces/meeting-place.interface';
+import { MeetingPlaceAvailability } from './meeting-place-availability';
 import { MeetingPlaceFieldService } from './meeting-place-field-service';
 import { MeetingPlaceId } from './meeting-place-id';
 import { MeetingPlaceLabel } from './meeting-place-label';
@@ -63,13 +61,11 @@ export class MeetingPlace {
     return {
       id: this.id.value,
       place: this.place.value,
-      phone: this.phone ? this.phone.value : this.phone,
+      phone: this.phone ? this.phone.value : undefined,
       latitude: this.latitude.value,
       longitude: this.longitude.value,
       fieldService: this.fieldService.value,
-      availability: this.availability
-        ? this.availability.values
-        : this.availability,
+      availability: this.availability ? this.availability.values : undefined,
     };
   }
 }

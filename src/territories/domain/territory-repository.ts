@@ -18,7 +18,7 @@ export abstract class TerritoryRepository {
     return await this.saveOrm(territory);
   }
 
-  abstract saveOrm(territory: Territory): Promise<TerritoryId>;
+  protected abstract saveOrm(territory: Territory): Promise<TerritoryId>;
 
   abstract searchAll(): Promise<Array<Territory>>;
 
@@ -42,7 +42,7 @@ export abstract class TerritoryRepository {
     return await this.updateOrm(number, territory);
   }
 
-  abstract updateOrm(
+  protected abstract updateOrm(
     number: TerritoryNumber,
     data: PartialITerritory,
   ): Promise<Territory>;
@@ -54,7 +54,7 @@ export abstract class TerritoryRepository {
     }
   }
 
-  abstract deleteOrm(id: TerritoryId): Promise<void>;
+  protected abstract deleteOrm(id: TerritoryId): Promise<void>;
 
   async #existTerritoryNumber(number: TerritoryNumber) {
     return (await this.findByNumber(number)) !== null;

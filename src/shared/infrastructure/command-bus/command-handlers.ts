@@ -20,4 +20,9 @@ export class CommandHandlers extends Map<Command, CommandHandler<Command>> {
 
     return commandHandler;
   }
+  public add(commandHandlers: Array<CommandHandler<Command>>) {
+    commandHandlers.forEach((commandHandler) => {
+      this.set(commandHandler.subscribedTo(), commandHandler);
+    });
+  }
 }

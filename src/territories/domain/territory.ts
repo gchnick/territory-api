@@ -1,7 +1,7 @@
 import { AggregateRoot } from 'src/shared/domain/aggregate-root';
 import { Nullable } from 'src/shared/domain/nullable';
+import { Availability } from './interfaces/meeting-place.interface';
 import { MeetingPlace } from './meeting-place/meeting-place';
-import { Availability } from './meeting-place/meeting-place-availability';
 import { TerritoryId } from './territory-id';
 import { TerritoryIsLocked } from './territory-is-locked';
 import { TerritoryLabel } from './territory-label';
@@ -120,7 +120,7 @@ export class Territory extends AggregateRoot {
       number: this.number.value,
       label: this.label.value,
       limits: this.limits.values,
-      map: this.map ? this.map.value : this.map,
+      map: this.map ? this.map.value : undefined,
       isLocked: this.isLocked.value,
       lastDateCompleted: this.lastDateCompleted.value,
       meetingPlaces: this.meetingPlaces.map((m) => m.toPrimitives()),
