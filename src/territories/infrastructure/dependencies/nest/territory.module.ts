@@ -5,9 +5,9 @@ import { QueryHandlers } from 'src/shared/infrastructure/query-bus/query-handler
 import { CreateTerritoryCommandHandler } from 'src/territories/application/create/create-territory-command-handler';
 import { FindByNumberQueryHandler } from 'src/territories/application/find-by-number/find-by-number-query-handler';
 import { SearchAllTerritoryQueryHandler } from 'src/territories/application/search-all/search-all-territories-query-handler';
-import { NEST_TERRITORY_PROVIDERS } from '../dependencies/providers';
-import { TerritoriesGetController } from './territories-get-controller';
-import { TerritoryPostController } from './territory-post.controller';
+import { TerritoriesGetController } from '../../controllers/territories-get-controller';
+import { TerritoryPostController } from '../../controllers/territory-post.controller';
+import { NEST_TERRITORY_PROVIDERS } from './providers';
 
 @Module({
   imports: [SharedModule],

@@ -1,6 +1,6 @@
 import { Provider } from '@nestjs/common';
 import { TerritoryRepository } from 'src/territories/domain/territory-repository';
-import { TerritoryPrimaSqlite } from '../persistence/prisma/territory-prisma-sqlite';
+import { TerritoryPrimaSqlite } from '../../persistence/prisma/territory-prisma-sqlite';
 import { territoryCommandFactories } from './commands.provider';
 import { territoryQueryFactories } from './queries.provider';
 
