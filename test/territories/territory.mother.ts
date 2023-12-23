@@ -1,9 +1,9 @@
-import { generatorUuid } from '@shared/domain/generator-uuid';
+import { Uuid } from '@shared/domain/value-object/uuid';
 
 export class TerritoryMother {
   static territoryRequest() {
     return {
-      id: generatorUuid(),
+      id: Uuid.random().value,
       number: 1,
       label: 'Name of territory',
       limits: {
@@ -12,6 +12,7 @@ export class TerritoryMother {
         EAST: 'EAST',
         WEST: 'WEST',
       },
+      lastDateCompleted: '2023-12-20',
     };
   }
 }

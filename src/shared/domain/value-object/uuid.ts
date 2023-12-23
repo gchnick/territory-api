@@ -1,5 +1,4 @@
-import { randomUUID as uuid } from 'crypto';
-import validate from 'uuid-validate';
+import { v4 as uuid, validate } from 'uuid';
 import { InvalidArgumentError } from './invalid-argument-error';
 import { ValueObject } from './value-object';
 

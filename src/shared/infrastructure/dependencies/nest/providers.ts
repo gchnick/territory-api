@@ -9,11 +9,19 @@ import { InMemoryQueryBus } from '../../query-bus/in-memory-query-bus';
 import { QueryHandlers } from '../../query-bus/query-handlers';
 
 export const NEST_ROOT_PROVIDERS: Provider[] = [
-  { provide: CommandBus, useClass: InMemoryCommandBus },
-  { provide: QueryBus, useClass: InMemoryQueryBus },
-  { provide: EventBus, useClass: InMemoryAsyncEventBus },
   { provide: CommandHandlers, useFactory: () => new CommandHandlers([]) },
   { provide: QueryHandlers, useFactory: () => new CommandHandlers([]) },
+  {
+    provide: CommandBus,
+    useFactory: (c: CommandHandlers) => new InMemoryCommandBus(c),
+    inject: [CommandHandlers],
+  },
+  {
+    provide: QueryBus,
+    useFactory: (q: QueryHandlers) => new InMemoryQueryBus(q),
+    inject: [QueryHandlers],
+  },
+  { provide: EventBus, useClass: InMemoryAsyncEventBus },
 ];
 
 export const NEST_ROOT_EXPORTS = [
