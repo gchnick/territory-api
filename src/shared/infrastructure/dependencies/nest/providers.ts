@@ -1,7 +1,7 @@
 import { Provider } from '@nestjs/common';
-import { CommandBus } from 'src/shared/domain/command-bus';
-import { EventBus } from 'src/shared/domain/event-bus';
-import { QueryBus } from 'src/shared/domain/query-bus';
+import { CommandBus } from '@shared/domain/command-bus';
+import { EventBus } from '@shared/domain/event-bus';
+import { QueryBus } from '@shared/domain/query-bus';
 import { CommandHandlers } from '../../command-bus/command-handlers';
 import { InMemoryCommandBus } from '../../command-bus/in-memory-command-bus';
 import { InMemoryAsyncEventBus } from '../../event-bus/in-memory/in-memory-async-event-bus';

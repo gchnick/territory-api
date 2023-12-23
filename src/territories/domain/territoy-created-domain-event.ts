@@ -1,4 +1,4 @@
-import { DomainEvent } from 'src/shared/domain/domain-event';
+import { DomainEvent } from '@shared/domain/domain-event';
 
 type CreateTerritoryDomainEventAttributes = {
   readonly number: number;

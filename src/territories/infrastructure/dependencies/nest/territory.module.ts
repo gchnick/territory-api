@@ -1,10 +1,10 @@
 import { Module, OnModuleInit } from '@nestjs/common';
-import { CommandHandlers } from 'src/shared/infrastructure/command-bus/command-handlers';
-import { SharedModule } from 'src/shared/infrastructure/dependencies/nest/shared.module';
-import { QueryHandlers } from 'src/shared/infrastructure/query-bus/query-handlers';
-import { CreateTerritoryCommandHandler } from 'src/territories/application/create/create-territory-command-handler';
-import { FindByNumberQueryHandler } from 'src/territories/application/find-by-number/find-by-number-query-handler';
-import { SearchAllTerritoryQueryHandler } from 'src/territories/application/search-all/search-all-territories-query-handler';
+import { CommandHandlers } from '@shared/infrastructure/command-bus/command-handlers';
+import { SharedModule } from '@shared/infrastructure/dependencies/nest/shared.module';
+import { QueryHandlers } from '@shared/infrastructure/query-bus/query-handlers';
+import { CreateTerritoryCommandHandler } from '@territories/application/create/create-territory-command-handler';
+import { FindByNumberQueryHandler } from '@territories/application/find-by-number/find-by-number-query-handler';
+import { SearchAllTerritoryQueryHandler } from '@territories/application/search-all/search-all-territories-query-handler';
 import { TerritoriesGetController } from '../../controllers/territories-get-controller';
 import { TerritoryPostController } from '../../controllers/territory-post.controller';
 import { NEST_TERRITORY_PROVIDERS } from './providers';

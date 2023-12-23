@@ -1,4 +1,4 @@
-import { Nullable } from 'src/shared/domain/nullable';
+import { Nullable } from '@shared/domain/nullable';
 import { Availability } from '../interfaces/meeting-place.interface';
 import { MeetingPlaceAvailability } from './meeting-place-availability';
 import { MeetingPlaceFieldService } from './meeting-place-field-service';

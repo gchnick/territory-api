@@ -1,5 +1,5 @@
-import { AggregateRoot } from 'src/shared/domain/aggregate-root';
-import { Nullable } from 'src/shared/domain/nullable';
+import { AggregateRoot } from '@shared/domain/aggregate-root';
+import { Nullable } from '@shared/domain/nullable';
 import { Availability } from './interfaces/meeting-place.interface';
 import { MeetingPlace } from './meeting-place/meeting-place';
 import { TerritoryId } from './territory-id';

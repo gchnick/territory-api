@@ -1,4 +1,8 @@
 import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import { CommandBus } from '@shared/domain/command-bus';
+import { generatorUuid } from '@shared/domain/generator-uuid';
+import { CreateTerritoryCommand } from '@territories/domain/create-territory-command';
+import { Limits } from '@territories/domain/territory-limits';
 import {
   IsDate,
   IsNumber,
@@ -7,10 +11,6 @@ import {
   IsUUID,
 } from 'class-validator';
 import { Response } from 'express';
-import { CommandBus } from 'src/shared/domain/command-bus';
-import { generatorUuid } from 'src/shared/domain/generator-uuid';
-import { CreateTerritoryCommand } from 'src/territories/domain/create-territory-command';
-import { Limits } from 'src/territories/domain/territory-limits';
 
 class TerritoryPostRequest {
   @IsUUID()

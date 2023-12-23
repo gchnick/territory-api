@@ -1,8 +1,8 @@
 import { Provider } from '@nestjs/common';
-import { EventBus } from 'src/shared/domain/event-bus';
-import { CreateTerritoryCommandHandler } from 'src/territories/application/create/create-territory-command-handler';
-import { TerritoryCreator } from 'src/territories/application/create/territory-creator';
-import { TerritoryRepository } from 'src/territories/domain/territory-repository';
+import { EventBus } from '@shared/domain/event-bus';
+import { CreateTerritoryCommandHandler } from '@territories/application/create/create-territory-command-handler';
+import { TerritoryCreator } from '@territories/application/create/territory-creator';
+import { TerritoryRepository } from '@territories/domain/territory-repository';
 
 const commandHelperFactories: Provider[] = [
   {

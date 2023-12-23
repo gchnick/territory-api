@@ -1,9 +1,9 @@
 import { Provider } from '@nestjs/common';
-import { FindByNumberQueryHandler } from 'src/territories/application/find-by-number/find-by-number-query-handler';
-import { TerritoryFinder } from 'src/territories/application/find-by-number/territory-finder';
-import { SearchAllTerritoryQueryHandler } from 'src/territories/application/search-all/search-all-territories-query-handler';
-import { TerritoriesFinder } from 'src/territories/application/search-all/territories-finder';
-import { TerritoryRepository } from 'src/territories/domain/territory-repository';
+import { FindByNumberQueryHandler } from '@territories/application/find-by-number/find-by-number-query-handler';
+import { TerritoryFinder } from '@territories/application/find-by-number/territory-finder';
+import { SearchAllTerritoryQueryHandler } from '@territories/application/search-all/search-all-territories-query-handler';
+import { TerritoriesFinder } from '@territories/application/search-all/territories-finder';
+import { TerritoryRepository } from '@territories/domain/territory-repository';
 
 const handlersHelpersFactory: Provider[] = [
   {

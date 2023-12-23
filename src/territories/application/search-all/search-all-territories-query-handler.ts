@@ -1,5 +1,5 @@
-import { Query } from 'src/shared/domain/query';
-import { QueryHandler } from 'src/shared/domain/query-handler';
+import { Query } from '@shared/domain/query';
+import { QueryHandler } from '@shared/domain/query-handler';
 import { SearchAllTerritoryQuery } from './search-all-territories-query';
 import { TerritoriesFinder } from './territories-finder';
 import { TerritoriesRespose } from './territories-response';

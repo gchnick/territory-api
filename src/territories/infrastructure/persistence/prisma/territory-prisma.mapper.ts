@@ -1,5 +1,5 @@
-import { PartialITerritory } from 'src/territories/domain/interfaces/territory.interface';
-import { Territory } from 'src/territories/domain/territory';
+import { PartialITerritory } from '@territories/domain/interfaces/territory.interface';
+import { Territory } from '@territories/domain/territory';
 import {
   Entity as MeetingPlaceEntity,
   MeetingPlacePrismaMapper,

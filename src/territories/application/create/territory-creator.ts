@@ -1,12 +1,12 @@
-import { EventBus } from 'src/shared/domain/event-bus';
-import { Territory } from 'src/territories/domain/territory';
-import { TerritoryId } from 'src/territories/domain/territory-id';
-import { TerritoryIsLocked } from 'src/territories/domain/territory-is-locked';
-import { TerritoryLabel } from 'src/territories/domain/territory-label';
-import { TerritoryLastDateCompleted } from 'src/territories/domain/territory-last-date-completed';
-import { TerritoryLimits } from 'src/territories/domain/territory-limits';
-import { TerritoryNumber } from 'src/territories/domain/territory-number';
-import { TerritoryRepository } from 'src/territories/domain/territory-repository';
+import { EventBus } from '@shared/domain/event-bus';
+import { Territory } from '@territories/domain/territory';
+import { TerritoryId } from '@territories/domain/territory-id';
+import { TerritoryIsLocked } from '@territories/domain/territory-is-locked';
+import { TerritoryLabel } from '@territories/domain/territory-label';
+import { TerritoryLastDateCompleted } from '@territories/domain/territory-last-date-completed';
+import { TerritoryLimits } from '@territories/domain/territory-limits';
+import { TerritoryNumber } from '@territories/domain/territory-number';
+import { TerritoryRepository } from '@territories/domain/territory-repository';
 
 export class TerritoryCreator {
   constructor(

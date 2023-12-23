@@ -1,4 +1,4 @@
-import { Command } from 'src/shared/domain/command';
+import { Command } from '@shared/domain/command';
 import { Limits } from './territory-limits';
 
 type Params = {

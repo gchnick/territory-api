@@ -1,4 +1,4 @@
-import { TerritoryRepository } from 'src/territories/domain/territory-repository';
+import { TerritoryRepository } from '@territories/domain/territory-repository';
 import { TerritoriesRespose } from './territories-response';
 
 export class TerritoriesFinder {

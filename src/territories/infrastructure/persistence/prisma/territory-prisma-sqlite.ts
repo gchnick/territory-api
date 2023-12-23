@@ -1,10 +1,10 @@
-import { Nullable } from 'src/shared/domain/nullable';
-import { prismaCli } from 'src/shared/infrastructure/persistence/prisma-sqlite';
-import { PartialITerritory } from 'src/territories/domain/interfaces/territory.interface';
-import { Territory } from 'src/territories/domain/territory';
-import { TerritoryId } from 'src/territories/domain/territory-id';
-import { TerritoryNumber } from 'src/territories/domain/territory-number';
-import { TerritoryRepository } from 'src/territories/domain/territory-repository';
+import { Nullable } from '@shared/domain/nullable';
+import { prismaCli } from '@shared/infrastructure/persistence/prisma-sqlite';
+import { PartialITerritory } from '@territories/domain/interfaces/territory.interface';
+import { Territory } from '@territories/domain/territory';
+import { TerritoryId } from '@territories/domain/territory-id';
+import { TerritoryNumber } from '@territories/domain/territory-number';
+import { TerritoryRepository } from '@territories/domain/territory-repository';
 import { TerritoryPrismaMapper } from './territory-prisma.mapper';
 
 export class TerritoryPrimaSqlite extends TerritoryRepository {

@@ -1,4 +1,4 @@
-import { Territory } from 'src/territories/domain/territory';
+import { Territory } from '@territories/domain/territory';
 import { ITerritoryResponse } from '../find-by-number/territory-response';
 
 export class TerritoriesRespose {

@@ -1,6 +1,6 @@
-import { Availability } from 'src/territories/domain/interfaces/meeting-place.interface';
-import { Territory } from 'src/territories/domain/territory';
-import { Limits } from 'src/territories/domain/territory-limits';
+import { Availability } from '@territories/domain/interfaces/meeting-place.interface';
+import { Territory } from '@territories/domain/territory';
+import { Limits } from '@territories/domain/territory-limits';
 
 export interface ITerritoryResponse {
   id: string;

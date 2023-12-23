@@ -3,8 +3,8 @@ import {
   Days,
   Moments,
   PartialIMeetingPlace,
-} from 'src/territories/domain/interfaces/meeting-place.interface';
-import { MeetingPlace } from 'src/territories/domain/meeting-place/meeting-place';
+} from '@territories/domain/interfaces/meeting-place.interface';
+import { MeetingPlace } from '@territories/domain/meeting-place/meeting-place';
 
 type MeetingPlaceEntity = {
   id?: string;
