@@ -1,4 +1,5 @@
 import { EventBus } from '@shared/domain/event-bus';
+import Logger from '@shared/domain/logger';
 import { Territory } from '@territories/domain/territory';
 import { TerritoryId } from '@territories/domain/territory-id';
 import { TerritoryIsLocked } from '@territories/domain/territory-is-locked';
@@ -10,9 +11,12 @@ import { TerritoryRepository } from '@territories/domain/territory-repository';
 
 export class TerritoryCreator {
   constructor(
+    private logger: Logger,
     private repository: TerritoryRepository,
     private eventBus: EventBus,
-  ) {}
+  ) {
+    this.logger.setContext('Territory');
+  }
 
   async run(params: {
     id: TerritoryId;
@@ -34,6 +38,7 @@ export class TerritoryCreator {
       params.lastDateCompleted,
       meetingPlacesByDefault,
     );
+    this.logger.info(`Saving new territory <${territory.label}>`);
     await this.repository.save(territory);
     await this.eventBus.publish(territory.pullDomainEvents());
   }
