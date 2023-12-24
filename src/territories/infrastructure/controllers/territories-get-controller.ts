@@ -1,14 +1,26 @@
-import { Controller, Get, HttpStatus, Param, Res } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Res,
+} from '@nestjs/common';
+import Logger from '@shared/domain/logger';
 import { QueryBus } from '@shared/domain/query-bus';
 import { FindByNumberQuery } from '@territories/application/find-by-number/find-by-number-query';
 import { TerritoryResponse } from '@territories/application/find-by-number/territory-response';
 import { SearchAllTerritoryQuery } from '@territories/application/search-all/search-all-territories-query';
 import { TerritoriesRespose } from '@territories/application/search-all/territories-response';
+import { TerritoryNotFount } from '@territories/domain/territory-not-fount';
 import { Response } from 'express';
 
 @Controller()
 export class TerritoriesGetController {
-  constructor(private queryBus: QueryBus) {}
+  constructor(
+    private log: Logger,
+    private queryBus: QueryBus,
+  ) {}
 
   @Get()
   async searchAll(@Res() res: Response): Promise<void> {
@@ -23,13 +35,22 @@ export class TerritoriesGetController {
   }
 
   @Get('/:number')
-  async findByNumber(@Param() number, @Res() res: Response): Promise<void> {
+  async findByNumber(
+    @Param('number', ParseIntPipe) number: number,
+    @Res() res: Response,
+  ) {
     try {
       const query = new FindByNumberQuery(number);
       const { value } = await this.queryBus.ask<TerritoryResponse>(query);
       res.json({ data: value });
     } catch (error) {
-      res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      if (error instanceof TerritoryNotFount) {
+        this.log.info(error.message);
+        res.sendStatus(HttpStatus.NOT_FOUND);
+      } else {
+        this.log.error(error);
+        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      }
     }
   }
 }

@@ -11,11 +11,11 @@ import { TerritoryRepository } from '@territories/domain/territory-repository';
 
 export class TerritoryCreator {
   constructor(
-    private logger: Logger,
+    private log: Logger,
     private repository: TerritoryRepository,
     private eventBus: EventBus,
   ) {
-    this.logger.setContext('Territory');
+    this.log.setContext('Territory');
   }
 
   async run(params: {
@@ -38,7 +38,7 @@ export class TerritoryCreator {
       params.lastDateCompleted,
       meetingPlacesByDefault,
     );
-    this.logger.info(`Saving new territory <${territory.label}>`);
+    this.log.info(`Saving new territory <${territory.label}>`);
     await this.repository.save(territory);
     await this.eventBus.publish(territory.pullDomainEvents());
   }
