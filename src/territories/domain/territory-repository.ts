@@ -42,11 +42,6 @@ export abstract class TerritoryRepository {
     return await this.updateOrm(number, territory);
   }
 
-  protected abstract updateOrm(
-    number: TerritoryNumber,
-    data: PartialITerritory,
-  ): Promise<Territory>;
-
   async delete(id: TerritoryId): Promise<void> {
     const exist = await this.#existTerritoryId(id);
     if (exist) {
@@ -54,7 +49,21 @@ export abstract class TerritoryRepository {
     }
   }
 
+  protected abstract updateOrm(
+    number: TerritoryNumber,
+    data: PartialITerritory,
+  ): Promise<Territory>;
+
+  async deleteAll(): Promise<void> {
+    const NODE_ENV = process.env.NODE_ENV;
+    if (NODE_ENV === 'development' || NODE_ENV === 'test') {
+      await this.deleteAllOrm();
+    }
+  }
+
   protected abstract deleteOrm(id: TerritoryId): Promise<void>;
+
+  protected abstract deleteAllOrm(): Promise<void>;
 
   async #existTerritoryNumber(number: TerritoryNumber) {
     return (await this.findByNumber(number)) !== null;

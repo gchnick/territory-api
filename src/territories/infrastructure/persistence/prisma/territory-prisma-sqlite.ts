@@ -1,5 +1,5 @@
 import { Nullable } from '@shared/domain/nullable';
-import { prismaCli } from '@shared/infrastructure/persistence/prisma-sqlite';
+import { prismaCli } from '@shared/infrastructure/persistence/prisma/prisma-sqlite';
 import { PartialITerritory } from '@territories/domain/interfaces/territory.interface';
 import { Territory } from '@territories/domain/territory';
 import { TerritoryId } from '@territories/domain/territory-id';
@@ -89,5 +89,14 @@ export class TerritoryPrimaSqlite extends TerritoryRepository {
 
   override async deleteOrm(id: TerritoryId): Promise<void> {
     await this.#orm.territories.delete({ where: { id: id.value } });
+  }
+
+  override async deleteAllOrm(): Promise<void> {
+    const territories = await this.#orm.territories.findMany({});
+    territories.map((t) => this.#deleteTerritory(t));
+  }
+
+  async #deleteTerritory(territory) {
+    await this.#orm.territories.delete({ where: { id: territory.id } });
   }
 }
