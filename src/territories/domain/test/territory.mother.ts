@@ -1,22 +1,7 @@
 import { Uuid } from '@shared/domain/value-object/uuid';
-import { Territory } from '@territories/domain/territory';
+import { Territory } from '../territory';
 
 export class TerritoryMother {
-  static get REQUEST_TERRITORY_4() {
-    return {
-      id: Uuid.random().value,
-      number: 4,
-      label: 'Territory 4 of request',
-      limits: {
-        NORTH: 'NORTH',
-        SOUTH: 'SOUTH',
-        EAST: 'EAST',
-        WEST: 'WEST',
-      },
-      lastDateCompleted: '2023-12-24',
-    };
-  }
-
   static get INITIAL_TERRITORIES(): Territory[] {
     return [
       Territory.fromPrimitives({

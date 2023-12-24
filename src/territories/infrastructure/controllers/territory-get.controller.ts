@@ -30,6 +30,7 @@ export class TerritoriesGetController {
         await this.queryBus.ask<TerritoriesRespose>(query);
       res.json({ data: territories });
     } catch (error) {
+      this.log.info(error.message);
       res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -46,7 +47,9 @@ export class TerritoriesGetController {
     } catch (error) {
       if (error instanceof TerritoryNotFount) {
         this.log.info(error.message);
-        res.sendStatus(HttpStatus.NOT_FOUND);
+        return res
+          .sendStatus(HttpStatus.NOT_FOUND)
+          .json({ message: error.message });
       } else {
         this.log.error(error);
         res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);

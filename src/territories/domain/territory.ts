@@ -41,6 +41,19 @@ export class Territory extends AggregateRoot {
     this.meetingPlaces = meetingPlaces;
   }
 
+  public lock() {
+    const primitives = this.toPrimitives();
+    primitives.isLocked = true;
+    return Territory.fromPrimitives(primitives);
+  }
+
+  public unlock(dateClosed: Date) {
+    const primitives = this.toPrimitives();
+    primitives.isLocked = false;
+    primitives.lastDateCompleted = dateClosed;
+    return Territory.fromPrimitives(primitives);
+  }
+
   static create(
     id: TerritoryId,
     number: TerritoryNumber,
