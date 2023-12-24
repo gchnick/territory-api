@@ -21,13 +21,25 @@ describe('TerritoryPostController (e2e)', () => {
     await saveInitialTerritories(repo, TerritoryMother.INITIAL_TERRITORIES);
   });
 
-  it('/v1/api/territories (POST)', () => {
-    const territoryMocked = TerritoryMother.REQUEST_TERRITORY_4;
-    return request(app.getHttpServer())
-      .post('')
-      .send(territoryMocked)
-      .expect('Location', `/v1/api/territories/${territoryMocked.id}`)
-      .expect(201);
+  describe('/v1/api/territories (POST)', () => {
+    it('should create new territory', () => {
+      const territoryMocked = TerritoryMother.REQUEST_TERRITORY_4;
+      return request(app.getHttpServer())
+        .post('')
+        .send(territoryMocked)
+        .expect('Location', `/v1/api/territories/${territoryMocked.id}`)
+        .expect(201);
+    });
+
+    it('when terriory number already registry should send 400 status code', () => {
+      const territoryMocked =
+        TerritoryMother.INITIAL_TERRITORIES[0].toPrimitives();
+      const expectedCode = 400;
+      return request(app.getHttpServer())
+        .post('')
+        .send(territoryMocked)
+        .expect(expectedCode);
+    });
   });
 
   afterAll(async () => {

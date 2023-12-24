@@ -4,18 +4,15 @@ import { Territory } from './territory';
 import { TerritoryId } from './territory-id';
 import { TerritoryNotFount } from './territory-not-fount';
 import { TerritoryNumber } from './territory-number';
-import { TerritoryNumberAlreadyRegistry } from './territory-number-already-registry';
 
 export abstract class TerritoryRepository {
+  /**
+   * @returns If successfull when saving territory, return id or null if number
+   * already registry
+   */
   async save(territory: Territory): Promise<TerritoryId> {
     const exist = await this.#existTerritoryNumber(territory.number);
-    if (exist) {
-      throw new TerritoryNumberAlreadyRegistry(
-        `Territory number <${territory.number.value}> already registry`,
-      );
-    }
-
-    return await this.saveOrm(territory);
+    return exist ? null : await this.saveOrm(territory);
   }
 
   protected abstract saveOrm(territory: Territory): Promise<TerritoryId>;

@@ -7,6 +7,7 @@ import { TerritoryLabel } from '@territories/domain/territory-label';
 import { TerritoryLastDateCompleted } from '@territories/domain/territory-last-date-completed';
 import { TerritoryLimits } from '@territories/domain/territory-limits';
 import { TerritoryNumber } from '@territories/domain/territory-number';
+import { TerritoryNumberAlreadyRegistry } from '@territories/domain/territory-number-already-registry';
 import { TerritoryRepository } from '@territories/domain/territory-repository';
 
 export class TerritoryCreator {
@@ -39,7 +40,12 @@ export class TerritoryCreator {
       meetingPlacesByDefault,
     );
     this.log.info(`Saving new territory <${territory.label}>`);
-    await this.repository.save(territory);
+    const id = await this.repository.save(territory);
+    if (id === null) {
+      throw new TerritoryNumberAlreadyRegistry(
+        `Territory number <${territory.number.value}> already registry`,
+      );
+    }
     await this.eventBus.publish(territory.pullDomainEvents());
   }
 }

@@ -1,6 +1,6 @@
 import { InvalidArgumentError } from '@shared/domain/value-object/invalid-argument-error';
 import { ValueObject } from '@shared/domain/value-object/value-object';
-import { LastDateCompletedIsNotPast } from './last-date-completed-is-not-past';
+import { LastDateCompletedIsInvalid } from './last-date-completed-is-invalid';
 
 export class TerritoryLastDateCompleted extends ValueObject<Date> {
   constructor(value: Date) {
@@ -20,8 +20,8 @@ export class TerritoryLastDateCompleted extends ValueObject<Date> {
   #ensureDateIsPast(value: Date) {
     const now = new Date();
     if (value >= now) {
-      throw new LastDateCompletedIsNotPast(
-        `The last date completed <${value}> is not past`,
+      throw new LastDateCompletedIsInvalid(
+        `The Last Date Completed <${value}> is not past`,
       );
     }
   }
