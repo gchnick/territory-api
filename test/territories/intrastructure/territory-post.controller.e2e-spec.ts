@@ -9,6 +9,7 @@ import { TerritoryControllerMother } from './territory-controller.mother';
 
 describe('TerritoryPostController (e2e)', () => {
   let app: INestApplication;
+  let repo: TerritoryRepository;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -17,12 +18,15 @@ describe('TerritoryPostController (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-    const repo = app.get(TerritoryRepository);
-    await repo.deleteAll();
-    await saveInitialTerritories(repo, TerritoryMother.INITIAL_TERRITORIES);
+    repo = app.get(TerritoryRepository);
   });
 
   describe('/v1/api/territories (POST)', () => {
+    beforeEach(async () => {
+      await repo.deleteAll();
+      await saveInitialTerritories(repo, TerritoryMother.INITIAL_TERRITORIES);
+    });
+
     it('should create new territory', () => {
       const territoryMocked = TerritoryControllerMother.REQUEST_TERRITORY_4;
       return request(app.getHttpServer())

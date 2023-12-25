@@ -92,11 +92,6 @@ export class TerritoryPrimaSqlite extends TerritoryRepository {
   }
 
   override async deleteAllOrm(): Promise<void> {
-    const territories = await this.#orm.territories.findMany({});
-    territories.map((t) => this.#deleteTerritory(t));
-  }
-
-  async #deleteTerritory(territory) {
-    await this.#orm.territories.delete({ where: { id: territory.id } });
+    await this.#orm.territories.deleteMany({});
   }
 }
