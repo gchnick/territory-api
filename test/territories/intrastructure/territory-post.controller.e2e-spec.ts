@@ -1,9 +1,9 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { TerritoryRepository } from '@territories/domain/territory-repository';
-import { TerritoryMother } from '@territories/domain/test/territory.mother';
 import { TerritoryModule } from '@territories/infrastructure/dependencies/nest/territory.module';
 import * as request from 'supertest';
+import { TerritoryMother } from '../domain/territory.mother';
 import { saveInitialTerritories } from './helpers';
 import { TerritoryControllerMother } from './territory-controller.mother';
 

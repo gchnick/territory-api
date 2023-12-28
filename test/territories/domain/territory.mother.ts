@@ -1,5 +1,5 @@
 import { Uuid } from '@shared/domain/value-object/uuid';
-import { Territory } from '../territory';
+import { Territory } from '../../../src/territories/domain/territory';
 
 export class TerritoryMother {
   static get INITIAL_TERRITORIES(): Territory[] {

@@ -14,7 +14,7 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "dotenv -e .env.test -- jest --silent",
-    "test:watch": "dotenv -e .env.test -- jest --watch --silent",
+    "test:watch": "dotenv -e .env.test -- jest --watch --silent --detectOpenHandles",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "dotenv -e .env.test -- jest --config ./test/jest-e2e.json",
@@ -65,7 +65,7 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": "test",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
@@ -76,8 +76,8 @@
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {
-      "^@shared/(.*)": "<rootDir>/shared/$1",
-      "^@territories/(.*)": "<rootDir>/territories/$1"
+      "^@shared/(.*)": "<rootDir>../src/shared/$1",
+      "^@territories/(.*)": "<rootDir>../src/territories/$1"
     }
   }
 }
