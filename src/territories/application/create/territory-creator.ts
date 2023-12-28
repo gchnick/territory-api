@@ -40,12 +40,17 @@ export class TerritoryCreator {
       meetingPlacesByDefault,
     );
     this.log.info(`Saving new territory <${territory.label}>`);
-    const id = await this.repository.save(territory);
-    if (id === null) {
-      throw new TerritoryNumberAlreadyRegistry(
-        `Territory number <${territory.number.value}> already registry`,
-      );
+
+    try {
+      await this.repository.save(territory);
+    } catch (e) {
+      if (e instanceof TerritoryNumberAlreadyRegistry) {
+        throw new TerritoryNumberAlreadyRegistry(
+          `Territory number <${territory.number.value}> already registry`,
+        );
+      }
     }
+
     await this.eventBus.publish(territory.pullDomainEvents());
   }
 }

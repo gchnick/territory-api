@@ -1,7 +1,8 @@
 import {
   Controller,
   Get,
-  HttpStatus,
+  InternalServerErrorException,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Res,
@@ -30,8 +31,8 @@ export class TerritoriesGetController {
         await this.queryBus.ask<TerritoriesRespose>(query);
       res.json({ data: territories });
     } catch (error) {
-      this.log.info(error.message);
-      res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+      this.log.info(error);
+      throw new InternalServerErrorException('Check server logs');
     }
   }
 
@@ -47,12 +48,10 @@ export class TerritoriesGetController {
     } catch (error) {
       if (error instanceof TerritoryNotFount) {
         this.log.info(error.message);
-        return res
-          .sendStatus(HttpStatus.NOT_FOUND)
-          .json({ message: error.message });
+        throw new NotFoundException(error.message);
       } else {
         this.log.error(error);
-        res.sendStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        throw new InternalServerErrorException('Check server logs');
       }
     }
   }

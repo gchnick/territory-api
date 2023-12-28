@@ -6,16 +6,7 @@ import { TerritoryNotFount } from './territory-not-fount';
 import { TerritoryNumber } from './territory-number';
 
 export abstract class TerritoryRepository {
-  /**
-   * @returns If successfull when saving territory, return id or null if number
-   * already registry
-   */
-  async save(territory: Territory): Promise<TerritoryId> {
-    const exist = await this.#existTerritoryNumber(territory.number);
-    return exist ? null : await this.saveOrm(territory);
-  }
-
-  protected abstract saveOrm(territory: Territory): Promise<TerritoryId>;
+  abstract save(territory: Territory): Promise<TerritoryId | never>;
 
   abstract searchAll(): Promise<Array<Territory>>;
 

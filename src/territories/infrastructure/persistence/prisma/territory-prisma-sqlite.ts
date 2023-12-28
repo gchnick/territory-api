@@ -4,30 +4,32 @@ import { PartialITerritory } from '@territories/domain/interfaces/territory.inte
 import { Territory } from '@territories/domain/territory';
 import { TerritoryId } from '@territories/domain/territory-id';
 import { TerritoryNumber } from '@territories/domain/territory-number';
+import { TerritoryNumberAlreadyRegistry } from '@territories/domain/territory-number-already-registry';
 import { TerritoryRepository } from '@territories/domain/territory-repository';
 import { TerritoryPrismaMapper } from './territory-prisma.mapper';
 
 export class TerritoryPrimaSqlite extends TerritoryRepository {
   readonly #orm = prismaCli;
 
-  constructor() {
-    super();
-  }
-
-  override async saveOrm(territory: Territory): Promise<TerritoryId> {
-    const { id } = await this.#orm.territories.create({
-      data: {
-        number: territory.number.value,
-        label: territory.label.value,
-        north_limit: territory.limits.values.NORTH ?? '',
-        south_limit: territory.limits.values.SOUTH ?? '',
-        east_limit: territory.limits.values.EAST ?? '',
-        west_limit: territory.limits.values.WEST ?? '',
-        last_date_completed: territory.lastDateCompleted.value,
-      },
-    });
-
-    return new TerritoryId(id);
+  override async save(territory: Territory): Promise<TerritoryId> {
+    try {
+      const { id } = await this.#orm.territories.create({
+        data: {
+          number: territory.number.value,
+          label: territory.label.value,
+          north_limit: territory.limits.values.NORTH ?? '',
+          south_limit: territory.limits.values.SOUTH ?? '',
+          east_limit: territory.limits.values.EAST ?? '',
+          west_limit: territory.limits.values.WEST ?? '',
+          last_date_completed: territory.lastDateCompleted.value,
+        },
+      });
+      return new TerritoryId(id);
+    } catch (error) {
+      if (error.code === 'P2002') {
+        throw new TerritoryNumberAlreadyRegistry();
+      }
+    }
   }
 
   override async searchAll(): Promise<Territory[]> {
