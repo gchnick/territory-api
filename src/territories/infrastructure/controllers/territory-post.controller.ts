@@ -1,4 +1,12 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpStatus,
+  InternalServerErrorException,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { CommandBus } from '@shared/domain/command-bus';
 import Logger from '@shared/domain/logger';
 import { InvalidArgumentError } from '@shared/domain/value-object/invalid-argument-error';
@@ -62,13 +70,11 @@ export class TerritoryPostController {
       res.status(HttpStatus.CREATED).send();
     } catch (error) {
       if (error instanceof InvalidArgumentError) {
-        this.log.info(error.message);
-        return res
-          .status(HttpStatus.BAD_REQUEST)
-          .json({ message: error.message });
+        this.log.warn(error.message);
+        throw new BadRequestException(error.message);
       }
       this.log.error(error);
-      res.status(HttpStatus.INTERNAL_SERVER_ERROR).send();
+      throw new InternalServerErrorException('Check server logs');
     }
   }
 }
