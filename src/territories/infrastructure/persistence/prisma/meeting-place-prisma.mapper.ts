@@ -1,10 +1,7 @@
 import {
-  Availability,
-  Days,
-  Moments,
+  MeetingPlace,
   PartialIMeetingPlace,
-} from '@territories/domain/interfaces/meeting-place.interface';
-import { MeetingPlace } from '@territories/domain/meeting-place/meeting-place';
+} from '@territories/domain/meeting-place/meeting-place';
 
 type MeetingPlaceEntity = {
   id?: string;
@@ -79,15 +76,24 @@ export class MeetingPlacePrismaMapper {
     entity: AvailabilityEntity[] | undefined,
   ) => {
     if (!entity) return undefined;
-    const record: Availability = {};
+    const array: {
+      day: string;
+      available: {
+        frequency: string;
+        moment: string;
+      };
+    }[] = [];
 
     entity.forEach((a) => {
-      record[a.day as Days] = {
-        frequency: a.frequency,
-        moment: Moments[a.moment as Moments],
-      };
+      array.push({
+        day: a.day,
+        available: {
+          frequency: a.frequency,
+          moment: a.moment,
+        },
+      });
     });
 
-    return record;
+    return array;
   };
 }

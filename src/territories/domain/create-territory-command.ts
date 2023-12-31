@@ -1,11 +1,13 @@
 import { Command } from '@shared/domain/command';
-import { Limits } from './territory-limits';
 
 type Params = {
   id: string;
   number: number;
   label: string;
-  limits: Limits;
+  limits: {
+    cardinalPoint: string;
+    limit: string;
+  }[];
   lastDateCompleted: Date;
 };
 
@@ -13,7 +15,10 @@ export class CreateTerritoryCommand extends Command {
   id: string;
   number: number;
   label: string;
-  limits: Limits;
+  limits: {
+    cardinalPoint: string;
+    limit: string;
+  }[];
   lastDateCompleted: Date;
 
   constructor({ id, number, label, limits, lastDateCompleted }: Params) {

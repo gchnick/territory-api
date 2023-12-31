@@ -1,5 +1,5 @@
-import { PartialITerritory } from '@territories/domain/interfaces/territory.interface';
-import { Territory } from '@territories/domain/territory';
+import { CardinalPoints } from '@territories/domain/cardinal-points';
+import { PartialITerritory, Territory } from '@territories/domain/territory';
 import {
   Entity as MeetingPlaceEntity,
   MeetingPlacePrismaMapper,
@@ -34,12 +34,24 @@ export class TerritoryPrismaMapper {
           map: territory.url_map_image,
           lastDateCompleted: territory.last_date_completed,
           isLocked: territory.assigned_lock,
-          limits: {
-            NORTH: territory.north_limit,
-            SOUTH: territory.south_limit,
-            EAST: territory.east_limit,
-            WEST: territory.west_limit,
-          },
+          limits: [
+            {
+              cardinalPoint: CardinalPoints.NORTH,
+              limit: territory.north_limit,
+            },
+            {
+              cardinalPoint: CardinalPoints.SOUTH,
+              limit: territory.south_limit,
+            },
+            {
+              cardinalPoint: CardinalPoints.EAST,
+              limit: territory.east_limit,
+            },
+            {
+              cardinalPoint: CardinalPoints.WEST,
+              limit: territory.west_limit,
+            },
+          ],
           meetingPlaces: territory.meeting_place.map((me) => {
             return MeetingPlacePrismaMapper.checkIsMeetingPlaceEntityWithAvailability(
               me,
@@ -73,12 +85,24 @@ export class TerritoryPrismaMapper {
           map: territory.url_map_image,
           lastDateCompleted: territory.last_date_completed,
           isLocked: territory.assigned_lock,
-          limits: {
-            NORTH: territory.north_limit,
-            SOUTH: territory.south_limit,
-            EAST: territory.east_limit,
-            WEST: territory.west_limit,
-          },
+          limits: [
+            {
+              cardinalPoint: CardinalPoints.NORTH,
+              limit: territory.north_limit,
+            },
+            {
+              cardinalPoint: CardinalPoints.SOUTH,
+              limit: territory.south_limit,
+            },
+            {
+              cardinalPoint: CardinalPoints.EAST,
+              limit: territory.east_limit,
+            },
+            {
+              cardinalPoint: CardinalPoints.WEST,
+              limit: territory.west_limit,
+            },
+          ],
           meetingPlaces: [],
         });
   }

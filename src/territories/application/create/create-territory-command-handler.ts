@@ -21,7 +21,7 @@ export class CreateTerritoryCommandHandler
     const id = new TerritoryId(command.id);
     const number = new TerritoryNumber(command.number);
     const label = new TerritoryLabel(command.label);
-    const limits = new TerritoryLimits(command.limits);
+    const limits = TerritoryLimits.fromPrimitives(command.limits);
     const lastDateCompleted = new TerritoryLastDateCompleted(
       command.lastDateCompleted,
     );

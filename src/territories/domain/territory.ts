@@ -1,7 +1,6 @@
 import { AggregateRoot } from '@shared/domain/aggregate-root';
 import { Nullable } from '@shared/domain/nullable';
-import { Availability } from './interfaces/meeting-place.interface';
-import { MeetingPlace } from './meeting-place/meeting-place';
+import { IMeetingPlace, MeetingPlace } from './meeting-place/meeting-place';
 import { TerritoryId } from './territory-id';
 import { TerritoryIsLocked } from './territory-is-locked';
 import { TerritoryLabel } from './territory-label';
@@ -9,6 +8,18 @@ import { TerritoryLastDateCompleted } from './territory-last-date-completed';
 import { Limits, TerritoryLimits } from './territory-limits';
 import { TerritoryMap } from './territory-map';
 import { TerritoryNumber } from './territory-number';
+
+export type ITerritory = {
+  id?: string;
+  number: number;
+  label: string;
+  urlMapImage?: string;
+  limits: Limits;
+  lastDateCompleted: Date;
+  isLocked: boolean;
+  meetingPlaces?: IMeetingPlace[];
+};
+export type PartialITerritory = Partial<ITerritory>;
 
 export class Territory extends AggregateRoot {
   readonly id: TerritoryId;
@@ -42,16 +53,29 @@ export class Territory extends AggregateRoot {
   }
 
   public lock() {
-    const primitives = this.toPrimitives();
-    primitives.isLocked = true;
-    return Territory.fromPrimitives(primitives);
+    return new Territory(
+      this.id,
+      this.number,
+      this.label,
+      this.limits,
+      this.map,
+      new TerritoryIsLocked(true),
+      this.lastDateCompleted,
+      this.meetingPlaces,
+    );
   }
 
   public unlock(dateClosed: Date) {
-    const primitives = this.toPrimitives();
-    primitives.isLocked = false;
-    primitives.lastDateCompleted = dateClosed;
-    return Territory.fromPrimitives(primitives);
+    return new Territory(
+      this.id,
+      this.number,
+      this.label,
+      this.limits,
+      this.map,
+      new TerritoryIsLocked(false),
+      new TerritoryLastDateCompleted(dateClosed),
+      this.meetingPlaces,
+    );
   }
 
   static create(
@@ -82,25 +106,34 @@ export class Territory extends AggregateRoot {
     id: string;
     number: number;
     label: string;
-    limits: Limits;
+    limits: {
+      cardinalPoint: string;
+      limit: string;
+    }[];
     map: Nullable<string>;
     isLocked: boolean;
     lastDateCompleted: Date;
     meetingPlaces: {
       id: string;
       place: string;
-      phone: string;
+      phone?: string;
       latitude: string;
       longitude: string;
       fieldService: boolean;
-      availability: Availability;
+      availability?: {
+        day: string;
+        available: {
+          frequency: string;
+          moment: string;
+        };
+      }[];
     }[];
   }): Territory {
     return new Territory(
       new TerritoryId(plainData.id),
       new TerritoryNumber(plainData.number),
       new TerritoryLabel(plainData.label),
-      new TerritoryLimits(plainData.limits),
+      TerritoryLimits.fromPrimitives(plainData.limits),
       plainData.map ? new TerritoryMap(plainData.map) : undefined,
       new TerritoryIsLocked(plainData.isLocked),
       new TerritoryLastDateCompleted(plainData.lastDateCompleted),
@@ -132,7 +165,7 @@ export class Territory extends AggregateRoot {
       id: this.id.value,
       number: this.number.value,
       label: this.label.value,
-      limits: this.limits.values,
+      limits: this.limits.toPrimitives(),
       map: this.map ? this.map.value : undefined,
       isLocked: this.isLocked.value,
       lastDateCompleted: this.lastDateCompleted.value,

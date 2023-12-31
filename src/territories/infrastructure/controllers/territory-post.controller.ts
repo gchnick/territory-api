@@ -12,14 +12,12 @@ import Logger from '@shared/domain/logger';
 import { InvalidArgumentError } from '@shared/domain/value-object/invalid-argument-error';
 import { Uuid } from '@shared/domain/value-object/uuid';
 import { CreateTerritoryCommand } from '@territories/domain/create-territory-command';
-import { Limits } from '@territories/domain/territory-limits';
 import { Type } from 'class-transformer';
 import {
+  IsArray,
   IsDate,
   IsNotEmpty,
-  IsNotEmptyObject,
   IsNumber,
-  IsObject,
   IsOptional,
   IsString,
   IsUUID,
@@ -38,9 +36,11 @@ class TerritoryPostRequest {
   @IsNotEmpty()
   label: string;
 
-  @IsObject()
-  @IsNotEmptyObject()
-  limits: Limits;
+  @IsArray()
+  limits: {
+    cardinalPoint: string;
+    limit: string;
+  }[];
 
   @IsDate()
   @Type(() => Date)

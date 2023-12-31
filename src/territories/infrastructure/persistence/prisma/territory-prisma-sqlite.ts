@@ -1,7 +1,6 @@
 import { Nullable } from '@shared/domain/nullable';
 import { prismaCli } from '@shared/infrastructure/persistence/prisma/prisma-sqlite';
-import { PartialITerritory } from '@territories/domain/interfaces/territory.interface';
-import { Territory } from '@territories/domain/territory';
+import { PartialITerritory, Territory } from '@territories/domain/territory';
 import { TerritoryId } from '@territories/domain/territory-id';
 import { TerritoryNumber } from '@territories/domain/territory-number';
 import { TerritoryNumberAlreadyRegistry } from '@territories/domain/territory-number-already-registry';
@@ -17,10 +16,10 @@ export class TerritoryPrimaSqlite extends TerritoryRepository {
         data: {
           number: territory.number.value,
           label: territory.label.value,
-          north_limit: territory.limits.values.NORTH ?? '',
-          south_limit: territory.limits.values.SOUTH ?? '',
-          east_limit: territory.limits.values.EAST ?? '',
-          west_limit: territory.limits.values.WEST ?? '',
+          north_limit: territory.limits.north ?? '',
+          south_limit: territory.limits.south ?? '',
+          east_limit: territory.limits.east ?? '',
+          west_limit: territory.limits.west ?? '',
           last_date_completed: territory.lastDateCompleted.value,
         },
       });

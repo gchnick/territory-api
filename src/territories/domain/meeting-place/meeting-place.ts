@@ -1,12 +1,26 @@
 import { Nullable } from '@shared/domain/nullable';
-import { Availability } from '../interfaces/meeting-place.interface';
-import { MeetingPlaceAvailability } from './meeting-place-availability';
+import {
+  IAvailability,
+  MeetingPlaceAvailability,
+} from './meeting-place-availability';
 import { MeetingPlaceFieldService } from './meeting-place-field-service';
 import { MeetingPlaceId } from './meeting-place-id';
 import { MeetingPlaceLabel } from './meeting-place-label';
 import { MeetingPlaceLatitude } from './meeting-place-latitude';
 import { MeetingPlaceLongitude } from './meeting-place-longitude';
 import { MeetingPlacePhone } from './meeting-place-phone';
+
+export type IMeetingPlace = {
+  id?: string;
+  place: string;
+  phone?: string;
+  latitude?: string;
+  longitude?: string;
+  fieldService: boolean;
+  availability?: IAvailability;
+};
+
+export type PartialIMeetingPlace = Partial<IMeetingPlace>;
 
 export class MeetingPlace {
   readonly id: MeetingPlaceId;
@@ -15,7 +29,7 @@ export class MeetingPlace {
   readonly latitude: MeetingPlaceLatitude;
   readonly longitude: MeetingPlaceLongitude;
   readonly fieldService: MeetingPlaceFieldService;
-  readonly availability: MeetingPlaceAvailability;
+  readonly availability: Nullable<MeetingPlaceAvailability>;
 
   constructor(
     id: MeetingPlaceId,
@@ -38,11 +52,17 @@ export class MeetingPlace {
   static fromPrimitive(plainData: {
     id: string;
     place: string;
-    phone: Nullable<string>;
+    phone?: string;
     latitude: string;
     longitude: string;
     fieldService: boolean;
-    availability: Nullable<Availability>;
+    availability?: {
+      day: string;
+      available: {
+        frequency: string;
+        moment: string;
+      };
+    }[];
   }): MeetingPlace {
     return new MeetingPlace(
       new MeetingPlaceId(plainData.id),
@@ -52,7 +72,9 @@ export class MeetingPlace {
       new MeetingPlaceLongitude(plainData.longitude),
       new MeetingPlaceFieldService(plainData.fieldService),
       plainData.availability
-        ? new MeetingPlaceAvailability(plainData.availability)
+        ? MeetingPlaceAvailability.fromPrimitives({
+            availability: plainData.availability,
+          })
         : undefined,
     );
   }
@@ -65,7 +87,9 @@ export class MeetingPlace {
       latitude: this.latitude.value,
       longitude: this.longitude.value,
       fieldService: this.fieldService.value,
-      availability: this.availability ? this.availability.values : undefined,
+      availability: this.availability
+        ? this.availability.toPrimitives()
+        : undefined,
     };
   }
 }

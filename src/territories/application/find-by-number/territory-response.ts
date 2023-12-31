@@ -1,12 +1,13 @@
-import { Availability } from '@territories/domain/interfaces/meeting-place.interface';
 import { Territory } from '@territories/domain/territory';
-import { Limits } from '@territories/domain/territory-limits';
 
 export interface ITerritoryResponse {
   id: string;
   number: number;
   label: string;
-  limits: Limits;
+  limits: {
+    cardinalPoint: string;
+    limit: string;
+  }[];
   map: string;
   isLocked: boolean;
   lastDateCompleted: Date;
@@ -17,7 +18,13 @@ export interface ITerritoryResponse {
     latitude: string;
     longitude: string;
     fieldService: boolean;
-    availability?: Availability;
+    availability?: {
+      day: string;
+      available: {
+        frequency: string;
+        moment: string;
+      };
+    }[];
   }[];
 }
 
