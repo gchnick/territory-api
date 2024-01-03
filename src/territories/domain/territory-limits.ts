@@ -24,38 +24,38 @@ export class TerritoryLimits {
   }
 
   get north(): string {
-    this.values.forEach((v, k) => {
-      if (k.value === CardinalPoints.NORTH) {
+    for (const [k, v] of this.values.entries()) {
+      if (k.isNorth()) {
         return v;
       }
-    });
+    }
     return undefined;
   }
 
   get south(): string {
-    this.values.forEach((v, k) => {
-      if (k.value === CardinalPoints.SOUTH) {
+    for (const [k, v] of this.values.entries()) {
+      if (k.isSouth()) {
         return v;
       }
-    });
+    }
     return undefined;
   }
 
   get east(): string {
-    this.values.forEach((v, k) => {
-      if (k.value === CardinalPoints.EAST) {
+    for (const [k, v] of this.values.entries()) {
+      if (k.isEast()) {
         return v;
       }
-    });
+    }
     return undefined;
   }
 
   get west(): string {
-    this.values.forEach((v, k) => {
-      if (k.value === CardinalPoints.WEST) {
+    for (const [k, v] of this.values.entries()) {
+      if (k.isWest()) {
         return v;
       }
-    });
+    }
     return undefined;
   }
 

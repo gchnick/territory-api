@@ -13,6 +13,22 @@ export class CardinalPoint extends EnumValueObject<CardinalPoints> {
     super(value, Object.values(CardinalPoints));
   }
 
+  isNorth() {
+    return this.value === CardinalPoints.NORTH;
+  }
+
+  isSouth() {
+    return this.value === CardinalPoints.SOUTH;
+  }
+
+  isEast() {
+    return this.value === CardinalPoints.EAST;
+  }
+
+  isWest() {
+    return this.value === CardinalPoints.WEST;
+  }
+
   static fromValue(value: string): CardinalPoint {
     for (const cardinalPointTypeValue of Object.values(CardinalPoints)) {
       if (value === cardinalPointTypeValue.toString()) {
