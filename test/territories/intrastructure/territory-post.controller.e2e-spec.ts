@@ -8,6 +8,7 @@ import { saveInitialTerritories } from './helpers';
 import { TerritoryControllerMother } from './territory-controller.mother';
 
 describe('TerritoryPostController (e2e)', () => {
+  const LENGHT_INITIAL_TERRITORY = 20;
   let app: INestApplication;
   let repo: TerritoryRepository;
 
@@ -24,11 +25,16 @@ describe('TerritoryPostController (e2e)', () => {
   describe('/v1/api/territories (POST)', () => {
     beforeEach(async () => {
       await repo.deleteAll();
-      await saveInitialTerritories(repo, TerritoryMother.INITIAL_TERRITORIES);
+      await saveInitialTerritories(
+        repo,
+        TerritoryMother.createInicialTerritories(LENGHT_INITIAL_TERRITORY),
+      );
     });
 
     it('should create new territory', () => {
-      const territoryMocked = TerritoryControllerMother.REQUEST_TERRITORY_4;
+      const territoryMocked = TerritoryControllerMother.requestCreate({
+        number: 21,
+      });
       return request(app.getHttpServer())
         .post('')
         .send(territoryMocked)
@@ -37,8 +43,9 @@ describe('TerritoryPostController (e2e)', () => {
     });
 
     it('when terriory number already registry should send 400 status code', () => {
-      const territoryMocked =
-        TerritoryMother.INITIAL_TERRITORIES[0].toPrimitives();
+      const territoryMocked = TerritoryControllerMother.requestCreate({
+        number: 5,
+      });
       const expectedCode = 400;
       return request(app.getHttpServer())
         .post('')

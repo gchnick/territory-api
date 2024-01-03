@@ -1,18 +1,24 @@
-import { Uuid } from '@shared/domain/value-object/uuid';
+import { faker } from '@faker-js/faker';
 
 export class TerritoryControllerMother {
-  static get REQUEST_TERRITORY_4() {
+  static requestCreate({
+    id = faker.string.uuid(),
+    number = faker.number.int({ min: 1, max: 100 }),
+    label = faker.location.city(),
+    limits = [
+      { cardinalPoint: 'NORTH', limit: faker.location.streetAddress() },
+      { cardinalPoint: 'SOUTH', limit: faker.location.streetAddress() },
+      { cardinalPoint: 'EAST', limit: faker.location.streetAddress() },
+      { cardinalPoint: 'WEST', limit: faker.location.streetAddress() },
+    ],
+    lastDateCompleted = faker.date.past(),
+  } = {}) {
     return {
-      id: Uuid.random().value,
-      number: 4,
-      label: 'Territory 4 of request',
-      limits: {
-        NORTH: 'NORTH',
-        SOUTH: 'SOUTH',
-        EAST: 'EAST',
-        WEST: 'WEST',
-      },
-      lastDateCompleted: '2023-12-24',
+      id,
+      number,
+      label,
+      limits,
+      lastDateCompleted,
     };
   }
 }

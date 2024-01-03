@@ -3,7 +3,7 @@ import { TerritoryMother } from './territory.mother';
 describe('Territory should', () => {
   it('change its bloking status to lock', () => {
     // Arrange
-    const territory = TerritoryMother.INITIAL_TERRITORIES[0];
+    const territory = TerritoryMother.create({ isLocked: false });
 
     // Act
     const territoryLocked = territory.lock();
@@ -15,7 +15,7 @@ describe('Territory should', () => {
 
   it('change its bloking status to unlock and update last date completed', () => {
     // Arrange
-    const territory = TerritoryMother.INITIAL_TERRITORIES[2];
+    const territory = TerritoryMother.create({ isLocked: true });
     const closedDate = new Date('2023-12-23');
 
     // Act

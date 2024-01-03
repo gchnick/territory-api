@@ -1,54 +1,39 @@
-import { Uuid } from '@shared/domain/value-object/uuid';
-import { Territory } from '../../../src/territories/domain/territory';
+import { faker } from '@faker-js/faker';
+import { Territory } from '@territories/domain/territory';
 
 export class TerritoryMother {
-  static get INITIAL_TERRITORIES(): Territory[] {
-    return [
-      Territory.fromPrimitives({
-        id: Uuid.random().value,
-        number: 1,
-        label: 'Territory 1',
-        limits: {
-          NORTH: 'NORTH',
-          SOUTH: 'SOUTH',
-          EAST: 'EAST',
-          WEST: 'WEST',
-        },
-        map: undefined,
-        isLocked: false,
-        lastDateCompleted: new Date('2023-12-20'),
-        meetingPlaces: [],
-      }),
-      Territory.fromPrimitives({
-        id: Uuid.random().value,
-        number: 2,
-        label: 'Territory 2',
-        limits: {
-          NORTH: 'NORTH',
-          SOUTH: 'SOUTH',
-          EAST: 'EAST',
-          WEST: 'WEST',
-        },
-        map: undefined,
-        isLocked: false,
-        lastDateCompleted: new Date('2023-12-21'),
-        meetingPlaces: [],
-      }),
-      Territory.fromPrimitives({
-        id: Uuid.random().value,
-        number: 3,
-        label: 'Territory 3',
-        limits: {
-          NORTH: 'NORTH',
-          SOUTH: 'SOUTH',
-          EAST: 'EAST',
-          WEST: 'WEST',
-        },
-        map: undefined,
-        isLocked: true,
-        lastDateCompleted: new Date('2023-12-22'),
-        meetingPlaces: [],
-      }),
-    ];
+  static createInicialTerritories(count = 50): Territory[] {
+    const territory: Territory[] = [];
+    for (let i = 0; i < count; i++) {
+      territory.push(this.create({ number: i + 1 }));
+    }
+    return territory;
+  }
+
+  static create({
+    id = faker.string.uuid(),
+    number = faker.number.int({ min: 1, max: 100 }),
+    label = faker.location.city(),
+    limits = [
+      { cardinalPoint: 'NORTH', limit: faker.location.streetAddress() },
+      { cardinalPoint: 'SOUTH', limit: faker.location.streetAddress() },
+      { cardinalPoint: 'EAST', limit: faker.location.streetAddress() },
+      { cardinalPoint: 'WEST', limit: faker.location.streetAddress() },
+    ],
+    map = faker.image.url(),
+    isLocked = faker.datatype.boolean(0.75),
+    lastDateCompleted = faker.date.past(),
+    meetingPlaces = [],
+  } = {}): Territory {
+    return Territory.fromPrimitives({
+      id,
+      number,
+      label,
+      limits,
+      map,
+      isLocked,
+      lastDateCompleted,
+      meetingPlaces,
+    });
   }
 }
