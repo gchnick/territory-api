@@ -8,6 +8,8 @@
   },
   "moduleNameMapper": {
     "^@shared/(.*)": "<rootDir>./src/shared/$1",
+    "^@auth/(.*)": "<rootDir>./src/auth/$1",
+    "^@users/(.*)": "<rootDir>./src/users/$1",
     "^@territories/(.*)": "<rootDir>./src/territories/$1"
   }
 }
