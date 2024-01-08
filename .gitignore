@@ -1,7 +1,7 @@
 dist
-last
 node_modules
 .env*
+!.env.template
 *.log
 *.db**
 coverage

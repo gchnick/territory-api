@@ -36,14 +36,11 @@ yarn build
 
 Now work into dist folder.
 
-### 4. Create a `.env` file
+### 4. Config file
 
-Into write the `DATABASE_URL` to _SQLITE_ database and `PORT` to run the _server_.
+Rename the **env.template** file to **.env**
 
-```txt
-DATABASE_URL="file:./territory.db"
-PORT=8000
-```
+You can change the values ​​of each of the environment variables to suit your needs.
 
 ### 5. Install dependencies
 
