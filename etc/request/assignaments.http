@@ -1,0 +1,54 @@
+## ASSIGNAMENTS
+
+### Recuperar todas las asignaciones sin incluir las futuras
+### Tipo de paginación: cursor-based pagination
+### Por defecto cada página contiene 10 asignaciones
+### Ordenado por fecha de asignaciones de forma desendiente
+GET http://localhost:7070/api/v1/programs/assignaments
+
+### Recuperar todas las asignaciones desde cursor
+GET http://localhost:7070/api/v1/programs/assignaments?cursor=4d43b5b5-cc78-41f7-b068-461fd7094ece
+
+### Recuperar todas las asignaciones incluyendo las futuras
+GET http://localhost:7070/api/v1/programs/assignaments?future=true
+
+### Crear una asignación en el programa actual
+POST http://localhost:7070/api/v1/programs/assignaments
+Content-Type: application/json
+
+{
+  "meetingPlaceId": "842ae545-5194-44b0-8742-060fae82270b",
+  "conductorId": "7aa6cb01-ebcf-4ccb-838d-dc23c1836e67",
+  "date": "2023-09-30 15:00"
+}
+
+### Crear una asignación en el programa por identificador
+POST http://localhost:7070/api/v1/programs/b032f09a-8ece-4bbe-b4d6-6338b0807e99/assignaments
+Content-Type: application/json
+
+{
+  "meetingPlaceId": "a30bc7b6-7d96-4e13-b0b3-f34e913d7f89",
+  "conductorId": "aeae0ff8-f5b0-46a1-b844-79dbabe9c951",
+  "date": "2023-08-1 15:00"
+}
+
+### Actualizar asignación como cubierta y registrar
+POST http://localhost:7070/api/v1/programs/assignaments/7c5b60f7-d8f4-4040-880b-f661dd5f0b92/covered
+Content-Type: application/json
+
+{
+  "completionDate": "2023-09-30"
+}
+
+### Actualizar una asignación
+PATCH http://localhost:7070/api/v1/programs/assignaments/db0e7d63-c97f-4b74-bf12-dc86b3233461
+Content-Type: application/json
+
+{
+  "meetingPlaceId": "a30bc7b6-7d96-4e13-b0b3-f34e913d7f89",
+  "conductorId": "aeae0ff8-f5b0-46a1-b844-79dbabe9c951",
+  "date": "2023-09-30 14:00"
+}
+
+### Borrar una asignación
+DELETE http://localhost:7070/api/v1/programs/assignaments/d76de462-d690-4900-952e-93848e456d42

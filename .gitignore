@@ -1,7 +1,9 @@
-dist
-node_modules
-.env*
-!.env.template
-*.log
-*.db**
-coverage
+node_modules/
+dist/
+.tmp
+.idea
+.env
+coverage/
+.npm
+.vscode
+.nyc_output

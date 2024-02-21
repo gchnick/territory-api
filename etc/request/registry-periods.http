@@ -1,0 +1,32 @@
+## REGISTRY PERIODS
+
+### Crear un periodo de registro
+POST http://localhost:7070/api/v1/registries/periods
+Content-Type: application/json
+
+{
+  "description": "New period of preach"
+}
+
+### Finalizar periodo actual y crear nuevo periodo
+POST http://localhost:7070/api/v1/registries/periods/finish-and-init
+Content-Type: application/json
+
+{
+  "description": "Period of preach before finish"
+}
+
+### Actualizar un periodo de registro
+PATCH http://localhost:7070/api/v1/registries/periods/f07abbd9-157a-4ac6-987d-b7ec28f63036
+Content-Type: application/json
+
+{
+  "description": "Special campain",
+  "finishDate": "2023-09-23"
+}
+
+### Finalizar periodo de registro actual
+POST http://localhost:7070/api/v1/registries/periods/finish
+
+### Borrar un periodo de registro
+DELETE http://localhost:7070/api/v1/registries/periods/292edda1-ea9e-4ed5-a39b-c77c31fed6e5

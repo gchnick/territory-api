@@ -1,9 +1,8 @@
-node_modules
-dist/
-.git/
-.gitignore
-.husky
-.env*
-*.log
-*.db**
-coverage
+*
+!/package.json
+!/yarn.lock
+!/tsconfig.prod.json
+!/tsconfig.json
+!/.swcrc
+!/nest-cli.json
+!/src

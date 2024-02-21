@@ -1,0 +1,46 @@
+## PROGRAMS
+
+### Recuperar todos programas completos sin incluir los futuros
+### Tipo de paginación: cursor-based pagination
+### Por defecto cada página contiene 2 programas
+### Ordenado por fecha de inicio de forma desendiente
+GET http://localhost:7070/api/v1/programs
+
+### Recuperar todos programas completos desde cursor
+GET http://localhost:7070/api/v1/programs?cursor=b032f09a-8ece-4bbe-b4d6-6338b0807e99
+
+### Recuperar todos programas completos incluyendo los futuros
+GET http://localhost:7070/api/v1/programs?future=true
+
+### Recuperar todos programas completos incluyendo los futuros desde cursor
+GET http://localhost:7070/api/v1/programs?future=true&cursor=77df4698-a0ef-428b-8b0a-8ef8d70c1040
+
+### Recuperar el programa actual completo
+GET http://localhost:7070/api/v1/programs?current=true
+
+### Recuperar el programa completo por identificador
+GET http://localhost:7070/api/v1/programs/b032f09a-8ece-4bbe-b4d6-6338b0807e99
+
+### Crear un programa
+POST http://localhost:7070/api/v1/programs
+Content-Type: application/json
+
+{
+  "sinceWeek": "2023-09-28",
+  "daysDuration": 7
+}
+
+### Actualizar el campo "published" de un programa
+POST http://localhost:7070/api/v1/programs/156329d6-1e51-457a-8830-956b61477ee5/published
+
+### Actualizar un programa
+PATCH http://localhost:7070/api/v1/programs/faacea25-b62b-4920-ac22-7fabfaea8ba8
+Content-Type: application/json
+
+{
+  "sinceWeek": "2023-09-28",
+  "untilWeek": "2023-10-05"
+}
+
+### Borrar un programa
+DELETE http://localhost:7070/api/v1/programs/156329d6-1e51-457a-8830-956b61477ee5

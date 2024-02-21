@@ -1,6 +1,6 @@
 # 🗺 Territory API Rest
 
-This ia a backend that serves as the basis for developing an application for territory servant records.
+This is a backend that serves as the basis for developing an application for territory servant records.
 
 ## Comming soon
 

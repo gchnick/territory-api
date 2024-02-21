@@ -1,0 +1,31 @@
+## MEETING PLACES
+
+### Modificar lugar de encuentro
+PATCH http://localhost:7070/api/v1/meeting-places/842ae545-5194-44b0-8742-060fae82270b
+Content-Type: application/json
+
+{
+  "place": "Place Update",
+  "latitude": "8.841722", 
+  "longitude": "-82.226129"
+}
+
+### Borrar lugar de encuentro
+DELETE http://localhost:7070/api/v1/meeting-places/83859656-fe69-48ab-bf51-68bdae0c45b4
+
+
+### Reemplazar disponibilidad del lugar de encuentro
+PUT http://localhost:7070/api/v1/meeting-places/842ae545-5194-44b0-8742-060fae82270b/availability
+Content-Type: application/json
+
+{
+  "phone": "0000-0000000",
+  "fieldService": true,
+  "availability": {
+    "SATURDAY": { "frequency": "2 week", "moment": "MORNING" },
+    "TUESDAY": { "frequency": "every", "moment": "AFTERNOON" }
+  }
+}
+
+### Borrar disponiblidad del lugar de encuentro
+DELETE http://localhost:7070/api/v1/meeting-places/3179f605-4d64-4f6b-b80b-9d9843149aa2/availability

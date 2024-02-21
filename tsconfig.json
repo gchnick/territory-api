@@ -1,27 +1,25 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
+    "target": "ES2022",
+    "esModuleInterop": true,
+    "strict": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "inlineSources": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "target": "ES2021",
-    "sourceMap": true,
-    "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false,
+    "resolveJsonModule": true,
     "paths": {
+      "@src/*": ["src/*"],
+      "@app/*": ["src/app/*"],
+      "@core/*": ["src/core/*"],
       "@shared/*": ["src/shared/*"],
-      "@auth/*": ["src/auth/*"],
-      "@users/*": ["src/users/*"],
-      "@territories/*": ["src/territories/*"]
+      "@contexts/*": ["src/contexts/*"]
     }
-  }
+  },
+  "exclude": ["node_modules", "dist"]
 }

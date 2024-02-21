@@ -1,0 +1,49 @@
+##  TERRITORIES
+
+### Recuperar todos territorios
+GET http://localhost:7070/api/v1/territories
+
+### Recuperar todos territorios disponibles
+GET http://localhost:7070/api/v1/territories?available=true
+
+### Recuperar un territorio por numero
+GET http://localhost:7070/api/v1/territories/10
+
+### Crear una territorio
+POST http://localhost:7070/api/v1/territories
+Content-Type: application/json
+
+{
+  "number": 10,
+  "label": "Place beatiful",
+  "limits": {
+    "NORTH": "Mont",
+    "SOUTH": "Rest",
+    "EAST": "Sunny",
+    "WEST": "River good"
+  },
+  "lastDateCompleted": "2023-03-1"
+}
+
+### Actualizar un territorio
+PATCH http://localhost:7070/api/v1/territories/10
+Content-Type: application/json
+
+{
+  "lastDateCompleted": "2023-09-1"
+}
+
+### Reemplazar lugares de encuentro en un territorio
+PUT http://localhost:7070/api/v1/territories/10/meeting-places
+Content-Type: application/json
+
+{
+  "meetingPlaces": [
+    { "place": "Place 1", "latitude": "7.841722", "longitude": "-72.226129" },
+    { "place": "Place 2", "latitude": "7.841722", "longitude": "72.226129" },
+    { "place": "Place 3", "latitude": "7.841722", "longitude": "72.226129" }
+  ]
+}
+
+### Borrar un territorio
+DELETE http://localhost:7070/api/v1/territories/130928d6-c4a1-42c3-8d54-31f70734b6d3
