@@ -1,8 +1,7 @@
 import { faker } from "@faker-js/faker";
 
-// eslint-disable-next-line unicorn/no-static-only-class
-export class TerritoryControllerMother {
-  static requestCreate({
+export const TerritoryPostRequestMother = {
+  create({
     id = faker.string.uuid(),
     number = faker.number.int({ min: 1, max: 100 }),
     label = faker.location.city(),
@@ -21,5 +20,5 @@ export class TerritoryControllerMother {
       limits,
       lastDateCompleted,
     };
-  }
-}
+  },
+};

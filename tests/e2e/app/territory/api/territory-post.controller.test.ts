@@ -8,10 +8,11 @@ import { TerritoryRepository } from "@contexts/registry/territories/domain/terri
 
 import { TerritoryMother } from "../../../../unit/src/context/registry/territories/domain/territory.mother";
 import { saveInitialTerritories } from "../helpers";
-import { TerritoryControllerMother } from "./territory-controller.mother";
+import { TerritoryPostRequestMother } from "./requests/territory-post-request-mother";
 
 describe("TerritoryPostController (e2e)", () => {
   const LENGHT_INITIAL_TERRITORY = 20;
+  const URL_BASE = "/v1/api/territories";
   let app: INestApplication;
   let repo: TerritoryRepository;
 
@@ -35,26 +36,26 @@ describe("TerritoryPostController (e2e)", () => {
     });
 
     it("should create new territory", () => {
-      const territoryMocked = TerritoryControllerMother.requestCreate({
+      const requestTerritory = TerritoryPostRequestMother.create({
         number: 21,
       });
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       return request(app.getHttpServer())
         .post("")
-        .send(territoryMocked)
-        .expect("Location", `/v1/api/territories/${territoryMocked.id}`)
+        .send(requestTerritory)
+        .expect("Location", `${URL_BASE}/${requestTerritory.id}`)
         .expect(201);
     });
 
     it("when terriory number already registry should send 400 status code", () => {
-      const territoryMocked = TerritoryControllerMother.requestCreate({
+      const requestTerritory = TerritoryPostRequestMother.create({
         number: 5,
       });
       const expectedCode = 400;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       return request(app.getHttpServer())
         .post("")
-        .send(territoryMocked)
+        .send(requestTerritory)
         .expect(expectedCode);
     });
   });

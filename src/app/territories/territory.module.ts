@@ -1,4 +1,6 @@
-import { Module, OnModuleInit, Provider } from "@nestjs/common";
+/* eslint-disable simple-import-sort/imports */
+import { Inject, Module, OnModuleInit, Provider } from "@nestjs/common";
+import { DataSource } from "typeorm";
 
 import { SharedModule } from "@app/shared/shared.module";
 
@@ -10,8 +12,13 @@ import { SearchAllTerritoryQueryHandler } from "@contexts/registry/territories/a
 import { TerritoriesFinder } from "@contexts/registry/territories/application/search-all/territories-finder";
 import { TerritoryRepository } from "@contexts/registry/territories/domain/territory-repository";
 import { TerritoryTypeorm } from "@contexts/registry/territories/infrastructure/persistence/typeorm/territory-typeorm";
+import { Command } from "@contexts/shared/domain/command";
+import { CommandHandler } from "@contexts/shared/domain/command-handler";
 import { EventBus } from "@contexts/shared/domain/event-bus";
 import Logger from "@contexts/shared/domain/logger";
+import { Query } from "@contexts/shared/domain/query";
+import { QueryHandler } from "@contexts/shared/domain/query-handler";
+import { Response } from "@contexts/shared/domain/response";
 import { CommandHandlers } from "@contexts/shared/infrastructure/command-bus/command-handlers";
 import { QueryHandlers } from "@contexts/shared/infrastructure/query-bus/query-handlers";
 
@@ -20,7 +27,11 @@ import { TerritoriesGetController } from "./api/territory-get.controller";
 import { TerritoryPostController } from "./api/territory-post.controller";
 
 export const territoryProviders: Provider[] = [
-  { provide: TerritoryRepository, useClass: TerritoryTypeorm },
+  {
+    provide: TerritoryRepository,
+    useFactory: (l: Logger, d: DataSource) => new TerritoryTypeorm(l, d),
+    inject: [Logger, DataSource],
+  },
   {
     provide: TerritoryCreator,
     useFactory: (l: Logger, r: TerritoryRepository, e: EventBus) =>
@@ -54,6 +65,19 @@ export const territoryProviders: Provider[] = [
     useFactory: (f: TerritoryFinder) => new FindByNumberQueryHandler(f),
     inject: [TerritoryFinder],
   },
+  {
+    provide: "TerritoyCommandHandlers",
+    useFactory: (c: CreateTerritoryCommandHandler) => [c],
+    inject: [CreateTerritoryCommandHandler],
+  },
+  {
+    provide: "TerritoyQueryHandlers",
+    useFactory: (
+      s: SearchAllTerritoryQueryHandler,
+      f: FindByNumberQueryHandler,
+    ) => [s, f],
+    inject: [SearchAllTerritoryQueryHandler, FindByNumberQueryHandler],
+  },
 ];
 
 @Module({
@@ -69,9 +93,10 @@ export class TerritoryModule implements OnModuleInit {
   constructor(
     private commandHandlers: CommandHandlers,
     private queryHandlers: QueryHandlers,
-    private c: CreateTerritoryCommandHandler,
-    private s: SearchAllTerritoryQueryHandler,
-    private f: FindByNumberQueryHandler,
+    @Inject("TerritoyCommandHandlers")
+    private commandHandler: Array<CommandHandler<Command>>,
+    @Inject("TerritoyQueryHandlers")
+    private queryHandler: Array<QueryHandler<Query, Response>>,
   ) {}
 
   onModuleInit() {
@@ -80,10 +105,10 @@ export class TerritoryModule implements OnModuleInit {
   }
 
   #addCommandHandlers() {
-    this.commandHandlers.add([this.c]);
+    this.commandHandlers.add(this.commandHandler);
   }
 
   #addQueryHandlers() {
-    this.queryHandlers.add([this.s, this.f]);
+    this.queryHandlers.add(this.queryHandler);
   }
 }
