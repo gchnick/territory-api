@@ -72,6 +72,7 @@ export class TerritoryTypeorm extends TerritoryRepository {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async matching(criteria: Criteria): Promise<Territory[]> {
     throw new Error("Method not implemented.");
   }
@@ -152,6 +153,7 @@ export class TerritoryTypeorm extends TerritoryRepository {
     });
   }
 
+  // eslint-disable-next-line @typescript-eslint/require-await
   async update(
     number: TerritoryNumber,
     data: Partial<TerritoryPrimitives>,

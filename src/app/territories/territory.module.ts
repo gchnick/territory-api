@@ -12,6 +12,7 @@ import { SearchAllTerritoryQueryHandler } from "@contexts/registry/territories/a
 import { TerritoriesFinder } from "@contexts/registry/territories/application/search-all/territories-finder";
 import { TerritoryRepository } from "@contexts/registry/territories/domain/territory-repository";
 import { TerritoryTypeorm } from "@contexts/registry/territories/infrastructure/persistence/typeorm/territory-typeorm";
+import { Territory } from "@contexts/registry/territories/infrastructure/persistence/typeorm/territory.entity";
 import { Command } from "@contexts/shared/domain/command";
 import { CommandHandler } from "@contexts/shared/domain/command-handler";
 import { EventBus } from "@contexts/shared/domain/event-bus";
@@ -22,6 +23,7 @@ import { Response } from "@contexts/shared/domain/response";
 import { CommandHandlers } from "@contexts/shared/infrastructure/command-bus/command-handlers";
 import { QueryHandlers } from "@contexts/shared/infrastructure/query-bus/query-handlers";
 
+import { TypeOrmModule } from "@nestjs/typeorm";
 import { TerritoryDeleteController } from "./api/territory-delete.controller";
 import { TerritoriesGetController } from "./api/territory-get.controller";
 import { TerritoryPostController } from "./api/territory-post.controller";
@@ -81,7 +83,7 @@ export const territoryProviders: Provider[] = [
 ];
 
 @Module({
-  imports: [SharedModule],
+  imports: [SharedModule, TypeOrmModule.forFeature([Territory])],
   controllers: [
     TerritoriesGetController,
     TerritoryPostController,
@@ -100,15 +102,7 @@ export class TerritoryModule implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.#addCommandHandlers();
-    this.#addQueryHandlers();
-  }
-
-  #addCommandHandlers() {
     this.commandHandlers.add(this.commandHandler);
-  }
-
-  #addQueryHandlers() {
     this.queryHandlers.add(this.queryHandler);
   }
 }
