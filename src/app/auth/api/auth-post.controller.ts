@@ -22,7 +22,7 @@ import { Uuid } from "@contexts/shared/domain/value-object/uuid";
 import { SignInRequest, SignUpRequest } from "./requests";
 
 @Controller()
-export class AuthController {
+export class AuthPostController {
   constructor(
     @Inject(Logger) private readonly log: Logger,
     @Inject(CommandBus) private readonly commandBus: CommandBus,

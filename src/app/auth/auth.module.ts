@@ -11,7 +11,7 @@ import { UserRepository } from "@contexts/registry/users/domain/user-repository"
 import Logger from "@contexts/shared/domain/logger";
 import { QueryHandlers } from "@contexts/shared/infrastructure/query-bus/query-handlers";
 
-import { AuthController } from "./api/auth-post.controller";
+import { AuthPostController } from "./api/auth-post.controller";
 
 const AUTH_PROVIDERS: Provider[] = [
   {
@@ -29,7 +29,7 @@ const AUTH_PROVIDERS: Provider[] = [
 
 @Module({
   imports: [SharedModule, UserModule],
-  controllers: [AuthController],
+  controllers: [AuthPostController],
   providers: [...AUTH_PROVIDERS],
 })
 export class AuthModule implements OnModuleInit {
