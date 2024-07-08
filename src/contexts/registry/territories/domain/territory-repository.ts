@@ -1,34 +1,27 @@
-import { Criteria } from "@contexts/shared/domain/criteria/criteria";
-import { Nullable } from "@contexts/shared/domain/nullable";
+import { Criteria } from "@/contexts/shared/domain/criteria/criteria";
+import { DeepPartial } from "@/contexts/shared/domain/deep-partial";
+import { Nullable } from "@/contexts/shared/domain/nullable";
 
-import { Territory, TerritoryPrimitives } from "./territory";
+import { Territory } from "./territory";
 import { TerritoryId } from "./territory-id";
 import { TerritoryNumber } from "./territory-number";
 
 export abstract class TerritoryRepository {
   abstract save(territory: Territory): Promise<void>;
 
-  abstract searchAll(): Promise<Array<Territory>>;
+  abstract searchAll(): Promise<Array<Territory> | Territory>;
 
-  abstract matching(criteria: Criteria): Promise<Array<Territory>>;
+  abstract matching(criteria: Criteria): Promise<Array<Territory> | Territory>;
 
   abstract findByNumber(number: TerritoryNumber): Promise<Nullable<Territory>>;
 
   abstract findById(id: TerritoryId): Promise<Nullable<Territory>>;
 
-  abstract update(
-    number: TerritoryNumber,
-    data: Partial<TerritoryPrimitives>,
-  ): Promise<Territory>;
+  abstract update(id: TerritoryId, data: DeepPartial<Territory>): Promise<void>;
+
+  abstract update(id: TerritoryId, data: Territory): Promise<void>;
 
   abstract delete(id: TerritoryId): Promise<void>;
 
-  protected abstract truncate(): Promise<void>;
-
-  async deleteAll(): Promise<void> {
-    const NODE_ENV = process.env.NODE_ENV;
-    if (NODE_ENV === "development" || NODE_ENV === "test") {
-      await this.truncate();
-    }
-  }
+  abstract deleteAll(): Promise<void>;
 }

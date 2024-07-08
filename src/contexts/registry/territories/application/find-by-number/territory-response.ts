@@ -1,7 +1,4 @@
-import {
-  Territory,
-  TerritoryPrimitives,
-} from "@contexts/registry/territories/domain/territory";
+import { Territory, TerritoryPrimitives } from "../../domain/territory";
 
 export class TerritoryResponse {
   public readonly data: TerritoryPrimitives;

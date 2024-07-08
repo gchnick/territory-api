@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { TerritoryId } from "@contexts/registry/territories/domain/territory-id";
+import { TerritoryId } from "@/contexts/registry/territories/domain/territory-id";
 
 export const TerritoryIdMother = {
   create(value?: string): TerritoryId {

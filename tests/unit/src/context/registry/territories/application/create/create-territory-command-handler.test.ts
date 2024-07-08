@@ -1,12 +1,12 @@
 /* eslint-disable simple-import-sort/imports */
-import { CreateTerritoryCommandHandler } from "@contexts/registry/territories/application/create/create-territory-command-handler";
-import { TerritoryCreator } from "@contexts/registry/territories/application/create/territory-creator";
-import { TerritoryLabelLengthExceeded } from "@contexts/registry/territories/domain/territory-label-length-exceeded";
+import { CreateTerritoryCommandHandler } from "@/contexts/registry/territories/application/create/create-territory-command-handler";
+import { TerritoryCreator } from "@/contexts/registry/territories/application/create/territory-creator";
+import { TerritoryLabelLengthExceeded } from "@/contexts/registry/territories/domain/territory-label-length-exceeded";
 
 import { MockEventBus } from "../../../../shared/domain/mock-event-bus";
 import { MockLogger } from "../../../../shared/infrastructure/mock-logger";
 import { TerritoryCreatedDomainEventMother } from "../../domain/territory-created-domain-event-mother";
-import { TerritoryMother } from "../../domain/territory.mother";
+import { TerritoryMother } from "../../domain/territory-mother";
 import { MockTerritoryRepository } from "../../intrastructure/mock-territory-repository";
 import { CreateTerritoryCommandMother } from "./create-territory-command-mother";
 
@@ -18,7 +18,6 @@ let handler: CreateTerritoryCommandHandler;
 
 beforeEach(() => {
   logger = new MockLogger();
-  logger.shouldSetContext("Territory");
   repository = new MockTerritoryRepository();
   eventBus = new MockEventBus();
   creator = new TerritoryCreator(logger, repository, eventBus);
@@ -28,7 +27,7 @@ beforeEach(() => {
 describe("CreateTerritoryCommandHandler should", () => {
   it("create a valid territory", async () => {
     const command = CreateTerritoryCommandMother.create();
-    const territory = TerritoryMother.from(command);
+    const territory = TerritoryMother.fromCommand(command);
     const domainEvent =
       TerritoryCreatedDomainEventMother.fromTerritory(territory);
 
@@ -43,7 +42,7 @@ describe("CreateTerritoryCommandHandler should", () => {
     void expect(async () => {
       const command = CreateTerritoryCommandMother.invalidLabel();
 
-      const territory = TerritoryMother.from(command);
+      const territory = TerritoryMother.fromCommand(command);
 
       await handler.handle(command);
 

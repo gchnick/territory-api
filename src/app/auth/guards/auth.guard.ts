@@ -8,7 +8,7 @@ import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { FastifyRequest } from "fastify";
 
-import { JwtPayload } from "@contexts/registry/auth/domain/jwt-payload";
+import { JwtPayload } from "@/contexts/registry/auth/domain/jwt-payload";
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -27,8 +27,6 @@ export class AuthGuard implements CanActivate {
       await this.jwtService.verifyAsync<JwtPayload>(token, {
         secret: this.configService.get<string>("jwtSecret"),
       });
-
-      // request["user"] = payload; TODO: Add palyload in request
     } catch {
       throw new UnauthorizedException();
     }

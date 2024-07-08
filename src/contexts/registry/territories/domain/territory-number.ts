@@ -1,4 +1,4 @@
-import { NumberValueObject } from "@contexts/shared/domain/value-object/number-value-object";
+import { NumberValueObject } from "@/contexts/shared/domain/value-object/number-value-object";
 
 import { TerritoryNumberExceeded } from "./territory-number-exceeded";
 import { TerritoryNumberIsNegative } from "./territory-number-is-negative";

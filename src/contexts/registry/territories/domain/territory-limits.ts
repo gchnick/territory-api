@@ -1,4 +1,4 @@
-import { InvalidArgumentError } from "@contexts/shared/domain/value-object/invalid-argument-error";
+import { InvalidArgumentError } from "@/contexts/shared/domain/value-object/invalid-argument-error";
 
 import { CardinalPoint, CardinalPoints } from "./cardinal-points";
 

@@ -1,10 +1,10 @@
 import { Filter, FilterPrimitives } from "./filter";
 
 export class Filters {
-  readonly filters: Filter[];
+  readonly value: Filter[];
 
   constructor(filters: Filter[]) {
-    this.filters = filters;
+    this.value = filters;
   }
 
   static fromValues(filters: Array<Map<string, string>>): Filters {
@@ -24,6 +24,6 @@ export class Filters {
   }
 
   toPrimitives(): FilterPrimitives[] {
-    return this.filters.map(filter => filter.toPrimitives());
+    return this.value.map(filter => filter.toPrimitives());
   }
 }

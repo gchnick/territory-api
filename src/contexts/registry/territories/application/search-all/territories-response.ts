@@ -1,12 +1,11 @@
-import {
-  Territory,
-  TerritoryPrimitives,
-} from "@contexts/registry/territories/domain/territory";
+import { Territory, TerritoryPrimitives } from "../../domain/territory";
 
-export class TerritoriesRespose {
+export class TerritoriesResponse {
   public readonly data: Array<TerritoryPrimitives>;
 
-  constructor(territories: Array<Territory>) {
-    this.data = territories.map(territory => territory.toPrimitives());
+  constructor(territories: Array<Territory> | Territory) {
+    this.data = Array.isArray(territories)
+      ? territories.map(territory => territory.toPrimitives())
+      : [territories.toPrimitives()];
   }
 }

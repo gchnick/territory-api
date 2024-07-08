@@ -1,34 +1,35 @@
-import { Encode } from "@contexts/registry/auth/domain/encode";
-import { Jwt } from "@contexts/registry/auth/domain/jwt";
-import { JwtPayload } from "@contexts/registry/auth/domain/jwt-payload";
-import { UserCredentialInvalid } from "@contexts/registry/users/domain/user-credential-invalid";
-import { UserDisabled } from "@contexts/registry/users/domain/user-disabled";
-import { UserEmail } from "@contexts/registry/users/domain/user-email";
-import { UserNotFount } from "@contexts/registry/users/domain/user-not-fount";
-import { UserPassword } from "@contexts/registry/users/domain/user-password";
-import { UserRepository } from "@contexts/registry/users/domain/user-repository";
-import { UserUnverified } from "@contexts/registry/users/domain/user-unverified";
-import Logger from "@contexts/shared/domain/logger";
+import { Encode } from "@/contexts/registry/auth/domain/encode";
+import { Jwt } from "@/contexts/registry/auth/domain/jwt";
+import { JwtPayload } from "@/contexts/registry/auth/domain/jwt-payload";
+import { UserCredentialInvalid } from "@/contexts/registry/users/domain/user-credential-invalid";
+import { UserDisabled } from "@/contexts/registry/users/domain/user-disabled";
+import { UserEmail } from "@/contexts/registry/users/domain/user-email";
+import { UserPassword } from "@/contexts/registry/users/domain/user-password";
+import { UserRepository } from "@/contexts/registry/users/domain/user-repository";
+import { UserUnverified } from "@/contexts/registry/users/domain/user-unverified";
+import Logger from "@/contexts/shared/domain/logger";
+import { Injectable } from "@/contexts/shared/infrastructure/dependency-injection/injectable";
 
 import { AuthResponse } from "./auth-response";
 
+@Injectable()
 export class AuthChecker {
   constructor(
-    private log: Logger,
-    private userRepository: UserRepository,
-    private encode: Encode,
-    private jwt: Jwt,
+    private readonly logger: Logger,
+    private readonly userRepository: UserRepository,
+    private readonly encode: Encode,
+    private readonly jwt: Jwt,
   ) {}
 
-  async run(email: UserEmail, password: UserPassword) {
-    this.log.info(`Finding user by email <${email.value}>`);
-    const user = await this.userRepository.findOne(email);
+  async check(email: UserEmail, password: UserPassword) {
+    this.logger.log(`Finding user by email <${email.value}>`, "User");
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new UserNotFount(`User with email <${email.value}> not found`);
+      throw new UserCredentialInvalid("Credentials are not valid");
     }
 
-    this.log.info(`Cheking authentication user <${user.name.value}>`);
+    this.logger.log(`Cheking authentication user <${user.name.value}>`, "User");
     const isMatch = await user.comparePassword(this.encode, password);
 
     if (!isMatch) {
@@ -50,7 +51,7 @@ export class AuthChecker {
     const payload: JwtPayload = {
       id: user.id.value,
       email: user.email.value,
-      roles: user.roles.map(r => r.value),
+      roles: user.roles.map(r => r.name.value),
     };
     const token = await this.jwt.signAsync(payload);
 

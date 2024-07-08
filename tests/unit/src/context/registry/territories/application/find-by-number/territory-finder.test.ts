@@ -1,15 +1,14 @@
 /* eslint-disable simple-import-sort/imports */
-import { TerritoryFinder } from "@contexts/registry/territories/application/find-by-number/territory-finder";
-import { TerritoryNotFount } from "@contexts/registry/territories/domain/territory-not-fount";
+import { TerritoryFinder } from "@/contexts/registry/territories/application/find-by-number/territory-finder";
+import { TerritoryNotFount } from "@/contexts/registry/territories/domain/territory-not-fount";
 
 import { MockLogger } from "../../../../shared/infrastructure/mock-logger";
+import { TerritoryMother } from "../../domain/territory-mother";
 import { TerritoryNumberMother } from "../../domain/territory-number-mother";
-import { TerritoryMother } from "../../domain/territory.mother";
 import { MockTerritoryRepository } from "../../intrastructure/mock-territory-repository";
 
 describe("TerritoryFinder should", () => {
   const logger = new MockLogger();
-  logger.shouldSetContext("Territory");
   const repository = new MockTerritoryRepository();
   const territoryFinder = new TerritoryFinder(logger, repository);
 

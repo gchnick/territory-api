@@ -4,9 +4,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable jest/no-standalone-expect */
-import { DomainEvent } from "@contexts/shared/domain/domain-event";
-import { EventBus } from "@contexts/shared/domain/event-bus";
-import { DomainEventSubscribers } from "@contexts/shared/infrastructure/event-bus/domain-event-subscribers";
+import { DomainEvent } from "@/contexts/shared/domain/domain-event";
+import { EventBus } from "@/contexts/shared/domain/event-bus";
+import { DomainEventSubscribers } from "@/contexts/shared/infrastructure/event-bus/domain-event-subscribers";
 
 export class MockEventBus implements EventBus {
   private readonly mockPublish = jest.fn();

@@ -1,5 +1,5 @@
-import { EnumValueObject } from "@contexts/shared/domain/value-object/enum-value-object";
-import { InvalidArgumentError } from "@contexts/shared/domain/value-object/invalid-argument-error";
+import { EnumValueObject } from "@/contexts/shared/domain/value-object/enum-value-object";
+import { InvalidArgumentError } from "@/contexts/shared/domain/value-object/invalid-argument-error";
 
 export enum Moments {
   MORNING = "MORNING",

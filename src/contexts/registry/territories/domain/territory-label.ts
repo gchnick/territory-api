@@ -1,4 +1,4 @@
-import { StringValueObject } from "@contexts/shared/domain/value-object/string-value-object";
+import { StringValueObject } from "@/contexts/shared/domain/value-object/string-value-object";
 
 import { TerritoryLabelIsEmpty } from "./territory-label-is-empty";
 import { TerritoryLabelLengthExceeded } from "./territory-label-length-exceeded";

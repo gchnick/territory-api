@@ -1,23 +1,24 @@
-import { Query } from "@contexts/shared/domain/query";
+import { FilterPrimitives } from "@/contexts/shared/domain/criteria/filter";
+import { Query } from "@/contexts/shared/domain/query";
 
 export class SearchTerritoriesByCriteriaQuery implements Query {
-  readonly filters: Array<Map<string, string>>;
+  readonly filters: FilterPrimitives[];
   readonly orderBy?: string;
   readonly orderType?: string;
   readonly limit?: number;
-  readonly pointer?: string;
+  readonly cursor?: string;
 
   constructor(
-    filters: Array<Map<string, string>>,
+    filters: FilterPrimitives[],
     orderBy?: string,
     orderType?: string,
     limit?: number,
-    pointer?: string,
+    cursor?: string,
   ) {
     this.filters = filters;
     this.orderBy = orderBy;
     this.orderType = orderType;
     this.limit = limit;
-    this.pointer = pointer;
+    this.cursor = cursor;
   }
 }

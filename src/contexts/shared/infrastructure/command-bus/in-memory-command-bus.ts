@@ -1,5 +1,5 @@
-import { Command } from "@contexts/shared/domain/command";
-import { CommandBus } from "@contexts/shared/domain/command-bus";
+import { Command } from "@/contexts/shared/domain/command";
+import { CommandBus } from "@/contexts/shared/domain/command-bus";
 
 import { CommandHandlers } from "./command-handlers";
 

@@ -3,14 +3,14 @@ import { faker } from "@faker-js/faker";
 import {
   Filter,
   FilterPrimitives,
-} from "@contexts/shared/domain/criteria/filter";
-import { Operator } from "@contexts/shared/domain/criteria/filter-operator";
+} from "@/contexts/shared/domain/criteria/filter";
+import { Operator } from "@/contexts/shared/domain/criteria/filter-operator";
 
 export const FilterMother = {
   create(params?: Partial<FilterPrimitives>): Filter {
     const randomOperator =
-      Object.values(Operator)[
-        Math.floor(Math.random() * Object.values(Operator).length)
+      Object.keys(Operator)[
+        Math.floor(Math.random() * Object.keys(Operator).length)
       ];
 
     const primitives: FilterPrimitives = {

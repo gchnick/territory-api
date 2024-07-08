@@ -1,10 +1,10 @@
 import { Test, TestingModule } from "@nestjs/testing";
 
-import { AuthPostController } from "@app/auth/api/auth-post.controller";
+import { AuthPostController } from "@/app/auth/api/auth-post.controller";
 
-import { CommandBus } from "@contexts/shared/domain/command-bus";
-import Logger from "@contexts/shared/domain/logger";
-import { QueryBus } from "@contexts/shared/domain/query-bus";
+import { CommandBus } from "@/contexts/shared/domain/command-bus";
+import Logger from "@/contexts/shared/domain/logger";
+import { QueryBus } from "@/contexts/shared/domain/query-bus";
 
 import { MockCommandBus } from "../../../context/shared/infrastructure/command-bus/mock-command-bus";
 import { MockLogger } from "../../../context/shared/infrastructure/mock-logger";

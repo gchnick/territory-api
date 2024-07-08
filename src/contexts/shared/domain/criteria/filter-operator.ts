@@ -25,10 +25,8 @@ export class FilterOperator extends EnumValueObject<Operator> {
     throw new InvalidArgumentError(`The filter operator ${value} is invalid`);
   }
 
-  public isPositive(): boolean {
-    return (
-      this.value !== Operator.NOT_EQUAL && this.value !== Operator.NOT_CONTAINS
-    );
+  static fromPrimitive(operator: string) {
+    return new FilterOperator(Operator[operator as keyof typeof Operator]);
   }
 
   protected throwErrorForInvalidValue(value: Operator): void {
@@ -37,5 +35,23 @@ export class FilterOperator extends EnumValueObject<Operator> {
 
   static equal() {
     return this.fromValue(Operator.EQUAL);
+  }
+
+  isPositive(): boolean {
+    return (
+      this.value !== Operator.NOT_EQUAL && this.value !== Operator.NOT_CONTAINS
+    );
+  }
+
+  isContains(): boolean {
+    return this.value.valueOf() === Operator.CONTAINS.valueOf();
+  }
+
+  isNotContains(): boolean {
+    return this.value.valueOf() === Operator.NOT_CONTAINS.valueOf();
+  }
+
+  isNotEquals(): boolean {
+    return this.value.valueOf() === Operator.NOT_EQUAL.valueOf();
   }
 }

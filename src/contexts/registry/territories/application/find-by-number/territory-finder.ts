@@ -1,20 +1,23 @@
-import { TerritoryNotFount } from "@contexts/registry/territories/domain/territory-not-fount";
-import { TerritoryNumber } from "@contexts/registry/territories/domain/territory-number";
-import { TerritoryRepository } from "@contexts/registry/territories/domain/territory-repository";
-import Logger from "@contexts/shared/domain/logger";
+import { TerritoryNotFount } from "@/contexts/registry/territories/domain/territory-not-fount";
+import { TerritoryNumber } from "@/contexts/registry/territories/domain/territory-number";
+import { TerritoryRepository } from "@/contexts/registry/territories/domain/territory-repository";
+import Logger from "@/contexts/shared/domain/logger";
+import { Injectable } from "@/contexts/shared/infrastructure/dependency-injection/injectable";
 
 import { TerritoryResponse } from "./territory-response";
 
+@Injectable()
 export class TerritoryFinder {
   constructor(
-    private log: Logger,
-    private territoryRepository: TerritoryRepository,
-  ) {
-    this.log.setContext("Territory");
-  }
+    private readonly logger: Logger,
+    private readonly territoryRepository: TerritoryRepository,
+  ) {}
 
   async find(number: TerritoryNumber): Promise<TerritoryResponse> {
-    this.log.info(`Finding territory by number <${number.value}>`);
+    this.logger.log(
+      `Finding territory by number <${number.value}>`,
+      "Territory",
+    );
     const territory = await this.territoryRepository.findByNumber(number);
 
     if (!territory) {

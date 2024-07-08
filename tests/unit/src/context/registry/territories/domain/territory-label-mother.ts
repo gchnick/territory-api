@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { TerritoryLabel } from "@contexts/registry/territories/domain/territory-label";
+import { TerritoryLabel } from "@/contexts/registry/territories/domain/territory-label";
 
 export const TerritoryLabelMother = {
   create(value?: string): TerritoryLabel {

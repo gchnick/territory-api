@@ -5,8 +5,13 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
+import {
+  DocumentBuilder,
+  SwaggerCustomOptions,
+  SwaggerModule,
+} from "@nestjs/swagger";
 
-import Logger from "@contexts/shared/domain/logger";
+import Logger from "@/contexts/shared/domain/logger";
 
 import { AppModule } from "./app.module";
 
@@ -23,13 +28,26 @@ async function bootstrap() {
     }),
   );
 
+  const config = new DocumentBuilder()
+    .setTitle("Service Overseer Backend")
+    .setDescription("The registries of Service Overseer API")
+    .setVersion("2.0")
+    .build();
+
+  const options: SwaggerCustomOptions = {
+    useGlobalPrefix: true,
+  };
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup("api", app, document, options);
+
   const configService = app.get(ConfigService);
   const port = configService.get<string>("PORT", "3000");
 
   await app.listen(port, "0.0.0.0");
 
   const logger = app.get(Logger);
-  logger.info(`App is ready and listening on port ${port} 🚀`);
+  logger.log(`App is ready and listening on port ${port} 🚀`, "Nest");
 }
 
 bootstrap().catch(handleError);

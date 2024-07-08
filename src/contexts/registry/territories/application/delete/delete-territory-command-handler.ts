@@ -1,14 +1,16 @@
-import { Command } from "@contexts/shared/domain/command";
-import { CommandHandler } from "@contexts/shared/domain/command-handler";
+import { Command } from "@/contexts/shared/domain/command";
+import { CommandHandler } from "@/contexts/shared/domain/command-handler";
+import { Injectable } from "@/contexts/shared/infrastructure/dependency-injection/injectable";
 
-import { DeleteTerritoryCommand } from "../../domain/delete-territory-command";
 import { TerritoryId } from "../../domain/territory-id";
+import { DeleteTerritoryCommand } from "./delete-territory-command";
 import { TerritoryDeleter } from "./territory-deleter";
 
+@Injectable()
 export class DeleteTerritoryCommandHandler
   implements CommandHandler<DeleteTerritoryCommand>
 {
-  constructor(private territoryDeleter: TerritoryDeleter) {}
+  constructor(private readonly territoryDeleter: TerritoryDeleter) {}
 
   subscribedTo(): Command {
     return DeleteTerritoryCommand;

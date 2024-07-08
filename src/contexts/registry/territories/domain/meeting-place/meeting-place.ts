@@ -1,4 +1,4 @@
-import { Nullable } from "@contexts/shared/domain/nullable";
+import { Nullable } from "@/contexts/shared/domain/nullable";
 
 import {
   AvailabilityPrimitives,

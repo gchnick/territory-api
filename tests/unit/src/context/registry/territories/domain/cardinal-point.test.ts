@@ -1,4 +1,4 @@
-import { CardinalPoint } from "@contexts/registry/territories/domain/cardinal-points";
+import { CardinalPoint } from "@/contexts/registry/territories/domain/cardinal-points";
 
 describe("CardinalPiont should", () => {
   it("comprare to CardinalPoints enum and return true if is equal", () => {

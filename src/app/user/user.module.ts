@@ -1,76 +1,58 @@
-/* eslint-disable simple-import-sort/imports */
-import { Module, OnModuleInit, Provider } from "@nestjs/common";
-import { TypeOrmModule, getRepositoryToken } from "@nestjs/typeorm";
-import * as bcrypt from "bcrypt";
-import { Repository } from "typeorm";
+import { Module } from "@nestjs/common";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { DataSource } from "typeorm";
 
-import { SharedModule } from "@app/shared/shared.module";
+import { SharedModule } from "@/core/shared/shared.module";
 
-import { CreateUserCommandHandler } from "@contexts/registry/users/application/create/creator-user-command-handler";
-import { UserCreator } from "@contexts/registry/users/application/create/user-creator";
-import { FindByEmailQueryHandler } from "@contexts/registry/users/application/find-by-email/find-by-email-query-handler";
-import { UserFinder } from "@contexts/registry/users/application/find-by-email/user-finder";
-import { UserRepository } from "@contexts/registry/users/domain/user-repository";
-import { Role } from "@contexts/registry/users/infrastructure/persistence/typeorm/role.entity";
-import { UserTypeormSqlite } from "@contexts/registry/users/infrastructure/persistence/typeorm/user-typeorm-sqlite";
-import { User } from "@contexts/registry/users/infrastructure/persistence/typeorm/user.entity";
-import { EventBus } from "@contexts/shared/domain/event-bus";
-import Logger from "@contexts/shared/domain/logger";
-import { CommandHandlers } from "@contexts/shared/infrastructure/command-bus/command-handlers";
-import { QueryHandlers } from "@contexts/shared/infrastructure/query-bus/query-handlers";
+import { Encode } from "@/contexts/registry/auth/domain/encode";
+import { CreateUserCommandHandler } from "@/contexts/registry/users/application/create/create-user-command-handler";
+import { UserCreator } from "@/contexts/registry/users/application/create/user-creator";
+import { FindByEmailQueryHandler } from "@/contexts/registry/users/application/find-by-email/find-by-email-query-handler";
+import { UserFinder } from "@/contexts/registry/users/application/find-by-email/user-finder";
+import { UpdateUserCommandHandler } from "@/contexts/registry/users/application/update/update-user-command-handler";
+import { UserUpdater } from "@/contexts/registry/users/application/update/user-updater";
+import { UserRepository } from "@/contexts/registry/users/domain/user-repository";
+import { RoleEntity } from "@/contexts/registry/users/infrastructure/persistence/typeorm/role-entity";
+import { UserEntity } from "@/contexts/registry/users/infrastructure/persistence/typeorm/user-entity";
+import { UserTypeOrm } from "@/contexts/registry/users/infrastructure/persistence/user-type-orm";
+import { Bcrypt } from "@/contexts/shared/infrastructure/encode/bcrypt";
 
-const USER_PROVIDERS: Provider[] = [
-  {
-    provide: UserRepository,
-    useFactory: (r: Repository<User>) => new UserTypeormSqlite(r),
-    inject: [getRepositoryToken(User)],
-  },
-  {
-    provide: UserCreator,
-    useFactory: (l: Logger, r: UserRepository, e: EventBus) =>
-      new UserCreator(l, r, bcrypt, e),
-    inject: [Logger, UserRepository, EventBus],
-  },
-  {
-    provide: CreateUserCommandHandler,
-    useFactory: (c: UserCreator) => new CreateUserCommandHandler(c),
-    inject: [UserCreator],
-  },
-  {
-    provide: UserFinder,
-    useFactory: (l: Logger, r: UserRepository) => new UserFinder(l, r),
-    inject: [Logger, UserRepository],
-  },
-  {
-    provide: FindByEmailQueryHandler,
-    useFactory: (f: UserFinder) => new FindByEmailQueryHandler(f),
-    inject: [UserFinder],
-  },
-];
+import { UserPutController } from "./api/user-put.controller";
 
 @Module({
-  imports: [SharedModule, TypeOrmModule.forFeature([User, Role])],
-  providers: [...USER_PROVIDERS],
-  exports: [UserRepository],
+  imports: [SharedModule, TypeOrmModule.forFeature([UserEntity, RoleEntity])],
+  controllers: [UserPutController],
+  providers: [
+    {
+      provide: UserRepository,
+      useFactory: (d: DataSource) => new UserTypeOrm(d),
+      inject: [DataSource],
+    },
+    UserCreator,
+    UserUpdater,
+    CreateUserCommandHandler,
+    UpdateUserCommandHandler,
+    UserFinder,
+    FindByEmailQueryHandler,
+    Bcrypt,
+    {
+      provide: Encode,
+      useExisting: Bcrypt,
+    },
+    {
+      provide: "UserCommandHandlers",
+      useFactory: (
+        c: CreateUserCommandHandler,
+        u: UpdateUserCommandHandler,
+      ) => [c, u],
+      inject: [CreateUserCommandHandler, UpdateUserCommandHandler],
+    },
+    {
+      provide: "UserQueryHandlers",
+      useFactory: (f: FindByEmailQueryHandler) => [f],
+      inject: [FindByEmailQueryHandler],
+    },
+  ],
+  exports: [UserRepository, "UserCommandHandlers", "UserQueryHandlers"],
 })
-export class UserModule implements OnModuleInit {
-  constructor(
-    private commandHandlers: CommandHandlers,
-    private queryHandlers: QueryHandlers,
-    private c: CreateUserCommandHandler,
-    private f: FindByEmailQueryHandler,
-  ) {}
-
-  onModuleInit() {
-    this.#addCommandHandlers();
-    this.#addQueryHandlers();
-  }
-
-  #addCommandHandlers() {
-    this.commandHandlers.add([this.c]);
-  }
-
-  #addQueryHandlers() {
-    this.queryHandlers.add([this.f]);
-  }
-}
+export class UserModule {}

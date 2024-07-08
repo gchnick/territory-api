@@ -1,15 +1,17 @@
-import { TerritoryNumber } from "@contexts/registry/territories/domain/territory-number";
-import { Query } from "@contexts/shared/domain/query";
-import { QueryHandler } from "@contexts/shared/domain/query-handler";
+import { TerritoryNumber } from "@/contexts/registry/territories/domain/territory-number";
+import { Query } from "@/contexts/shared/domain/query";
+import { QueryHandler } from "@/contexts/shared/domain/query-handler";
+import { Injectable } from "@/contexts/shared/infrastructure/dependency-injection/injectable";
 
 import { FindByNumberQuery } from "./find-by-number-query";
 import { TerritoryFinder } from "./territory-finder";
 import { TerritoryResponse } from "./territory-response";
 
+@Injectable()
 export class FindByNumberQueryHandler
   implements QueryHandler<FindByNumberQuery, TerritoryResponse>
 {
-  constructor(private territoryFinder: TerritoryFinder) {}
+  constructor(private readonly territoryFinder: TerritoryFinder) {}
 
   subscribedTo(): Query {
     return FindByNumberQuery;

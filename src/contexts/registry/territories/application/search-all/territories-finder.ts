@@ -1,20 +1,20 @@
-import { TerritoryRepository } from "@contexts/registry/territories/domain/territory-repository";
-import Logger from "@contexts/shared/domain/logger";
+import { TerritoryRepository } from "@/contexts/registry/territories/domain/territory-repository";
+import Logger from "@/contexts/shared/domain/logger";
+import { Injectable } from "@/contexts/shared/infrastructure/dependency-injection/injectable";
 
-import { TerritoriesRespose } from "./territories-response";
+import { TerritoriesResponse } from "./territories-response";
 
+@Injectable()
 export class TerritoriesFinder {
   constructor(
-    private log: Logger,
-    private territoryRepository: TerritoryRepository,
-  ) {
-    this.log.setContext("Territory");
-  }
+    private readonly logger: Logger,
+    private readonly territoryRepository: TerritoryRepository,
+  ) {}
 
   async fetch() {
-    this.log.info(`Fetching all territories`);
+    this.logger.log(`Fetching all territories`, "Territory");
     const territories = await this.territoryRepository.searchAll();
 
-    return new TerritoriesRespose(territories);
+    return new TerritoriesResponse(territories);
   }
 }

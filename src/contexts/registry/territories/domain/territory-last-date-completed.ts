@@ -1,21 +1,15 @@
-import { InvalidArgumentError } from "@contexts/shared/domain/value-object/invalid-argument-error";
-import { ValueObject } from "@contexts/shared/domain/value-object/value-object";
+import { ValueObject } from "@/contexts/shared/domain/value-object/value-object";
 
 import { LastDateCompletedIsInvalid } from "./last-date-completed-is-invalid";
 
 export class TerritoryLastDateCompleted extends ValueObject<Date> {
   constructor(value: Date) {
-    super(value);
-    this.#ensureDateIsNotString(value);
-    this.#ensureDateIsPast(value);
-  }
-
-  #ensureDateIsNotString(value: Date | string) {
+    let date = value;
     if (typeof value === "string") {
-      throw new InvalidArgumentError(
-        `The last date completed <${value}> is a string`,
-      );
+      date = new Date(value);
     }
+    super(date);
+    this.#ensureDateIsPast(date);
   }
 
   #ensureDateIsPast(value: Date) {

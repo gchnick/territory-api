@@ -1,4 +1,4 @@
-import { Role } from "@src/contexts/registry/users/domain/user-role";
+import { Role } from "@/contexts/registry/users/domain/role/role-name";
 
 export interface JwtPayload {
   id: string;

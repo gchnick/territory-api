@@ -1,7 +1,7 @@
 /* eslint-disable jest/no-mocks-import */
-import { CommandNotRegisteredError } from "@contexts/shared/domain/command-not-registered-error";
-import { CommandHandlers } from "@contexts/shared/infrastructure/command-bus/command-handlers";
-import { InMemoryCommandBus } from "@contexts/shared/infrastructure/command-bus/in-memory-command-bus";
+import { CommandNotRegisteredError } from "@/contexts/shared/domain/command-not-registered-error";
+import { CommandHandlers } from "@/contexts/shared/infrastructure/command-bus/command-handlers";
+import { InMemoryCommandBus } from "@/contexts/shared/infrastructure/command-bus/in-memory-command-bus";
 
 import { CommandHandlerDummy } from "./__mocks__/command-handler-dummy";
 import { DummyCommand } from "./__mocks__/dummy-command";

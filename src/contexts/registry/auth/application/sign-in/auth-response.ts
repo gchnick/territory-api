@@ -1,13 +1,7 @@
-export interface Token {
-  access_token: string;
-}
-
 export class AuthResponse {
-  public readonly value: Token;
+  public readonly access_token: string;
 
   constructor(token: string) {
-    this.value = {
-      access_token: token,
-    };
+    this.access_token = token;
   }
 }

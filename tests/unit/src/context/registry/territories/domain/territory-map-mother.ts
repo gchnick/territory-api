@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { TerritoryMap } from "@contexts/registry/territories/domain/territory-map";
+import { TerritoryMap } from "@/contexts/registry/territories/domain/territory-map";
 
 export const TerritoryMapMother = {
   create(urlMap?: string): TerritoryMap {

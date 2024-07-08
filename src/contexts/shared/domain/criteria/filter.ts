@@ -29,13 +29,17 @@ export class Filter {
     const operator = values.get("operator");
     const value = values.get("value");
 
-    if (!field || !operator || !value) {
+    if (
+      typeof field !== "string" ||
+      typeof operator !== "string" ||
+      typeof value !== "string"
+    ) {
       throw new InvalidArgumentError(`The filter is invalid`);
     }
 
     return new Filter(
       new FilterField(field),
-      FilterOperator.fromValue(operator),
+      FilterOperator.fromPrimitive(operator),
       new FilterValue(value),
     );
   }
@@ -47,7 +51,7 @@ export class Filter {
   ): Filter {
     return new Filter(
       new FilterField(field),
-      FilterOperator.fromValue(operator),
+      FilterOperator.fromPrimitive(operator),
       new FilterValue(value),
     );
   }

@@ -1,5 +1,5 @@
-import { Encode } from "@contexts/registry/auth/domain/encode";
-import { AggregateRoot } from "@contexts/shared/domain/aggregate-root";
+import { Encode } from "@/contexts/registry/auth/domain/encode";
+import { AggregateRoot } from "@/contexts/shared/domain/aggregate-root";
 
 import { UserCreatedDomainEvent } from "./user-created-domain-event";
 import { UserEmail } from "./user-email";
@@ -7,11 +7,21 @@ import { UserEnabled } from "./user-enabled";
 import { UserId } from "./user-id";
 import { UserName } from "./user-name";
 import { UserPassword } from "./user-password";
-import { UserRole } from "./user-role";
+import { UserRole, UserRolePrimitives } from "./user-role";
 import { UserVerified } from "./user-verified";
 
+export type UserPrimitives = {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  verified: boolean;
+  enabled: boolean;
+  roles: UserRolePrimitives[];
+};
+
 export class User extends AggregateRoot {
-  static #SALT_OR_ROUNDS_ENCODE = 10;
+  static SALT_OR_ROUNDS_ENCODE = 10;
 
   readonly id: UserId;
   readonly name: UserName;
@@ -43,7 +53,7 @@ export class User extends AggregateRoot {
   async hashPassword(encode: Encode): Promise<User> {
     const passwordHashed = await encode.hash(
       this.password.value,
-      User.#SALT_OR_ROUNDS_ENCODE,
+      User.SALT_OR_ROUNDS_ENCODE,
     );
     return new User(
       this.id,
@@ -79,6 +89,7 @@ export class User extends AggregateRoot {
         aggregateId: user.id.value,
         name: user.name.value,
         email: user.email.value,
+        roles: user.roles.map(r => r.name.value),
       }),
     );
 
@@ -92,7 +103,7 @@ export class User extends AggregateRoot {
     password: string;
     verified: boolean;
     enabled: boolean;
-    roles: string[];
+    roles: UserRolePrimitives[];
   }): User {
     return new User(
       new UserId(plainData.id),
@@ -101,11 +112,13 @@ export class User extends AggregateRoot {
       new UserPassword(plainData.password),
       new UserVerified(plainData.verified),
       new UserEnabled(plainData.enabled),
-      plainData.roles.map(r => UserRole.fromValue(r)),
+      plainData.roles.map(({ id, name, description }) =>
+        UserRole.fromPrimitives({ id, name, description }),
+      ),
     );
   }
 
-  toPrimitives() {
+  toPrimitives(): UserPrimitives {
     return {
       id: this.id.value,
       name: this.name.value,
@@ -113,7 +126,7 @@ export class User extends AggregateRoot {
       password: this.password.value,
       verified: this.verified.value,
       enabled: this.enabled.value,
-      roles: this.roles.map(r => r.value),
+      roles: this.roles.map(r => r.toPrimitives()),
     };
   }
 }

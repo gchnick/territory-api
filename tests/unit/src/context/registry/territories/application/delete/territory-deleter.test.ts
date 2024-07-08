@@ -1,4 +1,4 @@
-import { TerritoryDeleter } from "@contexts/registry/territories/application/delete/territory-deleter";
+import { TerritoryDeleter } from "@/contexts/registry/territories/application/delete/territory-deleter";
 
 import { MockLogger } from "../../../../shared/infrastructure/mock-logger";
 import { TerritoryIdMother } from "../../domain/territory-id-mother";
@@ -6,7 +6,6 @@ import { MockTerritoryRepository } from "../../intrastructure/mock-territory-rep
 
 describe("territory-deleter should", () => {
   const logger = new MockLogger();
-  logger.shouldSetContext("Territory");
   const repository = new MockTerritoryRepository();
   const territoryDeleter = new TerritoryDeleter(logger, repository);
 

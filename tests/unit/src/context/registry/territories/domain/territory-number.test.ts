@@ -1,5 +1,5 @@
-import { TerritoryNumberExceeded } from "@contexts/registry/territories/domain/territory-number-exceeded";
-import { TerritoryNumberIsNegative } from "@contexts/registry/territories/domain/territory-number-is-negative";
+import { TerritoryNumberExceeded } from "@/contexts/registry/territories/domain/territory-number-exceeded";
+import { TerritoryNumberIsNegative } from "@/contexts/registry/territories/domain/territory-number-is-negative";
 
 import { TerritoryNumberMother } from "./territory-number-mother";
 

@@ -1,24 +1,31 @@
-import { Connection, EntitySchema, Repository } from "typeorm";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { DataSource, EntitySchema, Repository } from "typeorm";
 
-import { AggregateRoot } from "@contexts/shared/domain/aggregate-root";
+import { AggregateRoot } from "@/contexts/shared/domain/aggregate-root";
 
 export abstract class TypeOrmRepository<T extends AggregateRoot> {
-  constructor(private _client: Promise<Connection>) {}
+  constructor(private _dataSource: DataSource) {}
 
   protected abstract entitySchema(): EntitySchema<T>;
 
-  protected client(): Promise<Connection> {
-    return this._client;
+  protected dataSource(): DataSource {
+    return this._dataSource;
   }
 
-  protected async repository(): Promise<Repository<T>> {
-    // eslint-disable-next-line unicorn/no-await-expression-member
-    return (await this._client).getRepository(this.entitySchema());
+  protected repository(): Repository<T> {
+    return this._dataSource.getRepository(this.entitySchema());
   }
 
   protected async persist(aggregateRoot: T): Promise<void> {
-    const repository = await this.repository();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const repository = this.repository();
     await repository.save(aggregateRoot as any);
+  }
+
+  protected async truncate(): Promise<void> {
+    const NODE_ENV = process.env.NODE_ENV;
+    if (NODE_ENV === "development" || NODE_ENV === "test") {
+      const repository = this.repository();
+      await repository.clear();
+    }
   }
 }

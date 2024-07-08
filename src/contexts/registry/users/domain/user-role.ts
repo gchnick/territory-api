@@ -1,30 +1,41 @@
-import { EnumValueObject } from "@contexts/shared/domain/value-object/enum-value-object";
-import { InvalidArgumentError } from "@contexts/shared/domain/value-object/invalid-argument-error";
+import { RoleDescription } from "./role/role-description";
+import { RoleId } from "./role/role-id";
+import { Role, RoleName } from "./role/role-name";
 
-export enum Role {
-  PUBLISHER = "PUBLISHER",
-  PIONEER = "PIONEER",
-  SERVANT = "SERVANT",
-  OVERSEER = "OVERSEER",
-  SERVICE_OVERSEER = "SERVICE_OVERSEER",
-}
+export type UserRolePrimitives = {
+  id: string;
+  name: Role;
+  description: string;
+};
 
-export class UserRole extends EnumValueObject<Role> {
-  constructor(value: Role) {
-    super(value, Object.values(Role));
+export class UserRole {
+  readonly id: RoleId;
+  readonly name: RoleName;
+  readonly description: RoleDescription;
+
+  constructor(id: RoleId, name: RoleName, description: RoleDescription) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
   }
 
-  static fromValue(value: string): UserRole {
-    for (const userRoleTypeValue of Object.values(Role)) {
-      if (value === userRoleTypeValue.toString()) {
-        return new UserRole(userRoleTypeValue);
-      }
-    }
-
-    throw new InvalidArgumentError(`The moment type ${value} is invalid`);
+  static fromPrimitives(plainData: {
+    id: string;
+    name: string;
+    description: string;
+  }): UserRole {
+    return new UserRole(
+      new RoleId(plainData.id),
+      RoleName.fromValue(plainData.name),
+      new RoleDescription(plainData.description),
+    );
   }
 
-  protected throwErrorForInvalidValue(value: Role): void {
-    throw new InvalidArgumentError(`The role type <${value}> is invalid`);
+  toPrimitives(): UserRolePrimitives {
+    return {
+      id: this.id.value,
+      name: this.name.value,
+      description: this.description.value,
+    };
   }
 }

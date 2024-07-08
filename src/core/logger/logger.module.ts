@@ -2,7 +2,9 @@ import { Global, Logger as LoggerNest, Module, Provider } from "@nestjs/common";
 import { LogLevel } from "@nestjs/common/services/logger.service";
 import { ConfigService } from "@nestjs/config";
 
-import Logger from "@contexts/shared/domain/logger";
+import { SharedModule } from "@/core/shared/shared.module";
+
+import Logger from "@/contexts/shared/domain/logger";
 
 const loggerProvider: Provider = {
   provide: Logger,
@@ -17,6 +19,7 @@ const loggerProvider: Provider = {
 
 @Global()
 @Module({
+  imports: [SharedModule],
   providers: [loggerProvider],
   exports: [loggerProvider],
 })

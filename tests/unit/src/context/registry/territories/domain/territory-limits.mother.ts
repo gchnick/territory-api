@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { TerritoryLimits } from "@contexts/registry/territories/domain/territory-limits";
+import { TerritoryLimits } from "@/contexts/registry/territories/domain/territory-limits";
 
 export const TerritoryLimitsMother = {
   create({

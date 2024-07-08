@@ -1,7 +1,7 @@
 import {
   DomainEvent,
   DomainEventClass,
-} from "@contexts/shared/domain/domain-event";
+} from "@/contexts/shared/domain/domain-event";
 
 import { DomainEventSubscribers } from "./domain-event-subscribers";
 

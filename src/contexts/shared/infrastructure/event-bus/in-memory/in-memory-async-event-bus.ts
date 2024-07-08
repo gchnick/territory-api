@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 
-import { DomainEvent } from "@contexts/shared/domain/domain-event";
-import { EventBus } from "@contexts/shared/domain/event-bus";
+import { DomainEvent } from "@/contexts/shared/domain/domain-event";
+import { EventBus } from "@/contexts/shared/domain/event-bus";
 
 import { DomainEventSubscribers } from "../domain-event-subscribers";
 

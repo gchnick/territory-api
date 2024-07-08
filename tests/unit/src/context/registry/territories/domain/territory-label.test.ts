@@ -1,6 +1,6 @@
-import { TerritoryLabel } from "@contexts/registry/territories/domain/territory-label";
-import { TerritoryLabelIsEmpty } from "@contexts/registry/territories/domain/territory-label-is-empty";
-import { TerritoryLabelLengthExceeded } from "@contexts/registry/territories/domain/territory-label-length-exceeded";
+import { TerritoryLabel } from "@/contexts/registry/territories/domain/territory-label";
+import { TerritoryLabelIsEmpty } from "@/contexts/registry/territories/domain/territory-label-is-empty";
+import { TerritoryLabelLengthExceeded } from "@/contexts/registry/territories/domain/territory-label-length-exceeded";
 
 describe("TerritoryLabel should", () => {
   it("throw error when label is empty", () => {

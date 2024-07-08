@@ -14,11 +14,9 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "paths": {
-      "@src/*": ["src/*"],
-      "@app/*": ["src/app/*"],
-      "@core/*": ["src/core/*"],
-      "@shared/*": ["src/shared/*"],
-      "@contexts/*": ["src/contexts/*"]
+      "@/app/*": ["src/app/*"],
+      "@/core/*": ["src/core/*"],
+      "@/contexts/*": ["src/contexts/*"]
     }
   },
   "exclude": ["node_modules", "dist"]

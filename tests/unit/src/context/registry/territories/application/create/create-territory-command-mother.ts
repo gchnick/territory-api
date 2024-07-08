@@ -1,17 +1,22 @@
-import { CreateTerritoryCommand } from "@contexts/registry/territories/domain/create-territory-command";
-import { TerritoryLimitsPrimitives } from "@contexts/registry/territories/domain/territory-limits";
+import { CreateTerritoryCommand } from "@/contexts/registry/territories/application/create/create-territory-command";
 
 import { TerritoryIdMother } from "../../domain/territory-id-mother";
 import { TerritoryLabelMother } from "../../domain/territory-label-mother";
 import { TerritoryLastDateCompletedMother } from "../../domain/territory-last-date-completed-mother";
-import { TerritoryLimitsMother } from "../../domain/territory-limits.mother";
+import { TerritoryLocalityInPartMother } from "../../domain/territory-locality-in-part-mother";
+import { TerritoryLocalityMother } from "../../domain/territory-locality-mother";
 import { TerritoryNumberMother } from "../../domain/territory-number-mother";
+import { TerritoryQuantityHouseMother } from "../../domain/territory-quantity-house-mother";
+import { TerritorySectorMother } from "../../domain/territory-sector-mother";
 
 type Params = {
   id: string;
   number: number;
   label: string;
-  limits: TerritoryLimitsPrimitives;
+  sector?: string;
+  locality: string;
+  localityInPart?: string;
+  quantityHouses: number;
   lastDateCompleted: Date;
 };
 
@@ -21,20 +26,17 @@ export const CreateTerritoryCommandMother = {
       id: TerritoryIdMother.create().value,
       number: TerritoryNumberMother.create().value,
       label: TerritoryLabelMother.create().value,
-      limits: TerritoryLimitsMother.create().toPrimitives(),
+      sector: TerritorySectorMother.create().value,
+      locality: TerritoryLocalityMother.create().value,
+      localityInPart: TerritoryLocalityInPartMother.create().value,
+      quantityHouses: TerritoryQuantityHouseMother.create().value,
       lastDateCompleted: TerritoryLastDateCompletedMother.create().value,
       ...params,
     };
     return new CreateTerritoryCommand(primitives);
   },
   invalidLabel(): CreateTerritoryCommand {
-    const primitives: Params = {
-      id: TerritoryIdMother.create().value,
-      number: TerritoryNumberMother.create().value,
-      label: TerritoryLabelMother.invalid().value,
-      limits: TerritoryLimitsMother.create().toPrimitives(),
-      lastDateCompleted: TerritoryLastDateCompletedMother.create().value,
-    };
-    return new CreateTerritoryCommand(primitives);
+    const label = TerritoryLabelMother.invalid().value;
+    return this.create({ label });
   },
 };

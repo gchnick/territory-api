@@ -1,15 +1,15 @@
-import { Module, OnModuleInit, Provider } from "@nestjs/common";
+import { Module, Provider } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 
-import { SharedModule } from "@app/shared/shared.module";
-import { UserModule } from "@app/user/user.module";
+import { UserModule } from "@/app/user/user.module";
 
-import { AuthChecker } from "@contexts/registry/auth/application/sign-in/auth-checker";
-import { SignInQueryHandler } from "@contexts/registry/auth/application/sign-in/sign-in-query-handler";
-import { UserRepository } from "@contexts/registry/users/domain/user-repository";
-import Logger from "@contexts/shared/domain/logger";
-import { QueryHandlers } from "@contexts/shared/infrastructure/query-bus/query-handlers";
+import { SharedModule } from "@/core/shared/shared.module";
+
+import { AuthChecker } from "@/contexts/registry/auth/application/sign-in/auth-checker";
+import { SignInQueryHandler } from "@/contexts/registry/auth/application/sign-in/sign-in-query-handler";
+import { UserRepository } from "@/contexts/registry/users/domain/user-repository";
+import Logger from "@/contexts/shared/domain/logger";
 
 import { AuthPostController } from "./api/auth-post.controller";
 
@@ -25,24 +25,17 @@ const AUTH_PROVIDERS: Provider[] = [
     useFactory: (a: AuthChecker) => new SignInQueryHandler(a),
     inject: [AuthChecker],
   },
+  {
+    provide: "AuthQueryHandlers",
+    useFactory: (s: SignInQueryHandler) => [s],
+    inject: [SignInQueryHandler],
+  },
 ];
 
 @Module({
   imports: [SharedModule, UserModule],
   controllers: [AuthPostController],
   providers: [...AUTH_PROVIDERS],
+  exports: ["AuthQueryHandlers"],
 })
-export class AuthModule implements OnModuleInit {
-  constructor(
-    private queryHandlers: QueryHandlers,
-    private s: SignInQueryHandler,
-  ) {}
-
-  onModuleInit() {
-    this.#addQueryHandlers();
-  }
-
-  #addQueryHandlers() {
-    this.queryHandlers.add([this.s]);
-  }
-}
+export class AuthModule {}

@@ -1,5 +1,5 @@
-import { Territory } from "@contexts/registry/territories/domain/territory";
-import { TerritoryCreatedDomainEvent } from "@contexts/registry/territories/domain/territoy-created-domain-event";
+import { Territory } from "@/contexts/registry/territories/domain/territory";
+import { TerritoryCreatedDomainEvent } from "@/contexts/registry/territories/domain/territoy-created-domain-event";
 
 export const TerritoryCreatedDomainEventMother = {
   create({

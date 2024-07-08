@@ -1,5 +1,5 @@
-import { AggregateRoot } from "@contexts/shared/domain/aggregate-root";
-import { Nullable } from "@contexts/shared/domain/nullable";
+import { AggregateRoot } from "@/contexts/shared/domain/aggregate-root";
+import { Nullable } from "@/contexts/shared/domain/nullable";
 
 import {
   MeetingPlace,
@@ -9,17 +9,23 @@ import { TerritoryId } from "./territory-id";
 import { TerritoryIsLocked } from "./territory-is-locked";
 import { TerritoryLabel } from "./territory-label";
 import { TerritoryLastDateCompleted } from "./territory-last-date-completed";
-import { TerritoryLimits, TerritoryLimitsPrimitives } from "./territory-limits";
+import { TerritoryLocality } from "./territory-locality";
+import { TerritoryLocalityInPart } from "./territory-locality-in-part";
 import { TerritoryMap } from "./territory-map";
 import { TerritoryNumber } from "./territory-number";
+import { TerritoryQuantityHouse } from "./territory-quantity-house";
+import { TerritorySector } from "./territory-sector";
 import { TerritoryCreatedDomainEvent } from "./territoy-created-domain-event";
 
 export type TerritoryPrimitives = {
   id: string;
   number: number;
   label: string;
+  sector?: string;
+  locality: string;
+  localityInPart?: string;
   map?: string;
-  limits: TerritoryLimitsPrimitives;
+  quantityHouses: number;
   lastDateCompleted: Date;
   isLocked: boolean;
   meetingPlaces: MeetingPlacePrimitives[];
@@ -29,7 +35,10 @@ export class Territory extends AggregateRoot {
   readonly id: TerritoryId;
   readonly number: TerritoryNumber;
   readonly label: TerritoryLabel;
-  readonly limits: TerritoryLimits;
+  readonly sector: Nullable<TerritorySector>;
+  readonly locality: TerritoryLocality;
+  readonly localityInPart: Nullable<TerritoryLocalityInPart>;
+  readonly quantityHouses: TerritoryQuantityHouse;
   readonly map: Nullable<TerritoryMap>;
   readonly isLocked: TerritoryIsLocked;
   readonly lastDateCompleted: TerritoryLastDateCompleted;
@@ -39,7 +48,10 @@ export class Territory extends AggregateRoot {
     id: TerritoryId,
     number: TerritoryNumber,
     label: TerritoryLabel,
-    limits: TerritoryLimits,
+    sector: Nullable<TerritorySector>,
+    locality: TerritoryLocality,
+    localityInPart: Nullable<TerritoryLocalityInPart>,
+    quantityHouses: TerritoryQuantityHouse,
     map: Nullable<TerritoryMap>,
     isLocked: TerritoryIsLocked,
     lastDateCompleted: TerritoryLastDateCompleted,
@@ -49,7 +61,10 @@ export class Territory extends AggregateRoot {
     this.id = id;
     this.number = number;
     this.label = label;
-    this.limits = limits;
+    this.sector = sector;
+    this.locality = locality;
+    this.localityInPart = localityInPart;
+    this.quantityHouses = quantityHouses;
     this.map = map;
     this.isLocked = isLocked;
     this.lastDateCompleted = lastDateCompleted;
@@ -61,7 +76,10 @@ export class Territory extends AggregateRoot {
       this.id,
       this.number,
       this.label,
-      this.limits,
+      this.sector,
+      this.locality,
+      this.localityInPart,
+      this.quantityHouses,
       this.map,
       new TerritoryIsLocked(true),
       this.lastDateCompleted,
@@ -74,7 +92,10 @@ export class Territory extends AggregateRoot {
       this.id,
       this.number,
       this.label,
-      this.limits,
+      this.sector,
+      this.locality,
+      this.localityInPart,
+      this.quantityHouses,
       this.map,
       new TerritoryIsLocked(false),
       new TerritoryLastDateCompleted(dateClosed),
@@ -86,7 +107,10 @@ export class Territory extends AggregateRoot {
     id: TerritoryId,
     number: TerritoryNumber,
     label: TerritoryLabel,
-    limits: TerritoryLimits,
+    sector: Nullable<TerritorySector>,
+    locality: TerritoryLocality,
+    localityInPart: Nullable<TerritoryLocalityInPart>,
+    quantityHouses: TerritoryQuantityHouse,
     map: Nullable<TerritoryMap>,
     isLocked: TerritoryIsLocked,
     lastDateCompleted: TerritoryLastDateCompleted,
@@ -96,7 +120,10 @@ export class Territory extends AggregateRoot {
       id,
       number,
       label,
-      limits,
+      sector,
+      locality,
+      localityInPart,
+      quantityHouses,
       map,
       isLocked,
       lastDateCompleted,
@@ -118,7 +145,10 @@ export class Territory extends AggregateRoot {
     id: string;
     number: number;
     label: string;
-    limits: TerritoryLimitsPrimitives;
+    sector?: string;
+    locality: string;
+    localityInPart?: string;
+    quantityHouses: number;
     map?: string;
     isLocked: boolean;
     lastDateCompleted: Date;
@@ -128,7 +158,12 @@ export class Territory extends AggregateRoot {
       new TerritoryId(plainData.id),
       new TerritoryNumber(plainData.number),
       new TerritoryLabel(plainData.label),
-      TerritoryLimits.fromPrimitives(plainData.limits),
+      plainData.sector ? new TerritorySector(plainData.sector) : undefined,
+      new TerritoryLocality(plainData.locality),
+      plainData.localityInPart
+        ? new TerritoryLocalityInPart(plainData.localityInPart)
+        : undefined,
+      new TerritoryQuantityHouse(plainData.quantityHouses),
       plainData.map ? new TerritoryMap(plainData.map) : undefined,
       new TerritoryIsLocked(plainData.isLocked),
       new TerritoryLastDateCompleted(plainData.lastDateCompleted),
@@ -160,11 +195,14 @@ export class Territory extends AggregateRoot {
       id: this.id.value,
       number: this.number.value,
       label: this.label.value,
-      limits: this.limits.toPrimitives(),
+      sector: this.sector?.value,
+      locality: this.locality.value,
+      localityInPart: this.localityInPart?.value,
+      quantityHouses: this.quantityHouses.value,
       map: this.map?.value,
       isLocked: this.isLocked.value,
       lastDateCompleted: this.lastDateCompleted.value,
-      meetingPlaces: this.meetingPlaces.map(m => m.toPrimitives()),
+      meetingPlaces: this.meetingPlaces?.map(m => m.toPrimitives()), // TODO: Implement meeting places
     };
   }
 }

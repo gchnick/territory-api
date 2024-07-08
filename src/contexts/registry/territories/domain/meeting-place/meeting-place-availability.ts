@@ -1,4 +1,4 @@
-import { InvalidArgumentError } from "@contexts/shared/domain/value-object/invalid-argument-error";
+import { InvalidArgumentError } from "@/contexts/shared/domain/value-object/invalid-argument-error";
 
 import { Available, AvailablePrimitives } from "./available";
 import { Day, Days } from "./days";

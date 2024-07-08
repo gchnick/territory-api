@@ -1,19 +1,11 @@
-import { User } from "@src/contexts/registry/users/domain/user";
-
-export interface IUserResponse {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  verified: boolean;
-  enabled: boolean;
-  roles: string[];
-}
+import { User, UserPrimitives } from "@/contexts/registry/users/domain/user";
 
 export class UserResponse {
-  public readonly value: IUserResponse;
+  public readonly data: Omit<UserPrimitives, "password">;
 
   constructor(user: User) {
-    this.value = user.toPrimitives();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...withoutPassword } = user.toPrimitives();
+    this.data = withoutPassword;
   }
 }

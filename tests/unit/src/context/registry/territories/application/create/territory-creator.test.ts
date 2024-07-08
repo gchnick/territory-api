@@ -1,13 +1,12 @@
-import { TerritoryCreator } from "@contexts/registry/territories/application/create/territory-creator";
+import { TerritoryCreator } from "@/contexts/registry/territories/application/create/territory-creator";
 
 import { MockEventBus } from "../../../../shared/domain/mock-event-bus";
 import { MockLogger } from "../../../../shared/infrastructure/mock-logger";
-import { TerritoryMother } from "../../domain/territory.mother";
+import { TerritoryMother } from "../../domain/territory-mother";
 import { MockTerritoryRepository } from "../../intrastructure/mock-territory-repository";
 
 describe("territory-creator should", () => {
   const logger = new MockLogger();
-  logger.shouldSetContext("Territory");
   const repository = new MockTerritoryRepository();
   const eventBus = new MockEventBus();
 
@@ -22,7 +21,10 @@ describe("territory-creator should", () => {
       id: expectedTerritory.id,
       number: expectedTerritory.number,
       label: expectedTerritory.label,
-      limits: expectedTerritory.limits,
+      sector: expectedTerritory.sector,
+      locality: expectedTerritory.locality,
+      localityInPart: expectedTerritory.localityInPart,
+      quantityHouses: expectedTerritory.quantityHouses,
       lastDateCompleted: expectedTerritory.lastDateCompleted,
     });
   });

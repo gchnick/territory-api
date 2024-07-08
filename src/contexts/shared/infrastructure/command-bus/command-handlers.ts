@@ -1,6 +1,6 @@
-import { Command } from "@contexts/shared/domain/command";
-import { CommandHandler } from "@contexts/shared/domain/command-handler";
-import { CommandNotRegisteredError } from "@contexts/shared/domain/command-not-registered-error";
+import { Command } from "@/contexts/shared/domain/command";
+import { CommandHandler } from "@/contexts/shared/domain/command-handler";
+import { CommandNotRegisteredError } from "@/contexts/shared/domain/command-not-registered-error";
 
 export class CommandHandlers extends Map<Command, CommandHandler<Command>> {
   constructor(commandHandlers: Array<CommandHandler<Command>>) {
@@ -19,10 +19,5 @@ export class CommandHandlers extends Map<Command, CommandHandler<Command>> {
     }
 
     return commandHandler;
-  }
-  public add(commandHandlers: Array<CommandHandler<Command>>) {
-    for (const commandHandler of commandHandlers) {
-      this.set(commandHandler.subscribedTo(), commandHandler);
-    }
   }
 }

@@ -1,6 +1,6 @@
-import { Territory } from "@contexts/registry/territories/domain/territory";
+import { Territory } from "@/contexts/registry/territories/domain/territory";
 
-import { TerritoryMother } from "./territory.mother";
+import { TerritoryMother } from "./territory-mother";
 
 describe("Territory should", () => {
   it("change its bloking status to lock", () => {

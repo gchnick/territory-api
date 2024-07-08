@@ -1,12 +1,11 @@
-import { TerritoriesFinder } from "@contexts/registry/territories/application/search-all/territories-finder";
+import { TerritoriesFinder } from "@/contexts/registry/territories/application/search-all/territories-finder";
 
 import { MockLogger } from "../../../../shared/infrastructure/mock-logger";
-import { TerritoryMother } from "../../domain/territory.mother";
+import { TerritoryMother } from "../../domain/territory-mother";
 import { MockTerritoryRepository } from "../../intrastructure/mock-territory-repository";
 
 describe("TerritoriesFinder should", () => {
   const logger = new MockLogger();
-  logger.shouldSetContext("Territory");
   const repository = new MockTerritoryRepository();
   const territoriesFinder = new TerritoriesFinder(logger, repository);
 

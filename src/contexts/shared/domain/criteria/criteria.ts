@@ -12,22 +12,21 @@ export class Criteria {
   readonly filters: Filters;
   readonly order: Order;
   readonly limit?: number;
-  readonly pointer?: string;
+  readonly cursor?: string;
 
-  constructor(
-    filters: Filters,
-    order: Order,
-    limit?: number,
-    pointer?: string,
-  ) {
+  constructor(filters: Filters, order: Order, limit?: number, cursor?: string) {
     this.filters = filters;
     this.order = order;
     this.limit = limit;
-    this.pointer = pointer;
+    this.cursor = cursor;
   }
 
-  public hasFilters(): boolean {
-    return this.filters.filters.length > 0;
+  hasFilters(): boolean {
+    return this.filters.value.length > 0;
+  }
+
+  hasOrder(): boolean {
+    return !this.order.isNone();
   }
 
   static fromPrimitives(
@@ -35,13 +34,13 @@ export class Criteria {
     orderBy?: string,
     orderType?: string,
     limit?: number,
-    pointer?: string,
+    cursor?: string,
   ): Criteria {
     return new Criteria(
       Filters.fromPrimitives(filters),
       Order.fromValues(orderBy, orderType),
       limit,
-      pointer,
+      cursor,
     );
   }
 }
