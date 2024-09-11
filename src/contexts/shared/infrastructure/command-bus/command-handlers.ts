@@ -1,6 +1,6 @@
-import { Command } from "@/contexts/shared/domain/command";
-import { CommandHandler } from "@/contexts/shared/domain/command-handler";
-import { CommandNotRegisteredError } from "@/contexts/shared/domain/command-not-registered-error";
+import { Command } from "@/shared/domain/command";
+import { CommandHandler } from "@/shared/domain/command-handler";
+import { CommandNotRegisteredError } from "@/shared/domain/command-not-registered-error";
 
 export class CommandHandlers extends Map<Command, CommandHandler<Command>> {
   constructor(commandHandlers: Array<CommandHandler<Command>>) {

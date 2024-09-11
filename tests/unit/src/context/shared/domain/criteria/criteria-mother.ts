@@ -1,7 +1,7 @@
 import {
   Criteria,
   CriteriaPrimitives,
-} from "@/contexts/shared/domain/criteria/criteria";
+} from "@/shared/domain/criteria/criteria";
 
 import { FiltersMother } from "./filters-mother";
 import { OrderMother } from "./order-mother";

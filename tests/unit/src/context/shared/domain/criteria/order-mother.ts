@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 
-import { Order } from "@/contexts/shared/domain/criteria/order";
-import { OrderTypes } from "@/contexts/shared/domain/criteria/order-type";
+import { Order } from "@/shared/domain/criteria/order";
+import { OrderTypes } from "@/shared/domain/criteria/order-type";
 
 type OrderPrimitives = {
   orderBy?: string;

@@ -1,0 +1,34 @@
+# AUTH
+
+## Get token to authentication and authorization
+POST http://localhost:7070/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "jhon.doe@domain.com",
+  "password": "jhondoepassword",
+}
+
+## Create new account
+POST http://localhost:7070/api/v1/auth/signup
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QG1haWwuY29tIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc3MiOiJodHRwczovL2RvbnJlbW9sby1iYWNrZW5kLmhlckLmhlcm9rdWFwcC5jb20vYXBpL3YxL2F1dGgvdG9rZW4iLCJleHAiOjE2NTI5OTgzMzl9.TG4fyhNykAbD_t7xdmyyxzrkHSyDLAnoj7knlYgnjc0
+
+{
+  "name": "Jhon Doe",
+  "email": "jhon.doe@domain.com",
+  "password": "jhondoepassword",
+  "roles": ["PUBLISHER"],
+}
+
+## Create new account with id
+PUT http://localhost:7070/api/v1/auth/signup/842ae545-5194-44b0-8742-060fae82270b
+Content-Type: application/json
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QG1haWwuY29tIiwicm9sZXMiOlsiUk9MRV9BRE1JTiJdLCJpc3MiOiJodHRwczovL2RvbnJlbW9sby1iYWNrZW5kLmhlckLmhlcm9rdWFwcC5jb20vYXBpL3YxL2F1dGgvdG9rZW4iLCJleHAiOjE2NTI5OTgzMzl9.TG4fyhNykAbD_t7xdmyyxzrkHSyDLAnoj7knlYgnjc0
+
+{
+  "name": "Jhon Doe",
+  "email": "jhon.doe@domain.com",
+  "password": "jhondoepassword",
+  "roles": ["PUBLISHER"],
+}

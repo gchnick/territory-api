@@ -1,9 +1,7 @@
-import { Command } from "@/contexts/shared/domain/command";
-import { CommandBus } from "@/contexts/shared/domain/command-bus";
+import { createMock, Mock } from "@/tests/utils/mock";
 
-export class MockCommandBus implements CommandBus {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  dispatch(_: Command): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
-}
+import { CommandBus } from "@/shared/domain/command-bus";
+
+const createMockCommandBus = (): Mock<CommandBus> => createMock<CommandBus>();
+
+export default createMockCommandBus;

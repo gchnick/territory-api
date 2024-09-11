@@ -1,10 +1,7 @@
 import { faker } from "@faker-js/faker";
 
-import {
-  Filter,
-  FilterPrimitives,
-} from "@/contexts/shared/domain/criteria/filter";
-import { Operator } from "@/contexts/shared/domain/criteria/filter-operator";
+import { Filter, FilterPrimitives } from "@/shared/domain/criteria/filter";
+import { Operator } from "@/shared/domain/criteria/filter-operator";
 
 export const FilterMother = {
   create(params?: Partial<FilterPrimitives>): Filter {

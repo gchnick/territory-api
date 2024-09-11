@@ -1,14 +1,12 @@
+# REGISTRIES 
 
-
-## REGISTRIES 
-
-### Recuperar los registros del territorio
+## Recuperar los registros del territorio
 GET http://localhost:7070/api/v1/territories/10/registries
 
-### Recuperar el ultimo registro del territorio
+## Recuperar el ultimo registro del territorio
 GET http://localhost:7070/api/v1/territories/10/registries?last=true
 
-### Crear un registro
+## Crear un registro
 POST http://localhost:7070/api/v1/territories/10/registries
 Content-Type: application/json
 
@@ -17,10 +15,10 @@ Content-Type: application/json
   "assignedDate": "2023-08-1"
 }
 
-### Actualizar como completado el último registro del territorio con la fecha de hoy
+## Actualizar como completado el último registro del territorio con la fecha de hoy
 POST http://localhost:7070/api/v1/territories/10/registries/completion
 
-### Actualizar el ultimo registro del territorio
+## Actualizar el ultimo registro del territorio
 PATCH http://localhost:7070/api/v1/territories/1/registries?last=true
 Content-Type: application/json
 
@@ -30,7 +28,7 @@ Content-Type: application/json
   "completionDate": "2023-9-20"
 }
 
-### Actualizar un registro
+## Actualizar un registro
 PATCH http://localhost:7070/api/v1/registries/25e6a514-ee5f-4301-a84f-48a80072db2c
 Content-Type: application/json
 
@@ -40,5 +38,5 @@ Content-Type: application/json
   "completionDate": "2023-7-20"
 }
 
-### Borrar un registro
+## Borrar un registro
 DELETE http://localhost:7070/api/v1/registries/4d43b5b5-cc78-41f7-b068-461fd7094ece

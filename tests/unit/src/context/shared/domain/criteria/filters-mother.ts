@@ -1,5 +1,5 @@
-import { Filter } from "@/contexts/shared/domain/criteria/filter";
-import { Filters } from "@/contexts/shared/domain/criteria/filters";
+import { Filter } from "@/shared/domain/criteria/filter";
+import { Filters } from "@/shared/domain/criteria/filters";
 
 import { FilterMother } from "./filter-mother";
 

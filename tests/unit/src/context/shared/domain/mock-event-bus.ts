@@ -1,18 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/require-await */
-/* eslint-disable jest/no-standalone-expect */
-import { DomainEvent } from "@/contexts/shared/domain/domain-event";
-import { EventBus } from "@/contexts/shared/domain/event-bus";
-import { DomainEventSubscribers } from "@/contexts/shared/infrastructure/event-bus/domain-event-subscribers";
+import { DomainEvent } from "@/shared/domain/domain-event";
+import { EventBus } from "@/shared/domain/event-bus";
+import { DomainEventSubscribers } from "@/shared/infrastructure/event-bus/domain-event-subscribers";
 
 export class MockEventBus implements EventBus {
-  private readonly mockPublish = jest.fn();
+  private readonly mockPublish = vi.fn();
 
   async publish(events: DomainEvent[]) {
-    this.mockPublish(events);
+    await this.mockPublish(events);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,7 +21,7 @@ export class MockEventBus implements EventBus {
     expect(publishSpyCalls.length).toBeGreaterThan(0);
 
     const lastPublishSpyCall = publishSpyCalls.at(-1);
-    const lastPublishedEvent = lastPublishSpyCall[0][0];
+    const lastPublishedEvent = lastPublishSpyCall[0][0] as DomainEvent;
 
     const expected = this.#getDataFromDomainEvent(expectedEvent);
     const published = this.#getDataFromDomainEvent(lastPublishedEvent);

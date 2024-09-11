@@ -11,9 +11,9 @@ import {
   SwaggerModule,
 } from "@nestjs/swagger";
 
-import Logger from "@/contexts/shared/domain/logger";
+import { AppModule } from "@/app/app.module";
 
-import { AppModule } from "./app.module";
+import Logger from "@/shared/domain/logger";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -21,16 +21,17 @@ async function bootstrap() {
     new FastifyAdapter(),
   );
 
-  app.setGlobalPrefix("/v1/api");
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
     }),
   );
 
+  app.setGlobalPrefix("api");
+
   const config = new DocumentBuilder()
     .setTitle("Service Overseer Backend")
-    .setDescription("The registries of Service Overseer API")
+    .setDescription("API to application of Service Overseer")
     .setVersion("2.0")
     .build();
 

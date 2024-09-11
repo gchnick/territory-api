@@ -1,8 +1,8 @@
----
 name: 'Docker size'
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
 
 permissions:
   pull-requests: write

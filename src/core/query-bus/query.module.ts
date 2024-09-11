@@ -1,15 +1,15 @@
 import { Global, Module } from "@nestjs/common";
 
-import { AuthModule } from "@/app/auth/auth.module";
-import { TerritoryModule } from "@/app/territories/territory.module";
-import { UserModule } from "@/app/user/user.module";
+import { AuthModule } from "@/src/app/shared/auth/auth.module";
+import { TerritoryModule } from "@/src/app/overseer/territories/territory.module";
+import { UserModule } from "@/src/app/shared/user/user.module";
 
-import { Query } from "@/contexts/shared/domain/query";
-import { QueryBus } from "@/contexts/shared/domain/query-bus";
-import { QueryHandler } from "@/contexts/shared/domain/query-handler";
-import { Response } from "@/contexts/shared/domain/response";
-import { InMemoryQueryBus } from "@/contexts/shared/infrastructure/query-bus/in-memory-query-bus";
-import { QueryHandlers } from "@/contexts/shared/infrastructure/query-bus/query-handlers";
+import { Query } from "@/shared/domain/query";
+import { QueryBus } from "@/shared/domain/query-bus";
+import { QueryHandler } from "@/shared/domain/query-handler";
+import { Response } from "@/shared/domain/response";
+import { InMemoryQueryBus } from "@/shared/infrastructure/query-bus/in-memory-query-bus";
+import { QueryHandlers } from "@/shared/infrastructure/query-bus/query-handlers";
 
 @Global()
 @Module({

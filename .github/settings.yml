@@ -1,9 +1,8 @@
----
 repository:
-  name: territory-api
-  description: This is a backend that serves as the basis for developing an application for territory servant records
-  homepage: github.com/gchnick/territory-api
-  topics: api, territory, jw, service-overseer
+  name: nestjs-service-template
+  description: Template for new services based on NestJS with the Best Practices and Ready for Production
+  homepage: github.com/AlbertHernandez/nestjs-service-template
+  topics: nodejs, template, typescript, nestjs-template, nestjs
   has_wiki: false
   private: false
   has_issues: true

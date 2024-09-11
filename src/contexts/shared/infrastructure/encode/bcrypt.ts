@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import * as bcrypt from "bcrypt";
 
-import { Encode } from "@/contexts/registry/auth/domain/encode";
+import { Encode } from "@/contexts/shared/auth/domain/encode";
 
 import { Injectable } from "../dependency-injection/injectable";
 

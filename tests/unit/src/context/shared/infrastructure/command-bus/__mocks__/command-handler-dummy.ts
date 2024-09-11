@@ -1,4 +1,4 @@
-import { CommandHandler } from "@/contexts/shared/domain/command-handler";
+import { CommandHandler } from "@/shared/domain/command-handler";
 
 import { DummyCommand } from "./dummy-command";
 

@@ -1,5 +1,5 @@
-import { DomainEvent } from "@/contexts/shared/domain/domain-event";
-import { DomainEventSubscriber } from "@/contexts/shared/domain/domain-event-subscriber";
+import { DomainEvent } from "@/shared/domain/domain-event";
+import { DomainEventSubscriber } from "@/shared/domain/domain-event-subscriber";
 
 export class DomainEventSubscribers {
   constructor(public items: Array<DomainEventSubscriber<DomainEvent>>) {}

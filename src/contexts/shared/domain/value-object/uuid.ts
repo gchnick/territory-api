@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { v4 as uuid, validate } from "uuid";
 
 import { InvalidArgumentError } from "./invalid-argument-error";

@@ -1,8 +1,8 @@
-import { NewableClass } from "@/contexts/shared/domain/newable-class";
+import { NewableClass } from "@/shared/domain/newable-class";
 import {
   Primitives,
   ValueObject,
-} from "@/contexts/shared/domain/value-object/value-object";
+} from "@/shared/domain/value-object/value-object";
 
 export const ValueObjectTransformer = <T extends Primitives>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

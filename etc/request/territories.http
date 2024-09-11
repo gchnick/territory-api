@@ -1,15 +1,16 @@
-##  TERRITORIES
+#  TERRITORIES
 
-### Recuperar todos territorios
+## Recuperar todos territorios
 GET http://localhost:7070/api/v1/territories
+Content-Type: application/json
 
-### Recuperar todos territorios disponibles
+## Recuperar todos territorios disponibles
 GET http://localhost:7070/api/v1/territories?available=true
 
-### Recuperar un territorio por numero
+## Recuperar un territorio por numero
 GET http://localhost:7070/api/v1/territories/10
 
-### Crear una territorio
+## Crear una territorio
 POST http://localhost:7070/api/v1/territories
 Content-Type: application/json
 
@@ -25,7 +26,7 @@ Content-Type: application/json
   "lastDateCompleted": "2023-03-1"
 }
 
-### Actualizar un territorio
+## Actualizar un territorio
 PATCH http://localhost:7070/api/v1/territories/10
 Content-Type: application/json
 
@@ -33,7 +34,7 @@ Content-Type: application/json
   "lastDateCompleted": "2023-09-1"
 }
 
-### Reemplazar lugares de encuentro en un territorio
+## Reemplazar lugares de encuentro en un territorio
 PUT http://localhost:7070/api/v1/territories/10/meeting-places
 Content-Type: application/json
 
@@ -45,5 +46,5 @@ Content-Type: application/json
   ]
 }
 
-### Borrar un territorio
+## Borrar un territorio
 DELETE http://localhost:7070/api/v1/territories/130928d6-c4a1-42c3-8d54-31f70734b6d3

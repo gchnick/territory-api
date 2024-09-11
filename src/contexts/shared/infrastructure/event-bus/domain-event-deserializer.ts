@@ -1,7 +1,4 @@
-import {
-  DomainEvent,
-  DomainEventClass,
-} from "@/contexts/shared/domain/domain-event";
+import { DomainEvent, DomainEventClass } from "@/shared/domain/domain-event";
 
 import { DomainEventSubscribers } from "./domain-event-subscribers";
 

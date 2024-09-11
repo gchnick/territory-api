@@ -2,8 +2,10 @@ node_modules/
 dist/
 .tmp
 .idea
-.env
+*.env
+!.example.env
 coverage/
 .npm
 .vscode
 .nyc_output
+k6-results

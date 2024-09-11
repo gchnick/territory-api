@@ -1,7 +1,7 @@
 import { Global, Module, Provider } from "@nestjs/common";
 
-import { EventBus } from "@/contexts/shared/domain/event-bus";
-import { InMemoryAsyncEventBus } from "@/contexts/shared/infrastructure/event-bus/in-memory/in-memory-async-event-bus";
+import { EventBus } from "@/shared/domain/event-bus";
+import { InMemoryAsyncEventBus } from "@/shared/infrastructure/event-bus/in-memory/in-memory-async-event-bus";
 
 const eventBusProvider: Provider = {
   provide: EventBus,

@@ -1,6 +1,6 @@
-import { Query } from "@/contexts/shared/domain/query";
-import { QueryBus } from "@/contexts/shared/domain/query-bus";
-import { Response } from "@/contexts/shared/domain/response";
+import { Query } from "@/shared/domain/query";
+import { QueryBus } from "@/shared/domain/query-bus";
+import { Response } from "@/shared/domain/response";
 
 import { QueryHandlers } from "./query-handlers";
 

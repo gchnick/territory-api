@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { DataSource, EntitySchema, Repository } from "typeorm";
 
-import { AggregateRoot } from "@/contexts/shared/domain/aggregate-root";
+import { AggregateRoot } from "@/shared/domain/aggregate-root";
 
 export abstract class TypeOrmRepository<T extends AggregateRoot> {
   constructor(private _dataSource: DataSource) {}

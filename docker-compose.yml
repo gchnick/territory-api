@@ -1,8 +1,8 @@
 version: "3.8"
 
 services:
-  territory-api-production:
-    container_name: territory-api-production
+  my-service-production:
+    container_name: my-service-production
     build:
       target: production
       context: .
@@ -19,8 +19,8 @@ services:
           cpus: "0.25"
           memory: "256m"
 
-  territory-api-dev:
-    container_name: territory-api-dev
+  my-service-dev:
+    container_name: my-service-dev
     restart: unless-stopped
     env_file: .env
     build:
@@ -32,8 +32,7 @@ services:
       - "${PORT:-3000}:${PORT:-3000}"
       - "9229:9229"
     volumes:
-      - .:/project
-      - node_modules:/project/node_modules/
+      - ./src:/app/src
     deploy:
       resources:
         limits:
@@ -43,5 +42,21 @@ services:
           cpus: "0.25"
           memory: "256m"
 
-volumes:
-  node_modules:
+  k6:
+    image: ghcr.io/grafana/xk6-dashboard:0.7.2
+    container_name: k6
+    volumes:
+      - ./tests/performance:/tests/performance
+      - ./k6-results:/home/k6
+    ports:
+      - "5665:5665"
+    environment:
+      BASE_URL: "http://host.docker.internal:3000"
+      K6_WEB_DASHBOARD_EXPORT: "report.html"
+      K6_WEB_DASHBOARD_PERIOD: "1s"
+      K6_WEB_DASHBOARD_OPEN: "true"
+    command: [
+      "run",
+      "--out", "web-dashboard",
+      "/tests/performance/contexts/users/get-users.mjs"
+    ]

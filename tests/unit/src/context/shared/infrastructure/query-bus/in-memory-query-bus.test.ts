@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/require-await */
-import { Query } from "@/contexts/shared/domain/query";
-import { QueryHandler } from "@/contexts/shared/domain/query-handler";
-import { QueryNotRegisteredError } from "@/contexts/shared/domain/query-not-registered-error";
-import { Response } from "@/contexts/shared/domain/response";
-import { InMemoryQueryBus } from "@/contexts/shared/infrastructure/query-bus/in-memory-query-bus";
-import { QueryHandlers } from "@/contexts/shared/infrastructure/query-bus/query-handlers";
+import { Query } from "@/shared/domain/query";
+import { QueryHandler } from "@/shared/domain/query-handler";
+import { QueryNotRegisteredError } from "@/shared/domain/query-not-registered-error";
+import { Response } from "@/shared/domain/response";
+import { InMemoryQueryBus } from "@/shared/infrastructure/query-bus/in-memory-query-bus";
+import { QueryHandlers } from "@/shared/infrastructure/query-bus/query-handlers";
 
 class UnhandledQuery extends Query {
   static QUERY_NAME = "unhandled.query";

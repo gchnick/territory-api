@@ -1,4 +1,3 @@
----
 💻 Source:
   - changed-files:
       - any-glob-to-any-file:
@@ -8,10 +7,11 @@
   - changed-files:
       - any-glob-to-any-file:
           - tests/**
-          - .jest/**
+          - .env.test
           - scripts/calculate-global-test-coverage.ts
-          - jest.config.ts
-          - nyc.config.js
+          - vitest.config.**.ts
+          - create-vitest-test-config.ts
+          - .nycrc.json
 
 📝 Documentation:
   - changed-files:
@@ -46,12 +46,13 @@
           - .prettierignore
           - .swcrc
           - .yamllint.yml
-          - .commitlint.config.js
-          - jest.config.ts
+          - lint-staged.config.mjs
+          - vitest.config.**.ts
+          - create-vitest-test-config.ts
           - commitlint.config.ts
           - nest-cli.json
-          - nyc.config.js
-          - prettier.config.js
+          - .nycrc.json
+          - prettier.config.mjs
           - tsconfig.json
           - tsconfig.prod.json
 

@@ -1,0 +1,4 @@
+# Health
+
+## Health of application
+GET http://localhost:7070/api/v1/health
