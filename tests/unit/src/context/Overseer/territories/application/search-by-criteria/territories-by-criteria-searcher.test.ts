@@ -1,12 +1,12 @@
+import { TerritoryMother } from "@/tests/unit/src/context/Overseer/territories/domain/territory-mother";
+import { MockTerritoryRepository } from "@/tests/unit/src/context/Overseer/territories/intrastructure/mock-territory-repository";
+import { CriteriaMother } from "@/tests/unit/src/context/shared/domain/criteria/criteria-mother";
+import createMockLogger from "@/tests/unit/src/context/shared/infrastructure/mock-logger";
+
 import { TerritoriesByCriteriaSearcher } from "@/contexts/Overseer/territories/application/search-by-criteria/territories-by-criteria-searcher";
 
-import { CriteriaMother } from "../../../../shared/domain/criteria/criteria-mother";
-import { MockLogger } from "../../../../shared/infrastructure/mock-logger";
-import { TerritoryMother } from "../../domain/territory-mother";
-import { MockTerritoryRepository } from "../../intrastructure/mock-territory-repository";
-
 describe("territories-by-criteria-searcher should", () => {
-  const logger = new MockLogger();
+  const logger = createMockLogger();
   const repository = new MockTerritoryRepository();
   const territoriesByCriteriaSearcher = new TerritoriesByCriteriaSearcher(
     logger,
@@ -22,7 +22,6 @@ describe("territories-by-criteria-searcher should", () => {
 
     repository.shouldMatch(criteria, territories);
 
-    // eslint-disable-next-line jest/valid-expect
     void expect(
       await territoriesByCriteriaSearcher.search(
         criteria.filters,

@@ -1,11 +1,11 @@
+import { TerritoryIdMother } from "@/tests/unit/src/context/Overseer/territories/domain/territory-id-mother";
+import { MockTerritoryRepository } from "@/tests/unit/src/context/Overseer/territories/intrastructure/mock-territory-repository";
+import createMockLogger from "@/tests/unit/src/context/shared/infrastructure/mock-logger";
+
 import { TerritoryDeleter } from "@/contexts/Overseer/territories/application/delete/territory-deleter";
 
-import { MockLogger } from "../../../../shared/infrastructure/mock-logger";
-import { TerritoryIdMother } from "../../domain/territory-id-mother";
-import { MockTerritoryRepository } from "../../intrastructure/mock-territory-repository";
-
 describe("territory-deleter should", () => {
-  const logger = new MockLogger();
+  const logger = createMockLogger();
   const repository = new MockTerritoryRepository();
   const territoryDeleter = new TerritoryDeleter(logger, repository);
 

@@ -12,15 +12,17 @@ export const sqliteOptions = (
   // eslint-disable-next-line @typescript-eslint/ban-types
   entities?: MixedList<string | Function | EntitySchema<unknown>>,
 ): Promise<TypeOrmModuleOptions> | TypeOrmModuleOptions => {
-  const dropSchema = enviroment.isTest();
-  const database = enviroment.isTest()
+  const isTestEnvironment = enviroment.isTest();
+  const dropSchema = isTestEnvironment;
+  const logging = enviroment.isDevelopment();
+  const database = isTestEnvironment
     ? ":memory:"
     : configService.getOrThrow<string>("SQLITE_DATABASE");
   return {
     type: "sqlite",
     database,
     dropSchema,
-    logging: true,
+    logging,
     synchronize: true,
     entities,
     autoLoadEntities: true,

@@ -1,17 +1,21 @@
+import { MockEventBus } from "@/tests/unit/src/context/shared/domain/mock-event-bus";
+import createMockLogger from "@/tests/unit/src/context/shared/infrastructure/mock-logger";
+import { UserCreatedDomainEventMother } from "@/tests/unit/src/context/shared/users/domain/user-created-domain-event-mother";
+import { UserMother } from "@/tests/unit/src/context/shared/users/domain/user-mother";
+import { MockEncode } from "@/tests/unit/src/context/shared/users/infrastructure/mock-encode";
+import { MockUserRepository } from "@/tests/unit/src/context/shared/users/infrastructure/mock-user-repository";
+import { Mock } from "@/tests/utils/mock";
+
 import { InvalidArgumentError } from "@/shared/domain/value-object/invalid-argument-error";
 
-import { CreateUserCommandHandler } from "@/src/contexts/shared/users/application/create/create-user-command-handler";
-import { UserCreator } from "@/src/contexts/shared/users/application/create/user-creator";
+import Logger from "@/contexts/shared/domain/logger";
+import { CreateUserCommandHandler } from "@/contexts/shared/users/application/create/create-user-command-handler";
+import { UserCreator } from "@/contexts/shared/users/application/create/user-creator";
+import { Role } from "@/contexts/shared/users/domain/role/role-name";
 
-import { MockEventBus } from "../../../domain/mock-event-bus";
-import { MockLogger } from "../../../infrastructure/mock-logger";
-import { UserCreatedDomainEventMother } from "../../domain/user-created-domain-event-mother";
-import { UserMother } from "../../domain/user-mother";
-import { MockEncode } from "../../infrastructure/mock-encode";
-import { MockUserRepository } from "../../infrastructure/mock-user-repository";
 import { CreateUserCommandMother } from "./create-user-command-handler-mother";
 
-let logger: MockLogger;
+let logger: Mock<Logger>;
 let repository: MockUserRepository;
 let encode: MockEncode;
 let creator: UserCreator;
@@ -19,7 +23,7 @@ let eventBus: MockEventBus;
 let handler: CreateUserCommandHandler;
 
 beforeEach(() => {
-  logger = new MockLogger();
+  logger = createMockLogger();
   repository = new MockUserRepository();
   encode = new MockEncode();
   eventBus = new MockEventBus();
@@ -30,7 +34,7 @@ beforeEach(() => {
 describe("CreateUserCommandHandler should", () => {
   it("create a valid user", async () => {
     const command = CreateUserCommandMother.create({
-      roles: ["SERVICE_OVERSEER"],
+      roles: [Role.SERVICE_OVERSEER],
     });
     const user = UserMother.fromCommand(command);
     const expectedUserRole = user.roles;
@@ -46,7 +50,7 @@ describe("CreateUserCommandHandler should", () => {
   });
 
   it("throw error if user role is not valid", () => {
-    // eslint-disable-next-line jest/valid-expect
+    // eslint-disable-next-line vitest/valid-expect
     void expect(async () => {
       const command = CreateUserCommandMother.invalidRoles();
 

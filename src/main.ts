@@ -27,7 +27,7 @@ async function bootstrap() {
     }),
   );
 
-  app.setGlobalPrefix("api");
+  app.setGlobalPrefix("api/v2");
 
   const config = new DocumentBuilder()
     .setTitle("Service Overseer Backend")

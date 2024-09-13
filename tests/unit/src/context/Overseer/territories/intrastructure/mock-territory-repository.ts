@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/require-await */
-/* eslint-disable jest/no-standalone-expect */
 import { EntitySchema } from "typeorm";
 
 import { Criteria } from "@/shared/domain/criteria/criteria";
@@ -13,14 +12,14 @@ import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/terr
 import { TerritoryEntity } from "@/contexts/Overseer/territories/infrastructure/persistence/typeorm/territory-entity";
 
 export class MockTerritoryRepository implements TerritoryRepository {
-  private readonly mockSave = jest.fn();
-  private readonly mockSearchAll = jest.fn();
-  private readonly mockFindByNumber = jest.fn();
-  private readonly mockFindById = jest.fn();
-  private readonly mockUpdate = jest.fn();
-  private readonly mockDelete = jest.fn();
-  private readonly mockTruncate = jest.fn();
-  private readonly mockMatching = jest.fn();
+  private readonly mockSave = vi.fn();
+  private readonly mockSearchAll = vi.fn();
+  private readonly mockFindByNumber = vi.fn();
+  private readonly mockFindById = vi.fn();
+  private readonly mockUpdate = vi.fn();
+  private readonly mockDelete = vi.fn();
+  private readonly mockTruncate = vi.fn();
+  private readonly mockMatching = vi.fn();
 
   protected entitySchema(): EntitySchema<Territory> {
     return TerritoryEntity;

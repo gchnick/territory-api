@@ -20,7 +20,10 @@ const typeOrmOptions = (
   ) => {
     const nodeEnv = configService.getOrThrow<string>("NODE_ENV");
     const environment = EnviromentValueObject.fromValue(nodeEnv);
-    logger.log(`NODE_ENV => <${environment.value}>`);
+    logger.log(
+      `typeOrmOptions node environment <${environment.value}>`,
+      "InstanceLoader",
+    );
     const useSqlite = environment.isDevelopment() || environment.isTest();
 
     return useSqlite

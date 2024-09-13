@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable jest/no-standalone-expect */
 /* eslint-disable @typescript-eslint/require-await */
-import { Encode } from "@/src/contexts/shared/auth/domain/encode";
-import { User } from "@/src/contexts/shared/users/domain/user";
+import { Encode } from "@/contexts/shared/auth/domain/encode";
+import { User } from "@/contexts/shared/users/domain/user";
 
 export class MockEncode implements Encode {
-  private readonly mockHash = jest.fn();
-  private readonly mockCompare = jest.fn();
+  private readonly mockHash = vi.fn();
+  private readonly mockCompare = vi.fn();
 
   hashSync(data: string | Buffer, _saltOrRounds: string | number): string {
     expect(this.mockHash).toHaveBeenCalledWith(

@@ -1,23 +1,22 @@
 /* eslint-disable @typescript-eslint/require-await */
-/* eslint-disable jest/no-standalone-expect */
 import { DeepPartial } from "@/shared/domain/deep-partial";
 import { Nullable } from "@/shared/domain/nullable";
 
-import { RoleName } from "@/src/contexts/shared/users/domain/role/role-name";
-import { User } from "@/src/contexts/shared/users/domain/user";
-import { UserEmail } from "@/src/contexts/shared/users/domain/user-email";
-import { UserId } from "@/src/contexts/shared/users/domain/user-id";
-import { UserRepository } from "@/src/contexts/shared/users/domain/user-repository";
-import { UserRole } from "@/src/contexts/shared/users/domain/user-role";
+import { RoleName } from "@/contexts/shared/users/domain/role/role-name";
+import { User } from "@/contexts/shared/users/domain/user";
+import { UserEmail } from "@/contexts/shared/users/domain/user-email";
+import { UserId } from "@/contexts/shared/users/domain/user-id";
+import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
+import { UserRole } from "@/contexts/shared/users/domain/user-role";
 
 export class MockUserRepository implements UserRepository {
-  private readonly mockSave = jest.fn();
-  private readonly mockFindByEmail = jest.fn();
-  private readonly mockFindById = jest.fn();
-  private readonly mockFindRole = jest.fn();
-  private readonly mockSaveRole = jest.fn();
-  private readonly mockUpdate = jest.fn();
-  private readonly mockTruncate = jest.fn();
+  private readonly mockSave = vi.fn();
+  private readonly mockFindByEmail = vi.fn();
+  private readonly mockFindById = vi.fn();
+  private readonly mockFindRole = vi.fn();
+  private readonly mockSaveRole = vi.fn();
+  private readonly mockUpdate = vi.fn();
+  private readonly mockTruncate = vi.fn();
 
   async save(user: User): Promise<void> {
     expect(this.mockSave).toHaveBeenCalledWith(user.toPrimitives());

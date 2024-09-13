@@ -3,10 +3,9 @@ import {
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
 import { Test, TestingModule } from "@nestjs/testing";
-import { TypeOrmModule } from "@nestjs/typeorm";
 import * as nock from "nock";
 
-import { TYPE_ORM_ENTITIES } from "@/tests/e2e/app/helpers/constants";
+import { baseTestModuleImports } from "@/tests/e2e/app/helpers/base-test-module-imports";
 import { saveInitialTerritories } from "@/tests/e2e/app/overseer/territories/helpers";
 import { TerritoryMother } from "@/tests/unit/src/context/Overseer/territories/domain/territory-mother";
 
@@ -15,13 +14,6 @@ import { TerritoryModule } from "@/app/overseer/territories/territory.module";
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/territory-repository";
 
-import { CommandModule } from "@/core/command-bus/command.module";
-import typeOrmOptions from "@/core/config/typeorm/type-orm-options";
-import { EventBusModule } from "@/core/event-bus/event-bus.module";
-import { LoggerModule } from "@/core/logger/logger.module";
-import { QueryModule } from "@/core/query-bus/query.module";
-import { SharedModule } from "@/core/shared/shared.module";
-
 describe("TerritoryGetController (e2e)", () => {
   const LENGHT_INITIAL_TERRITORY = 20;
   let app: NestFastifyApplication;
@@ -29,15 +21,7 @@ describe("TerritoryGetController (e2e)", () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        TerritoryModule,
-        SharedModule,
-        LoggerModule,
-        CommandModule,
-        QueryModule,
-        EventBusModule,
-        TypeOrmModule.forRootAsync(typeOrmOptions(TYPE_ORM_ENTITIES)),
-      ],
+      imports: [...baseTestModuleImports(), TerritoryModule],
     }).compile();
 
     app = moduleFixture.createNestApplication<NestFastifyApplication>(
@@ -67,7 +51,10 @@ describe("TerritoryGetController (e2e)", () => {
     });
 
     it("should fetch all territories", async () => {
-      const response = await app.inject({ method: "GET", url: "/" });
+      const response = await app.inject({
+        method: "GET",
+        url: "/territories",
+      });
 
       expect(response.statusCode).toBe(200);
       expect(response.headers["content-type"]).toMatch(/application\/json/);
@@ -80,7 +67,7 @@ describe("TerritoryGetController (e2e)", () => {
 
       const response = await app.inject({
         method: "GET",
-        url: `/${numberParam}`,
+        url: `/territories/${numberParam}`,
       });
 
       expect(response.statusCode).toBe(200);
@@ -95,7 +82,7 @@ describe("TerritoryGetController (e2e)", () => {
 
       const response = await app.inject({
         method: "GET",
-        url: "/?filters[0][field]=isLocked&filters[0][operator]=EQUAL&filters[0][value]=false&orderBy=lastDateCompleted&order=ASC",
+        url: "/territories/?filters[0][field]=isLocked&filters[0][operator]=EQUAL&filters[0][value]=false&orderBy=lastDateCompleted&order=ASC",
       });
 
       expect(response.statusCode).toBe(200);

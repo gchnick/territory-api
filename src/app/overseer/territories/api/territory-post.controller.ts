@@ -7,10 +7,11 @@ import {
   InternalServerErrorException,
   Post,
   Req,
-  Res,
+  Response,
   ValidationPipe,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import * as fastify from "fastify";
 
 import { CommandBus } from "@/shared/domain/command-bus";
 import Logger from "@/shared/domain/logger";
@@ -36,7 +37,7 @@ export class TerritoryPostController {
   async create(
     @Body(new ValidationPipe({ transform: true })) body: TerritoryPostRequest,
     @Req() request: Request,
-    @Res({ passthrough: true }) response: Response,
+    @Response({ passthrough: true }) reply: fastify.FastifyReply,
   ) {
     try {
       const {
@@ -62,7 +63,7 @@ export class TerritoryPostController {
 
       await this.commandBus.dispatch(command);
 
-      return response.headers.set("location", `${request.url}/${command.id}`);
+      await reply.header("location", `${request.url}/${command.id}`).send();
     } catch (error) {
       if (error instanceof InvalidArgumentError) {
         this.logger.warn(error.message, "Territory");

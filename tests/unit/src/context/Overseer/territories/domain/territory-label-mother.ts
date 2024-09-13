@@ -6,7 +6,10 @@ export const TerritoryLabelMother = {
   create(value?: string): TerritoryLabel {
     return new TerritoryLabel(value ?? faker.location.city());
   },
-  invalid(): TerritoryLabel {
-    return new TerritoryLabel(faker.string.alpha(55));
+  invalid(): string {
+    const exceeded = TerritoryLabel.MAXIMUM_CHARACTERS + 20;
+    return faker.string.alpha({
+      length: { min: exceeded, max: exceeded + 50 },
+    });
   },
 };

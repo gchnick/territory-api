@@ -2,6 +2,8 @@ import { TerritoryLabel } from "@/contexts/Overseer/territories/domain/territory
 import { TerritoryLabelIsEmpty } from "@/contexts/Overseer/territories/domain/territory-label-is-empty";
 import { TerritoryLabelLengthExceeded } from "@/contexts/Overseer/territories/domain/territory-label-length-exceeded";
 
+import { TerritoryLabelMother } from "./territory-label-mother";
+
 describe("TerritoryLabel should", () => {
   it("throw error when label is empty", () => {
     const labelEmpty = "      ";
@@ -13,14 +15,13 @@ describe("TerritoryLabel should", () => {
     expect(labelInstace).toThrow(TerritoryLabelIsEmpty);
   });
 
-  it("throw error when label lenght exceeded 100 characters", () => {
-    const label =
-      "This is a label length exceeded 50 characters. This value is invalid";
+  it("throw error when label lenght exceeded the maximum characters", () => {
+    const invalidLabel = TerritoryLabelMother.invalid();
 
-    const labelInstace = () => {
-      new TerritoryLabel(label);
+    const invalidLabelInstace = () => {
+      new TerritoryLabel(invalidLabel);
     };
 
-    expect(labelInstace).toThrow(TerritoryLabelLengthExceeded);
+    expect(invalidLabelInstace).toThrow(TerritoryLabelLengthExceeded);
   });
 });

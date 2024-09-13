@@ -1,41 +1,39 @@
-#  TERRITORIES
+### TERRITORIES
 
-## Recuperar todos territorios
-GET http://localhost:7070/api/v1/territories
+### Recuperar todos territorios
+GET http://localhost:7070/api/v2/territories
 Content-Type: application/json
 
-## Recuperar todos territorios disponibles
-GET http://localhost:7070/api/v1/territories?available=true
+### Recuperar todos territorios disponibles
+GET http://localhost:7070/api/v2/territories?available=true
 
-## Recuperar un territorio por numero
-GET http://localhost:7070/api/v1/territories/10
+### Recuperar un territorio por numero
+GET http://localhost:7070/api/v2/territories/10
 
-## Crear una territorio
-POST http://localhost:7070/api/v1/territories
+### Crear una territorio
+POST http://localhost:7070/api/v2/territories
 Content-Type: application/json
 
 {
   "number": 10,
   "label": "Place beatiful",
-  "limits": {
-    "NORTH": "Mont",
-    "SOUTH": "Rest",
-    "EAST": "Sunny",
-    "WEST": "River good"
-  },
-  "lastDateCompleted": "2023-03-1"
+  "sector": "Carolina",
+  "locality": "New City, Century Park",
+  "localityInPart": "Center Square",
+  "quantityHouses": 130,
+  "lastDateCompleted": "2023-03-01T00:00:00.000Z"
 }
 
-## Actualizar un territorio
-PATCH http://localhost:7070/api/v1/territories/10
+### Actualizar un territorio
+PATCH http://localhost:7070/api/v2/territories/10
 Content-Type: application/json
 
 {
   "lastDateCompleted": "2023-09-1"
 }
 
-## Reemplazar lugares de encuentro en un territorio
-PUT http://localhost:7070/api/v1/territories/10/meeting-places
+### Reemplazar lugares de encuentro en un territorio
+PUT http://localhost:7070/api/v2/territories/10/meeting-places
 Content-Type: application/json
 
 {
@@ -46,5 +44,5 @@ Content-Type: application/json
   ]
 }
 
-## Borrar un territorio
-DELETE http://localhost:7070/api/v1/territories/130928d6-c4a1-42c3-8d54-31f70734b6d3
+### Borrar un territorio
+DELETE http://localhost:7070/api/v2/territories/130928d6-c4a1-42c3-8d54-31f70734b6d3

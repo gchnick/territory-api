@@ -2,7 +2,7 @@ import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 
 import { TerritoryMother } from "./territory-mother";
 
-describe("Territory should", () => {
+describe.only("Territory should", () => {
   it("change its bloking status to lock", () => {
     const territory: Territory = TerritoryMother.create({ isLocked: false });
 

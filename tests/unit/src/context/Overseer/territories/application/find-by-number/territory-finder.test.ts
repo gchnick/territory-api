@@ -1,14 +1,13 @@
-/* eslint-disable simple-import-sort/imports */
+import { TerritoryMother } from "@/tests/unit/src/context/Overseer/territories/domain/territory-mother";
+import { TerritoryNumberMother } from "@/tests/unit/src/context/Overseer/territories/domain/territory-number-mother";
+import { MockTerritoryRepository } from "@/tests/unit/src/context/Overseer/territories/intrastructure/mock-territory-repository";
+import createMockLogger from "@/tests/unit/src/context/shared/infrastructure/mock-logger";
+
 import { TerritoryFinder } from "@/contexts/Overseer/territories/application/find-by-number/territory-finder";
 import { TerritoryNotFount } from "@/contexts/Overseer/territories/domain/territory-not-fount";
 
-import { MockLogger } from "../../../../shared/infrastructure/mock-logger";
-import { TerritoryMother } from "../../domain/territory-mother";
-import { TerritoryNumberMother } from "../../domain/territory-number-mother";
-import { MockTerritoryRepository } from "../../intrastructure/mock-territory-repository";
-
 describe("TerritoryFinder should", () => {
-  const logger = new MockLogger();
+  const logger = createMockLogger();
   const repository = new MockTerritoryRepository();
   const territoryFinder = new TerritoryFinder(logger, repository);
 
@@ -17,7 +16,7 @@ describe("TerritoryFinder should", () => {
 
     repository.shouldNotSearch(territoryNumber);
 
-    // eslint-disable-next-line jest/valid-expect
+    // eslint-disable-next-line vitest/valid-expect
     void expect(async () => {
       await territoryFinder.find(territoryNumber);
     }).rejects.toThrow(TerritoryNotFount);

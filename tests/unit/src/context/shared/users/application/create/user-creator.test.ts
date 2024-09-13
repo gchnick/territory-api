@@ -1,15 +1,16 @@
-import { UserCreator } from "@/src/contexts/shared/users/application/create/user-creator";
+import { MockEventBus } from "@/tests/unit/src/context/shared/domain/mock-event-bus";
+import createMockLogger from "@/tests/unit/src/context/shared/infrastructure/mock-logger";
+import { RoleNameMother } from "@/tests/unit/src/context/shared/users/domain/role/role-name-mother";
+import { UserMother } from "@/tests/unit/src/context/shared/users/domain/user-mother";
+import { UserRoleMother } from "@/tests/unit/src/context/shared/users/domain/user-role-mother";
+import { MockEncode } from "@/tests/unit/src/context/shared/users/infrastructure/mock-encode";
+import { MockUserRepository } from "@/tests/unit/src/context/shared/users/infrastructure/mock-user-repository";
 
-import { MockEventBus } from "../../../domain/mock-event-bus";
-import { MockLogger } from "../../../infrastructure/mock-logger";
-import { RoleNameMother } from "../../domain/role/role-name-mother";
-import { UserMother } from "../../domain/user-mother";
-import { UserRoleMother } from "../../domain/user-role-mother";
-import { MockEncode } from "../../infrastructure/mock-encode";
-import { MockUserRepository } from "../../infrastructure/mock-user-repository";
+import { UserCreator } from "@/contexts/shared/users/application/create/user-creator";
+import { Role } from "@/contexts/shared/users/domain/role/role-name";
 
 describe("UserCreator should", () => {
-  const logger = new MockLogger();
+  const logger = createMockLogger();
   const repository = new MockUserRepository();
   const encode = new MockEncode();
   const eventBus = new MockEventBus();
@@ -17,7 +18,8 @@ describe("UserCreator should", () => {
   const userCreator = new UserCreator(logger, repository, encode, eventBus);
 
   it("register a valid user", async () => {
-    const expectedRoleName = RoleNameMother.create("SERVICE_OVERSEER");
+    const role = Role.SERVICE_OVERSEER;
+    const expectedRoleName = RoleNameMother.create(role);
     const expectedUserRole = UserRoleMother.create({
       name: expectedRoleName.value,
     });

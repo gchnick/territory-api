@@ -1,14 +1,13 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { UserFinder } from "@/src/contexts/shared/users/application/find-by-email/user-finder";
-import { UserNotFount } from "@/src/contexts/shared/users/domain/user-not-fount";
+import createMockLogger from "@/tests/unit/src/context/shared/infrastructure/mock-logger";
+import { UserEmailMother } from "@/tests/unit/src/context/shared/users/domain/user-email-mother";
+import { UserMother } from "@/tests/unit/src/context/shared/users/domain/user-mother";
+import { MockUserRepository } from "@/tests/unit/src/context/shared/users/infrastructure/mock-user-repository";
 
-import { MockLogger } from "../../../infrastructure/mock-logger";
-import { UserEmailMother } from "../../domain/user-email-mother";
-import { UserMother } from "../../domain/user-mother";
-import { MockUserRepository } from "../../infrastructure/mock-user-repository";
+import { UserFinder } from "@/contexts/shared/users/application/find-by-email/user-finder";
+import { UserNotFount } from "@/contexts/shared/users/domain/user-not-fount";
 
 describe("UserFinder should", () => {
-  const logger = new MockLogger();
+  const logger = createMockLogger();
   const repository = new MockUserRepository();
 
   const userFinder = new UserFinder(logger, repository);
@@ -18,7 +17,7 @@ describe("UserFinder should", () => {
 
     repository.shouldNotSearch(userEmail);
 
-    // eslint-disable-next-line jest/valid-expect
+    // eslint-disable-next-line vitest/valid-expect
     void expect(async () => {
       await userFinder.find(userEmail);
     }).rejects.toThrow(UserNotFount);
@@ -26,6 +25,7 @@ describe("UserFinder should", () => {
 
   it("search an existing user", async () => {
     const existingUser = UserMother.create();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...expectedUser } = existingUser.toPrimitives();
 
     repository.shouldFindByEmail(existingUser);
