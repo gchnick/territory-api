@@ -1,6 +1,7 @@
 node_modules/
 dist/
 db/*.db
+src/core/seed/*.sql
 .tmp
 .idea
 *.env

@@ -1,5 +1,5 @@
 import { Module } from "@nestjs/common";
-import { ConfigModule } from "@nestjs/config";
+import { ConditionalModule, ConfigModule } from "@nestjs/config";
 import { RouterModule } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
 import { TypeOrmModule } from "@nestjs/typeorm";
@@ -17,6 +17,7 @@ import typeOrmOptions from "@/core/config/typeorm/type-orm-options";
 import { EventBusModule } from "@/core/event-bus/event-bus.module";
 import { LoggerModule } from "@/core/logger/logger.module";
 import { QueryModule } from "@/core/query-bus/query.module";
+import { SeedModule } from "@/core/seed/seed.module";
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { QueryModule } from "@/core/query-bus/query.module";
     JwtModule.registerAsync(jwtAsyncOptions()),
     TypeOrmModule.forRootAsync(typeOrmOptions()),
     RouterModule.register(routes()),
+    ConditionalModule.registerWhen(SeedModule, "USE_SEEDS"),
   ],
 })
 export class AppModule {}
