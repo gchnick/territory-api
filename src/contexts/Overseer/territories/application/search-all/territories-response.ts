@@ -1,4 +1,7 @@
-import { Territory, TerritoryPrimitives } from "../../domain/territory";
+import {
+  Territory,
+  TerritoryPrimitives,
+} from "@/contexts/Overseer/territories/domain/territory";
 
 export class TerritoriesResponse {
   public readonly data: Array<TerritoryPrimitives>;

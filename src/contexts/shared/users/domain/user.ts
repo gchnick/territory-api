@@ -1,6 +1,6 @@
 import { AggregateRoot } from "@/shared/domain/aggregate-root";
 
-import { Encode } from "@/src/contexts/shared/auth/domain/encode";
+import { Encode } from "@/contexts/shared/auth/domain/encode";
 
 import { UserCreatedDomainEvent } from "./user-created-domain-event";
 import { UserEmail } from "./user-email";
