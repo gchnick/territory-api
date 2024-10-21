@@ -36,7 +36,7 @@ export const CreateTerritoryCommandMother = {
     return new CreateTerritoryCommand(primitives);
   },
   invalidLabel(): CreateTerritoryCommand {
-    const label = TerritoryLabelMother.invalid().value;
+    const label = TerritoryLabelMother.invalid();
     return this.create({ label });
   },
 };
