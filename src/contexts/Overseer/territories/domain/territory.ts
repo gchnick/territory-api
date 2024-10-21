@@ -4,7 +4,8 @@ import { Nullable } from "@/shared/domain/nullable";
 import {
   MeetingPlace,
   MeetingPlacePrimitives,
-} from "./meeting-place/meeting-place";
+} from "@/contexts/Overseer/meeting-place/domain/meeting-place";
+
 import { TerritoryId } from "./territory-id";
 import { TerritoryIsLocked } from "./territory-is-locked";
 import { TerritoryLabel } from "./territory-label";
@@ -202,7 +203,7 @@ export class Territory extends AggregateRoot {
       map: this.map?.value,
       isLocked: this.isLocked.value,
       lastDateCompleted: this.lastDateCompleted.value,
-      meetingPlaces: this.meetingPlaces?.map(m => m.toPrimitives()), // TODO: Implement meeting places
+      meetingPlaces: this.meetingPlaces?.map(m => m.toPrimitives()),
     };
   }
 }

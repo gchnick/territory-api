@@ -1,4 +1,4 @@
-import { MeetingPlace } from "@/contexts/Overseer/territories/domain/meeting-place/meeting-place";
+import { MeetingPlace } from "@/src/contexts/Overseer/meeting-place/domain/meeting-place";
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
 import { TerritoryIsLocked } from "@/contexts/Overseer/territories/domain/territory-is-locked";

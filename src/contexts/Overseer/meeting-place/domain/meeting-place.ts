@@ -18,7 +18,7 @@ export type MeetingPlacePrimitives = {
   latitude: string;
   longitude: string;
   fieldService: boolean;
-  availability?: AvailabilityPrimitives;
+  availability?: AvailabilityPrimitives[];
 };
 
 export class MeetingPlace {
@@ -28,7 +28,7 @@ export class MeetingPlace {
   readonly latitude: MeetingPlaceLatitude;
   readonly longitude: MeetingPlaceLongitude;
   readonly fieldService: MeetingPlaceFieldService;
-  readonly availability: Nullable<MeetingPlaceAvailability>;
+  readonly availability: Nullable<Array<MeetingPlaceAvailability>>;
 
   constructor(
     id: MeetingPlaceId,
@@ -37,7 +37,7 @@ export class MeetingPlace {
     latitude: MeetingPlaceLatitude,
     longitude: MeetingPlaceLongitude,
     fieldService: MeetingPlaceFieldService,
-    availability: Nullable<MeetingPlaceAvailability>,
+    availability: Nullable<Array<MeetingPlaceAvailability>>,
   ) {
     this.id = id;
     this.place = place;
@@ -55,7 +55,7 @@ export class MeetingPlace {
     latitude: string;
     longitude: string;
     fieldService: boolean;
-    availability?: AvailabilityPrimitives;
+    availability?: AvailabilityPrimitives[];
   }): MeetingPlace {
     return new MeetingPlace(
       new MeetingPlaceId(plainData.id),
@@ -65,9 +65,9 @@ export class MeetingPlace {
       new MeetingPlaceLongitude(plainData.longitude),
       new MeetingPlaceFieldService(plainData.fieldService),
       plainData.availability
-        ? MeetingPlaceAvailability.fromPrimitives({
-            availability: plainData.availability,
-          })
+        ? plainData.availability.map(availability =>
+            MeetingPlaceAvailability.fromPrimitives({ availability }),
+          )
         : undefined,
     );
   }
@@ -80,7 +80,7 @@ export class MeetingPlace {
       latitude: this.latitude.value,
       longitude: this.longitude.value,
       fieldService: this.fieldService.value,
-      availability: this.availability?.toPrimitives(),
+      availability: this.availability?.map(a => a.toPrimitives()),
     };
   }
 }

@@ -1,9 +1,13 @@
 import { Module } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { DataSource } from "typeorm";
 
 import { AuthModule } from "@/app/shared/auth/auth.module";
 
+import { MeetingPlaceAvailability } from "@/contexts/Overseer/meeting-place/domain/meeting-place-availability";
+import { AvailabilityEntity } from "@/contexts/Overseer/meeting-place/infrastructure/persistence/typeorm/availability-entity";
+import { MeetingPlaceEntity } from "@/contexts/Overseer/meeting-place/infrastructure/persistence/typeorm/meeting-place-entity";
 import { CreateTerritoryCommandHandler } from "@/contexts/Overseer/territories/application/create/create-territory-command-handler";
 import { TerritoryCreator } from "@/contexts/Overseer/territories/application/create/territory-creator";
 import { ExistsByIdQueryHandler } from "@/contexts/Overseer/territories/application/exists/exists-by-id-query-handler";
@@ -27,7 +31,15 @@ import { TerritoryPostController } from "./api/territory-post.controller";
 import { TerritoryPutController } from "./api/territory-put.controller";
 
 @Module({
-  imports: [AuthModule, TypeOrmModule.forFeature([TerritoryEntity])],
+  imports: [
+    AuthModule,
+    TypeOrmModule.forFeature([
+      TerritoryEntity,
+      MeetingPlaceEntity,
+      MeetingPlaceAvailability,
+      AvailabilityEntity,
+    ]),
+  ],
   controllers: [
     TerritoryGetController,
     TerritoryPostController,
@@ -38,8 +50,9 @@ import { TerritoryPutController } from "./api/territory-put.controller";
   providers: [
     {
       provide: TerritoryRepository,
-      useFactory: (d: DataSource) => new TerritoryTypeOrm(d),
-      inject: [DataSource],
+      useFactory: (d: DataSource, c: ConfigService) =>
+        new TerritoryTypeOrm(d, c),
+      inject: [DataSource, ConfigService],
     },
     TerritoryCreator,
     TerritoryUpdater,
