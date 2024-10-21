@@ -5,7 +5,7 @@ GET http://localhost:7070/api/v2/territories
 Content-Type: application/json
 
 ### Recuperar todos territorios disponibles
-GET http://localhost:7070/api/v2/territories?available=true
+GET http://localhost:7070/api/v2/territories?filters[0][field]=isLocked&filters[0][operator]=EQUAL&filters[0][value]=false&orderBy=lastDateCompleted&order=ASC
 
 ### Recuperar un territorio por numero
 GET http://localhost:7070/api/v2/territories/10
