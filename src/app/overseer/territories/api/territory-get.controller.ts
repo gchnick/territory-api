@@ -5,9 +5,10 @@ import {
   NotFoundException,
   Param,
   ParseIntPipe,
-  Req,
+  Request,
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+import * as fastify from "fastify";
 
 import Logger from "@/shared/domain/logger";
 import { QueryBus } from "@/shared/domain/query-bus";
@@ -29,7 +30,7 @@ export class TerritoryGetController {
   ) {}
 
   @Get()
-  async search(@Req() request: Request) {
+  async search(@Request() request: fastify.FastifyRequest) {
     const [, querystring] = request.url.split("?");
     const query = new URLSearchParams(querystring);
     const filters = SearchParamsCriteriaFiltersParser.parse(query);
