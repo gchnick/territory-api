@@ -1,11 +1,6 @@
+import { ConfigService } from "@nestjs/config";
 import { DataSource, EntitySchema } from "typeorm";
 
-import { Territory } from "@/contexts/Overseer/territories/domain/territory";
-import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
-import { TerritoryIsLocked } from "@/contexts/Overseer/territories/domain/territory-is-locked";
-import { TerritoryNotFount } from "@/contexts/Overseer/territories/domain/territory-not-fount";
-import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
-import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/territory-repository";
 import { Criteria } from "@/shared/domain/criteria/criteria";
 import { DeepPartial } from "@/shared/domain/deep-partial";
 import { Nullable } from "@/shared/domain/nullable";
@@ -13,14 +8,24 @@ import { BooleanValueObject } from "@/shared/domain/value-object/boolean-value-o
 import { CriteriaToTypeOrmConverter } from "@/shared/infrastructure/criteria/criteria-to-type-orm-converter";
 import { TypeOrmRepository } from "@/shared/infrastructure/persistence/typeorm/type-orm-repository";
 
+import { Territory } from "@/contexts/Overseer/territories/domain/territory";
+import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
+import { TerritoryIsLocked } from "@/contexts/Overseer/territories/domain/territory-is-locked";
+import { TerritoryNotFount } from "@/contexts/Overseer/territories/domain/territory-not-fount";
+import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
+import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/territory-repository";
+
 import { TerritoryEntity } from "./typeorm/territory-entity";
 
+/**
+ * @deprecated TypeOrm will be remove to Prisma ORM
+ */
 export class TerritoryTypeOrm
   extends TypeOrmRepository<Territory>
   implements TerritoryRepository
 {
-  constructor(dataSource: DataSource) {
-    super(dataSource);
+  constructor(dataSource: DataSource, configService: ConfigService) {
+    super(dataSource, configService);
   }
 
   protected entitySchema(): EntitySchema<Territory> {
@@ -32,7 +37,11 @@ export class TerritoryTypeOrm
   }
 
   async searchAll(): Promise<Array<Territory> | Territory> {
-    return await this.repository().find();
+    const repository = this.repository();
+    const result = await repository.find({
+      relations: { meetingPlaces: true },
+    });
+    return result;
   }
 
   async matching(criteria: Criteria): Promise<Array<Territory> | Territory> {
@@ -57,7 +66,11 @@ export class TerritoryTypeOrm
   }
 
   async findByNumber(number: TerritoryNumber): Promise<Nullable<Territory>> {
-    return await this.repository().findOneBy({ number });
+    const result = await this.repository().find({
+      relations: { meetingPlaces: true },
+      where: { number },
+    });
+    return result[0];
   }
 
   async findById(id: TerritoryId): Promise<Nullable<Territory>> {

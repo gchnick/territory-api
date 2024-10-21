@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { DataSource } from "typeorm";
 
@@ -26,8 +27,8 @@ import { UserPutController } from "./api/user-put.controller";
   providers: [
     {
       provide: UserRepository,
-      useFactory: (d: DataSource) => new UserTypeOrm(d),
-      inject: [DataSource],
+      useFactory: (d: DataSource, c: ConfigService) => new UserTypeOrm(d, c),
+      inject: [DataSource, ConfigService],
     },
     UserCreator,
     UserUpdater,

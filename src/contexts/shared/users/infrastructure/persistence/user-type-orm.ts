@@ -1,3 +1,4 @@
+import { ConfigService } from "@nestjs/config";
 import { DataSource, EntitySchema } from "typeorm";
 
 import { DeepPartial } from "@/shared/domain/deep-partial";
@@ -14,12 +15,15 @@ import { UserRole } from "../../domain/user-role";
 import { RoleEntity } from "./typeorm/role-entity";
 import { UserEntity } from "./typeorm/user-entity";
 
+/**
+ * @deprecated TypeOrm will be remove to Prisma ORM
+ */
 export class UserTypeOrm
   extends TypeOrmRepository<User>
   implements UserRepository
 {
-  constructor(dataSource: DataSource) {
-    super(dataSource);
+  constructor(dataSource: DataSource, configService: ConfigService) {
+    super(dataSource, configService);
   }
 
   protected entitySchema(): EntitySchema<User> {

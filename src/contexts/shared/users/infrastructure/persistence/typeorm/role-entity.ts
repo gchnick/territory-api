@@ -3,10 +3,10 @@ import { EntitySchema } from "typeorm";
 import { EnumValueObjectTransformer } from "@/shared/infrastructure/persistence/typeorm/enum-value-object-transformer";
 import { ValueObjectTransformer } from "@/shared/infrastructure/persistence/typeorm/value-object-transformer";
 
-import { RoleDescription } from "../../../domain/role/role-description";
-import { RoleId } from "../../../domain/role/role-id";
-import { RoleName } from "../../../domain/role/role-name";
-import { UserRole } from "../../../domain/user-role";
+import { RoleDescription } from "@/contexts/shared/users/domain/role/role-description";
+import { RoleId } from "@/contexts/shared/users/domain/role/role-id";
+import { RoleName } from "@/contexts/shared/users/domain/role/role-name";
+import { UserRole } from "@/contexts/shared/users/domain/user-role";
 
 export const RoleEntity = new EntitySchema<UserRole>({
   name: "UserRole",

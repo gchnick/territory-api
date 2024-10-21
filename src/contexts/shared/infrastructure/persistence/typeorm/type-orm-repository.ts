@@ -1,10 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { ConfigService } from "@nestjs/config";
 import { DataSource, EntitySchema, Repository } from "typeorm";
 
 import { AggregateRoot } from "@/shared/domain/aggregate-root";
 
+import { EnviromentValueObject } from "@/contexts/shared/domain/value-object/enviroment-value-object";
+
 export abstract class TypeOrmRepository<T extends AggregateRoot> {
-  constructor(private _dataSource: DataSource) {}
+  constructor(
+    private readonly _dataSource: DataSource,
+    private readonly _configService: ConfigService,
+  ) {}
 
   protected abstract entitySchema(): EntitySchema<T>;
 
@@ -22,8 +28,10 @@ export abstract class TypeOrmRepository<T extends AggregateRoot> {
   }
 
   protected async truncate(): Promise<void> {
-    const NODE_ENV = process.env.NODE_ENV;
-    if (NODE_ENV === "development" || NODE_ENV === "test") {
+    const nodeEnv = this._configService.getOrThrow<string>("NODE_ENV");
+    const environment = EnviromentValueObject.fromValue(nodeEnv);
+
+    if (environment.isDevelopment() || environment.isTest()) {
       const repository = this.repository();
       await repository.clear();
     }
