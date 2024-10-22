@@ -1,37 +1,36 @@
-import { CardinalPoint } from "@/contexts/Overseer/territories/domain/cardinal-points";
+import {
+  CardinalPoint,
+  CardinalPoints,
+} from "@/contexts/Overseer/territories/domain/cardinal-points";
+import { InvalidArgumentError } from "@/contexts/shared/domain/value-object/invalid-argument-error";
 
 describe("CardinalPiont should", () => {
-  it("comprare to CardinalPoints enum and return true if is equal", () => {
-    const north = CardinalPoint.fromValue("NORTH");
-    const south = CardinalPoint.fromValue("SOUTH");
-    const east = CardinalPoint.fromValue("EAST");
-    const west = CardinalPoint.fromValue("WEST");
+  it("to be defined", () => {
+    const north = CardinalPoints.NORTH;
+    const cardinalPoint = new CardinalPoint(north);
 
-    const currentNorth = north.isNorth();
-    const currentSouth = south.isSouth();
-    const currentEast = east.isEast();
-    const currentWest = west.isWest();
-
-    expect(currentNorth).toBe(true);
-    expect(currentSouth).toBe(true);
-    expect(currentEast).toBe(true);
-    expect(currentWest).toBe(true);
+    expect(cardinalPoint).toBeDefined();
   });
 
-  it("comprare to CardinalPoints enum and return false if is not equal", () => {
-    const north = CardinalPoint.fromValue("NORTH");
-    const south = CardinalPoint.fromValue("SOUTH");
-    const east = CardinalPoint.fromValue("EAST");
-    const west = CardinalPoint.fromValue("WEST");
+  it("compare to equal cardinal point", () => {
+    const northCardinalPoint = CardinalPoint.fromValue("NORTH");
+    const soutCardinalPoint = CardinalPoint.fromValue("SOUTH");
+    const otherNorthCardinalPoint = CardinalPoint.fromValue("NORTH");
 
-    const currentNorth = south.isNorth();
-    const currentSouth = west.isSouth();
-    const currentEast = north.isEast();
-    const currentWest = east.isWest();
+    const isEqual = northCardinalPoint.equals(otherNorthCardinalPoint);
+    const isNotEqual = northCardinalPoint.equals(soutCardinalPoint);
 
-    expect(currentNorth).toBe(false);
-    expect(currentSouth).toBe(false);
-    expect(currentEast).toBe(false);
-    expect(currentWest).toBe(false);
+    expect(isEqual).toBe(true);
+    expect(isNotEqual).toBe(false);
+  });
+
+  it("throw error when use invalid argument", () => {
+    const invalidArgument = "invalidString";
+
+    const invalidInstance = () => {
+      CardinalPoint.fromValue(invalidArgument);
+    };
+
+    expect(invalidInstance).toThrowError(InvalidArgumentError);
   });
 });
