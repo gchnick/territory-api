@@ -13,20 +13,11 @@ export class CardinalPoint extends EnumValueObject<CardinalPoints> {
     super(value, Object.values(CardinalPoints));
   }
 
-  isNorth() {
-    return this.value === CardinalPoints.NORTH;
-  }
-
-  isSouth() {
-    return this.value === CardinalPoints.SOUTH;
-  }
-
-  isEast() {
-    return this.value === CardinalPoints.EAST;
-  }
-
-  isWest() {
-    return this.value === CardinalPoints.WEST;
+  equals(other: CardinalPoint): boolean {
+    return (
+      other.constructor.name === this.constructor.name &&
+      other.value === this.value
+    );
   }
 
   static fromValue(value: string): CardinalPoint {
@@ -37,13 +28,13 @@ export class CardinalPoint extends EnumValueObject<CardinalPoints> {
     }
 
     throw new InvalidArgumentError(
-      `The cardinal point type ${value} is invalid`,
+      `The CardinalPoint type <${value}> is invalid`,
     );
   }
 
   protected throwErrorForInvalidValue(value: CardinalPoints): void {
     throw new InvalidArgumentError(
-      `The cardinal point type ${value} is invalid`,
+      `The CardinalPoint type <${value}> is invalid`,
     );
   }
 }

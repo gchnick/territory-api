@@ -22,47 +22,20 @@ export class TerritoryLimits {
     for (const key of values.keys()) {
       if (keys.includes(key.value)) {
         throw new InvalidArgumentError(
-          `The territory limits value is invalid. ardinal point <${key.value}> not is unique`,
+          `The territory limits value is invalid. Cardinal point <${key.value}> not is unique`,
         );
       }
       keys.push(key.value);
     }
   }
 
-  get north(): string {
-    for (const [k, v] of this.values.entries()) {
-      if (k.isNorth()) {
-        return v;
+  get(cardinalPoint: CardinalPoint): string | undefined {
+    for (const [thisCardinalPoint, thisLimit] of this.values.entries()) {
+      if (cardinalPoint.equals(thisCardinalPoint)) {
+        return thisLimit;
       }
     }
-    return "";
-  }
-
-  get south(): string {
-    for (const [k, v] of this.values.entries()) {
-      if (k.isSouth()) {
-        return v;
-      }
-    }
-    return "";
-  }
-
-  get east(): string {
-    for (const [k, v] of this.values.entries()) {
-      if (k.isEast()) {
-        return v;
-      }
-    }
-    return "";
-  }
-
-  get west(): string {
-    for (const [k, v] of this.values.entries()) {
-      if (k.isWest()) {
-        return v;
-      }
-    }
-    return "";
+    return;
   }
 
   static fromPrimitives(
@@ -72,15 +45,15 @@ export class TerritoryLimits {
     }[],
   ): TerritoryLimits {
     const limits = new Map<CardinalPoint, string>();
-    for (const l of plainData)
-      limits.set(CardinalPoint.fromValue(l.cardinalPoint), l.limit);
+    for (const { cardinalPoint, limit } of plainData)
+      limits.set(CardinalPoint.fromValue(cardinalPoint), limit);
     return new TerritoryLimits(limits);
   }
 
   toPrimitives(): TerritoryLimitsPrimitives {
     const primitive: { cardinalPoint: string; limit: string }[] = [];
-    for (const [k, v] of this.values.entries()) {
-      primitive.push({ cardinalPoint: k.value, limit: v });
+    for (const [cardinalPoint, limit] of this.values.entries()) {
+      primitive.push({ cardinalPoint: cardinalPoint.value, limit });
     }
     return primitive;
   }
