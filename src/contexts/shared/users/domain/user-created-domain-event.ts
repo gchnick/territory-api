@@ -3,7 +3,6 @@ import { DomainEvent } from "@/shared/domain/domain-event";
 import { Role } from "./role/role-name";
 
 type CreateUserDomainEventAttributes = {
-  readonly name: string;
   readonly email: string;
   readonly roles: Role[];
 };
@@ -11,13 +10,11 @@ type CreateUserDomainEventAttributes = {
 export class UserCreatedDomainEvent extends DomainEvent {
   static readonly EVENT_NAME = "user.created";
 
-  readonly name: string;
   readonly email: string;
   readonly roles: Role[];
 
   constructor({
     aggregateId,
-    name,
     email,
     roles,
     eventId,
@@ -25,7 +22,6 @@ export class UserCreatedDomainEvent extends DomainEvent {
   }: {
     aggregateId: string;
     eventId?: string;
-    name: string;
     email: string;
     roles: Role[];
     occurredOn?: Date;
@@ -36,15 +32,13 @@ export class UserCreatedDomainEvent extends DomainEvent {
       eventId,
       occurredOn,
     });
-    this.name = name;
     this.email = email;
     this.roles = roles;
   }
 
   toPrimitives(): CreateUserDomainEventAttributes {
-    const { name, email, roles } = this;
+    const { email, roles } = this;
     return {
-      name,
       email,
       roles,
     };
@@ -59,7 +53,6 @@ export class UserCreatedDomainEvent extends DomainEvent {
     const { aggregateId, attributes, occurredOn, eventId } = params;
     return new UserCreatedDomainEvent({
       aggregateId,
-      name: attributes.name,
       email: attributes.email,
       roles: attributes.roles,
       eventId,

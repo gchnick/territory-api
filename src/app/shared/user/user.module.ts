@@ -1,7 +1,4 @@
 import { Module } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { DataSource } from "typeorm";
 
 import { Bcrypt } from "@/shared/infrastructure/encode/bcrypt";
 
@@ -13,22 +10,18 @@ import { UserFinder } from "@/contexts/shared/users/application/find-by-email/us
 import { UpdateUserCommandHandler } from "@/contexts/shared/users/application/update/update-user-command-handler";
 import { UserUpdater } from "@/contexts/shared/users/application/update/user-updater";
 import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
-import { RoleEntity } from "@/contexts/shared/users/infrastructure/persistence/typeorm/role-entity";
-import { UserEntity } from "@/contexts/shared/users/infrastructure/persistence/typeorm/user-entity";
-import { UserTypeOrm } from "@/contexts/shared/users/infrastructure/persistence/user-type-orm";
-
-import { SharedModule } from "@/core/shared/shared.module";
+import { UserPrisma } from "@/contexts/shared/users/infrastructure/persistence/user-prisma";
 
 import { UserPutController } from "./api/user-put.controller";
 
 @Module({
-  imports: [SharedModule, TypeOrmModule.forFeature([UserEntity, RoleEntity])],
+  imports: [],
   controllers: [UserPutController],
   providers: [
+    UserPrisma,
     {
       provide: UserRepository,
-      useFactory: (d: DataSource, c: ConfigService) => new UserTypeOrm(d, c),
-      inject: [DataSource, ConfigService],
+      useExisting: UserPrisma,
     },
     UserCreator,
     UserUpdater,

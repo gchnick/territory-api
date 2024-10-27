@@ -2,15 +2,14 @@ import { EventBus } from "@/shared/domain/event-bus";
 import Logger from "@/shared/domain/logger";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
-import { Encode } from "@/src/contexts/shared/auth/domain/encode";
-import { User } from "@/src/contexts/shared/users/domain/user";
-import { UserEmail } from "@/src/contexts/shared/users/domain/user-email";
-import { UserEnabled } from "@/src/contexts/shared/users/domain/user-enabled";
-import { UserId } from "@/src/contexts/shared/users/domain/user-id";
-import { UserName } from "@/src/contexts/shared/users/domain/user-name";
-import { UserPassword } from "@/src/contexts/shared/users/domain/user-password";
-import { UserRepository } from "@/src/contexts/shared/users/domain/user-repository";
-import { UserVerified } from "@/src/contexts/shared/users/domain/user-verified";
+import { Encode } from "@/contexts/shared/auth/domain/encode";
+import { User } from "@/contexts/shared/users/domain/user";
+import { UserEmail } from "@/contexts/shared/users/domain/user-email";
+import { UserEnabled } from "@/contexts/shared/users/domain/user-enabled";
+import { UserId } from "@/contexts/shared/users/domain/user-id";
+import { UserPassword } from "@/contexts/shared/users/domain/user-password";
+import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
+import { UserVerified } from "@/contexts/shared/users/domain/user-verified";
 
 import { RoleName } from "../../domain/role/role-name";
 import { UserRole } from "../../domain/user-role";
@@ -27,7 +26,6 @@ export class UserCreator {
 
   async create(params: {
     id: UserId;
-    name: UserName;
     email: UserEmail;
     password: UserPassword;
     roles: RoleName[];
@@ -38,7 +36,6 @@ export class UserCreator {
 
     const user = User.create(
       params.id,
-      params.name,
       params.email,
       params.password,
       verifiedDefault,

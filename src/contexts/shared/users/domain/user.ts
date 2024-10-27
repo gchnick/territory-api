@@ -6,14 +6,12 @@ import { UserCreatedDomainEvent } from "./user-created-domain-event";
 import { UserEmail } from "./user-email";
 import { UserEnabled } from "./user-enabled";
 import { UserId } from "./user-id";
-import { UserName } from "./user-name";
 import { UserPassword } from "./user-password";
 import { UserRole, UserRolePrimitives } from "./user-role";
 import { UserVerified } from "./user-verified";
 
 export type UserPrimitives = {
   id: string;
-  name: string;
   email: string;
   password: string;
   verified: boolean;
@@ -25,7 +23,6 @@ export class User extends AggregateRoot {
   static SALT_OR_ROUNDS_ENCODE = 10;
 
   readonly id: UserId;
-  readonly name: UserName;
   readonly email: UserEmail;
   readonly password: UserPassword;
   readonly verified: UserVerified;
@@ -34,7 +31,6 @@ export class User extends AggregateRoot {
 
   constructor(
     id: UserId,
-    name: UserName,
     email: UserEmail,
     password: UserPassword,
     verified: UserVerified,
@@ -43,7 +39,6 @@ export class User extends AggregateRoot {
   ) {
     super();
     this.id = id;
-    this.name = name;
     this.email = email;
     this.password = password;
     this.verified = verified;
@@ -58,7 +53,6 @@ export class User extends AggregateRoot {
     );
     return new User(
       this.id,
-      this.name,
       this.email,
       new UserPassword(passwordHashed),
       this.verified,
@@ -76,19 +70,17 @@ export class User extends AggregateRoot {
 
   static create(
     id: UserId,
-    name: UserName,
     email: UserEmail,
     password: UserPassword,
     verified: UserVerified,
     enabled: UserEnabled,
     roles: UserRole[],
   ): User {
-    const user = new User(id, name, email, password, verified, enabled, roles);
+    const user = new User(id, email, password, verified, enabled, roles);
 
     user.record(
       new UserCreatedDomainEvent({
         aggregateId: user.id.value,
-        name: user.name.value,
         email: user.email.value,
         roles: user.roles.map(r => r.name.value),
       }),
@@ -99,7 +91,6 @@ export class User extends AggregateRoot {
 
   static fromPrimitive(plainData: {
     id: string;
-    name: string;
     email: string;
     password: string;
     verified: boolean;
@@ -108,7 +99,6 @@ export class User extends AggregateRoot {
   }): User {
     return new User(
       new UserId(plainData.id),
-      new UserName(plainData.name),
       new UserEmail(plainData.email),
       new UserPassword(plainData.password),
       new UserVerified(plainData.verified),
@@ -122,7 +112,6 @@ export class User extends AggregateRoot {
   toPrimitives(): UserPrimitives {
     return {
       id: this.id.value,
-      name: this.name.value,
       email: this.email.value,
       password: this.password.value,
       verified: this.verified.value,

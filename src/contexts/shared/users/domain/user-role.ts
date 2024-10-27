@@ -1,33 +1,40 @@
+import { Nullable } from "@/contexts/shared/domain/nullable";
+
 import { RoleDescription } from "./role/role-description";
 import { RoleId } from "./role/role-id";
 import { Role, RoleName } from "./role/role-name";
 
 export type UserRolePrimitives = {
-  id: string;
+  id: number;
   name: Role;
-  description: string;
+  description: Nullable<string>;
 };
 
 export class UserRole {
   readonly id: RoleId;
   readonly name: RoleName;
-  readonly description: RoleDescription;
+  readonly description: Nullable<RoleDescription>;
 
-  constructor(id: RoleId, name: RoleName, description: RoleDescription) {
+  constructor(
+    id: RoleId,
+    name: RoleName,
+    description: Nullable<RoleDescription>,
+  ) {
     this.id = id;
     this.name = name;
     this.description = description;
   }
 
   static fromPrimitives(plainData: {
-    id: string;
+    id: number;
     name: string;
-    description: string;
+    description: Nullable<string>;
   }): UserRole {
+    const { description } = plainData;
     return new UserRole(
       new RoleId(plainData.id),
       RoleName.fromValue(plainData.name),
-      new RoleDescription(plainData.description),
+      description ? new RoleDescription(description) : undefined,
     );
   }
 
@@ -35,7 +42,7 @@ export class UserRole {
     return {
       id: this.id.value,
       name: this.name.value,
-      description: this.description.value,
+      description: this.description?.value,
     };
   }
 }
