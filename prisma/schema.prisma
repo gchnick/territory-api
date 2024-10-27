@@ -6,3 +6,256 @@ datasource db {
   provider = "sqlite"
   url      = env("SQLITE_DATABASE")
 }
+
+model congregations {
+  number                Int     @id
+  name                  String  @unique
+  circuit               String
+  number_of_territories Int?    @default(0)
+  map_image_url         String?
+  north_limit           String
+  south_limit           String
+  east_limit            String
+  west_limit            String
+
+  territories territories[]
+}
+
+model territories {
+  teritory_id         String   @id @default(uuid())
+  number              Int      @unique
+  label               String   @unique
+  sector              String
+  quantity_houses     Int      @default(0)
+  locality            String
+  locality_in_part    String?
+  map_image_url       String?
+  last_date_completed DateTime
+  current_assigned    Boolean  @default(false)
+
+  meeting_place meeting_places[]
+  registry      registries[]
+
+  congregation    congregations @relation(fields: [congregation_id], references: [number])
+  congregation_id Int
+}
+
+model meeting_places {
+  meeting_place_id String  @id @default(uuid())
+  place            String
+  mobile_phone     String?
+  field_service    Boolean @default(false)
+  latitude         String?
+  longitude        String?
+
+  availability meeting_place_availability[]
+  assignaments assignaments[]
+
+  territory    territories @relation(fields: [territory_id], references: [teritory_id], onDelete: Cascade)
+  territory_id String
+}
+
+model meeting_place_availability {
+  day       String
+  frequency String
+  moment    String
+
+  meeting_place    meeting_places @relation(fields: [meeting_place_id], references: [meeting_place_id], onDelete: Cascade)
+  meeting_place_id String
+
+  @@id([meeting_place_id, day])
+}
+
+model periods {
+  period_id   String    @id @default(uuid())
+  description String
+  start_date  DateTime
+  finish_date DateTime?
+
+  registries registries[]
+}
+
+model registries {
+  registry_id    String    @id @default(uuid())
+  date_assigned  DateTime
+  date_completed DateTime?
+
+  assigned_to  conductors @relation(fields: [conductor_id], references: [conductor_id], onDelete: Cascade)
+  conductor_id String
+
+  territory    territories @relation(fields: [territory_id], references: [teritory_id], onDelete: Cascade)
+  territory_id String
+  period       periods     @relation(fields: [period_id], references: [period_id], onDelete: Cascade)
+  period_id    String
+}
+
+model family_groups {
+  id    Int    @id() @default(autoincrement())
+  label String
+
+  publishers publishers[]
+}
+
+model phones {
+  phone_id Int    @id @default(autoincrement())
+  label    String
+  number   String @unique
+
+  publishers publisher__phone[]
+}
+
+model roles {
+  id          Int     @id @default(autoincrement())
+  role        String  @unique
+  description String?
+
+  publishers user__role[]
+}
+
+model user__role {
+  user    users  @relation(fields: [user_id], references: [user_id])
+  user_id String
+  role    roles  @relation(fields: [role_id], references: [id])
+  role_id Int
+
+  @@id([user_id, role_id])
+}
+
+model users {
+  user_id  String  @id @default(uuid())
+  username String  @unique
+  password String
+  enabled  Boolean @default(true)
+  verified Boolean @default(false)
+
+  roles user__role[]
+
+  publisher    publishers? @relation(fields: [publisher_id], references: [publisher_id])
+  publisher_id String?     @unique
+}
+
+model publishers {
+  publisher_id  String    @id @default(uuid())
+  householder   Boolean   @default(false)
+  sort_name     String    @unique
+  firts_name    String
+  last_name     String
+  address       String?
+  mobile_phone  String?   @unique
+  service_group Int       @default(-1)
+  photo_url     String?
+  privileges    String
+  hope          String
+  last_report   DateTime?
+  is_active     Boolean   @default(true)
+  is_aparted    Boolean   @default(false)
+  email         String?   @unique
+
+  conductors        conductors[]
+  user              users?
+  phones            publisher__phone[]
+  emergency_contact emergency_contacts?
+
+  is_elder       elders?
+  is_ministerial ministerial_servants?
+  is_pionner     pionners?
+  is_missionary  missionaries?
+
+  family_group    family_groups? @relation(fields: [family_group_id], references: [id], onDelete: Cascade)
+  family_group_id Int
+
+  @@unique([firts_name, last_name])
+}
+
+model publisher__phone {
+  publisher    publishers @relation(fields: [publisher_id], references: [publisher_id])
+  publisher_id String
+  phone        phones     @relation(fields: [phone_id], references: [phone_id])
+  phone_id     Int
+
+  @@id([publisher_id, phone_id])
+}
+
+model emergency_contacts {
+  id        Int    @id @default(autoincrement())
+  full_name String
+  phone     String @unique
+
+  publisher    publishers? @relation(fields: [publisher_id], references: [publisher_id])
+  publisher_id String      @unique
+}
+
+model elders {
+  id Int @id @default(autoincrement())
+
+  publisher    publishers @relation(fields: [publisher_id], references: [publisher_id])
+  publisher_id String     @unique
+}
+
+model ministerial_servants {
+  id Int @id @default(autoincrement())
+
+  publisher    publishers @relation(fields: [publisher_id], references: [publisher_id])
+  publisher_id String     @unique
+}
+
+model pionners {
+  id Int @id @default(autoincrement())
+
+  publisher    publishers @relation(fields: [publisher_id], references: [publisher_id])
+  publisher_id String     @unique
+}
+
+model missionaries {
+  id Int @id @default(autoincrement())
+
+  publisher    publishers @relation(fields: [publisher_id], references: [publisher_id])
+  publisher_id String     @unique
+}
+
+model conductors {
+  conductor_id       String    @id @default(uuid())
+  last_date_assigned DateTime?
+
+  assignaments assignaments[]
+  registries   registries[]
+  availability conductor_availability[]
+
+  publisher    publishers @relation(fields: [publisher_id], references: [publisher_id], onDelete: Cascade)
+  publisher_id String
+}
+
+model conductor_availability {
+  day       String
+  frequency String
+  moment    String
+
+  conductor    conductors @relation(fields: [conductor_id], references: [conductor_id], onDelete: Cascade)
+  conductor_id String
+
+  @@id([conductor_id, day])
+}
+
+model programs {
+  program_id   String   @id @default(uuid())
+  since_week   DateTime
+  until_week   DateTime
+  is_published Boolean  @default(false)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  assignaments assignaments[]
+}
+
+model assignaments {
+  assignament_id String   @id @default(uuid())
+  date           DateTime
+  covered        Boolean  @default(false)
+
+  meeting_places   meeting_places @relation(fields: [meeting_place_id], references: [meeting_place_id], onDelete: Cascade)
+  meeting_place_id String
+  conductor        conductors     @relation(fields: [coductor_id], references: [conductor_id], onDelete: Cascade)
+  coductor_id      String
+  programs         programs       @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
+  program_id       String
+}
