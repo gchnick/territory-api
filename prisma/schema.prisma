@@ -154,11 +154,13 @@ model publishers {
   conductors        conductors[]
   user              users?
   phones            publisher__phone[]
+  reports reports_current_file[]
+  backup_reports dead_file[]
   emergency_contact emergency_contacts?
 
   is_elder       elders?
   is_ministerial ministerial_servants?
-  is_pionner     pionners?
+  is_pionner     pioneers?
   is_missionary  missionaries?
 
   family_group    family_groups? @relation(fields: [family_group_id], references: [id], onDelete: Cascade)
@@ -199,7 +201,7 @@ model ministerial_servants {
   publisher_id String     @unique
 }
 
-model pionners {
+model pioneers {
   id Int @id @default(autoincrement())
 
   publisher    publishers @relation(fields: [publisher_id], references: [publisher_id])
@@ -258,4 +260,72 @@ model assignaments {
   coductor_id      String
   programs         programs       @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
   program_id       String
+}
+
+model months_year_service {
+  month_id Int @id @default(autoincrement())
+  date DateTime
+
+  reports reports_current_file[]
+  backup_reports dead_file[]
+  total_publisher_report total_publisher_reports[]
+  total_pioneer_report total_pioneer_reports[]
+  total_auxiliary_pioneer_report total_auxiliary_pioneers_reports[]
+}
+
+model reports_current_file {
+  report_id Int @id @default(autoincrement())
+  participated_in_some_facet Boolean @default(false)
+  hours Decimal?
+  bible_courses Int?
+  is_pioneer Boolean @default(false)
+  is_auxiliar_pioneer Boolean @default(false)
+  comment String?
+
+  month months_year_service @relation(fields: [months_year_service_id], references: [month_id])
+  months_year_service_id Int
+  publisher publishers @relation(fields: [publisher_id], references: [publisher_id])
+ publisher_id String
+}
+
+model dead_file {
+  report_id Int @id @default(autoincrement())
+  participated_in_some_facet Boolean @default(false)
+  hours Decimal?
+  bible_courses Int?
+  is_pioneer Boolean @default(false)
+  is_auxiliar_pioneer Boolean @default(false)
+  comment String?
+
+  month months_year_service @relation(fields: [months_year_service_id], references: [month_id])
+  months_year_service_id Int
+  publisher publishers @relation(fields: [publisher_id], references: [publisher_id])
+ publisher_id String
+}
+
+model total_publisher_reports {
+  report_id Int @id @default(autoincrement())
+  total_publishers Int
+  total_publisher_reports Int
+
+  month months_year_service @relation(fields: [month_id], references: [month_id])
+  month_id Int
+}
+
+model total_pioneer_reports {
+  report_id Int @id @default(autoincrement())
+  total_publishers Int
+  total_publisher_reports Int
+
+  month months_year_service @relation(fields: [month_id], references: [month_id])
+  month_id Int
+}
+
+model total_auxiliary_pioneers_reports {
+  report_id Int @id @default(autoincrement())
+  total_pioneers Int
+  total_pioneer_reports Int
+
+  month months_year_service @relation(fields: [month_id], references: [month_id])
+  month_id Int
 }

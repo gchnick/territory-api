@@ -167,10 +167,10 @@ CREATE TABLE "ministerial_servants" (
 );
 
 -- CreateTable
-CREATE TABLE "pionners" (
+CREATE TABLE "pioneers" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "publisher_id" TEXT NOT NULL,
-    CONSTRAINT "pionners_publisher_id_fkey" FOREIGN KEY ("publisher_id") REFERENCES "publishers" ("publisher_id") ON DELETE RESTRICT ON UPDATE CASCADE
+    CONSTRAINT "pioneers_publisher_id_fkey" FOREIGN KEY ("publisher_id") REFERENCES "publishers" ("publisher_id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -222,6 +222,69 @@ CREATE TABLE "assignaments" (
     CONSTRAINT "assignaments_program_id_fkey" FOREIGN KEY ("program_id") REFERENCES "programs" ("program_id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+-- CreateTable
+CREATE TABLE "months_year_service" (
+    "month_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "date" DATETIME NOT NULL
+);
+
+-- CreateTable
+CREATE TABLE "reports_current_file" (
+    "report_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "participated_in_some_facet" BOOLEAN NOT NULL DEFAULT false,
+    "hours" DECIMAL,
+    "bible_courses" INTEGER,
+    "is_pioneer" BOOLEAN NOT NULL DEFAULT false,
+    "is_auxiliar_pioneer" BOOLEAN NOT NULL DEFAULT false,
+    "comment" TEXT,
+    "months_year_service_id" INTEGER NOT NULL,
+    "publisher_id" TEXT NOT NULL,
+    CONSTRAINT "reports_current_file_months_year_service_id_fkey" FOREIGN KEY ("months_year_service_id") REFERENCES "months_year_service" ("month_id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "reports_current_file_publisher_id_fkey" FOREIGN KEY ("publisher_id") REFERENCES "publishers" ("publisher_id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "dead_file" (
+    "report_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "participated_in_some_facet" BOOLEAN NOT NULL DEFAULT false,
+    "hours" DECIMAL,
+    "bible_courses" INTEGER,
+    "is_pioneer" BOOLEAN NOT NULL DEFAULT false,
+    "is_auxiliar_pioneer" BOOLEAN NOT NULL DEFAULT false,
+    "comment" TEXT,
+    "months_year_service_id" INTEGER NOT NULL,
+    "publisher_id" TEXT NOT NULL,
+    CONSTRAINT "dead_file_months_year_service_id_fkey" FOREIGN KEY ("months_year_service_id") REFERENCES "months_year_service" ("month_id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "dead_file_publisher_id_fkey" FOREIGN KEY ("publisher_id") REFERENCES "publishers" ("publisher_id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "total_publisher_reports" (
+    "report_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "total_publishers" INTEGER NOT NULL,
+    "total_publisher_reports" INTEGER NOT NULL,
+    "month_id" INTEGER NOT NULL,
+    CONSTRAINT "total_publisher_reports_month_id_fkey" FOREIGN KEY ("month_id") REFERENCES "months_year_service" ("month_id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "total_pioneer_reports" (
+    "report_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "total_publishers" INTEGER NOT NULL,
+    "total_publisher_reports" INTEGER NOT NULL,
+    "month_id" INTEGER NOT NULL,
+    CONSTRAINT "total_pioneer_reports_month_id_fkey" FOREIGN KEY ("month_id") REFERENCES "months_year_service" ("month_id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "total_auxiliary_pioneers_reports" (
+    "report_id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "total_pioneers" INTEGER NOT NULL,
+    "total_pioneer_reports" INTEGER NOT NULL,
+    "month_id" INTEGER NOT NULL,
+    CONSTRAINT "total_auxiliary_pioneers_reports_month_id_fkey" FOREIGN KEY ("month_id") REFERENCES "months_year_service" ("month_id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "congregations_name_key" ON "congregations"("name");
 
@@ -268,7 +331,7 @@ CREATE UNIQUE INDEX "elders_publisher_id_key" ON "elders"("publisher_id");
 CREATE UNIQUE INDEX "ministerial_servants_publisher_id_key" ON "ministerial_servants"("publisher_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "pionners_publisher_id_key" ON "pionners"("publisher_id");
+CREATE UNIQUE INDEX "pioneers_publisher_id_key" ON "pioneers"("publisher_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "missionaries_publisher_id_key" ON "missionaries"("publisher_id");
