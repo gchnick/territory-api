@@ -1,6 +1,7 @@
 import { DomainEvent } from "@/shared/domain/domain-event";
 
 type CreateTerritoryDomainEventAttributes = {
+  readonly congregationId: number;
   readonly number: number;
   readonly label: string;
 };
@@ -8,11 +9,13 @@ type CreateTerritoryDomainEventAttributes = {
 export class TerritoryCreatedDomainEvent extends DomainEvent {
   static readonly EVENT_NAME = "territory.created";
 
+  readonly congregationId: number;
   readonly number: number;
   readonly label: string;
 
   constructor({
     aggregateId,
+    congregationId,
     number,
     label,
     eventId,
@@ -20,6 +23,7 @@ export class TerritoryCreatedDomainEvent extends DomainEvent {
   }: {
     aggregateId: string;
     eventId?: string;
+    congregationId: number;
     number: number;
     label: string;
     occurredOn?: Date;
@@ -30,13 +34,15 @@ export class TerritoryCreatedDomainEvent extends DomainEvent {
       eventId,
       occurredOn,
     });
+    this.congregationId = congregationId;
     this.number = number;
     this.label = label;
   }
 
   toPrimitives(): CreateTerritoryDomainEventAttributes {
-    const { number, label } = this;
+    const { congregationId, number, label } = this;
     return {
+      congregationId,
       number,
       label,
     };
@@ -51,6 +57,7 @@ export class TerritoryCreatedDomainEvent extends DomainEvent {
     const { aggregateId, attributes, occurredOn, eventId } = params;
     return new TerritoryCreatedDomainEvent({
       aggregateId,
+      congregationId: attributes.congregationId,
       number: attributes.number,
       label: attributes.label,
       eventId,

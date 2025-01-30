@@ -5,7 +5,7 @@ import { ValueObjectTransformer } from "@/shared/infrastructure/persistence/type
 import { MeetingPlaceEntity } from "@/contexts/Overseer/meeting-place/infrastructure/persistence/typeorm/meeting-place-entity";
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
-import { TerritoryIsLocked } from "@/contexts/Overseer/territories/domain/territory-is-locked";
+import { TerritoryIsLocked } from "@/src/contexts/Overseer/territories/domain/territory-current-assigned";
 import { TerritoryLabel } from "@/contexts/Overseer/territories/domain/territory-label";
 import { TerritoryLastDateCompleted } from "@/contexts/Overseer/territories/domain/territory-last-date-completed";
 import { TerritoryLocality } from "@/contexts/Overseer/territories/domain/territory-locality";

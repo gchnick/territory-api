@@ -3,7 +3,7 @@ import { Injectable } from "@/shared/infrastructure/dependency-injection/injecta
 
 import { Territory } from "../../domain/territory";
 import { TerritoryId } from "../../domain/territory-id";
-import { TerritoryIsLocked } from "../../domain/territory-is-locked";
+import { TerritoryIsLocked } from "../../domain/territory-current-assigned";
 import { TerritoryLabel } from "../../domain/territory-label";
 import { TerritoryLastDateCompleted } from "../../domain/territory-last-date-completed";
 import { TerritoryLocality } from "../../domain/territory-locality";

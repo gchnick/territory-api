@@ -22,10 +22,10 @@ model congregations {
 }
 
 model territories {
-  teritory_id         String   @id @default(uuid())
+  territory_id         String   @id @default(uuid())
   number              Int      @unique
   label               String   @unique
-  sector              String
+  sector              String?
   quantity_houses     Int      @default(0)
   locality            String
   locality_in_part    String?
@@ -51,7 +51,7 @@ model meeting_places {
   availability meeting_place_availability[]
   assignaments assignaments[]
 
-  territory    territories @relation(fields: [territory_id], references: [teritory_id], onDelete: Cascade)
+  territory    territories @relation(fields: [territory_id], references: [territory_id], onDelete: Cascade)
   territory_id String
 }
 
@@ -83,7 +83,7 @@ model registries {
   assigned_to  conductors @relation(fields: [conductor_id], references: [conductor_id], onDelete: Cascade)
   conductor_id String
 
-  territory    territories @relation(fields: [territory_id], references: [teritory_id], onDelete: Cascade)
+  territory    territories @relation(fields: [territory_id], references: [territory_id], onDelete: Cascade)
   territory_id String
   period       periods     @relation(fields: [period_id], references: [period_id], onDelete: Cascade)
   period_id    String

@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { TerritoryIsLocked } from "@/contexts/Overseer/territories/domain/territory-is-locked";
+import { TerritoryIsLocked } from "@/src/contexts/Overseer/territories/domain/territory-current-assigned";
 
 export const TerritoryIsLockedMother = {
   create(isLocked?: boolean): TerritoryIsLocked {

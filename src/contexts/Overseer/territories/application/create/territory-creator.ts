@@ -1,7 +1,7 @@
 import { MeetingPlace } from "@/src/contexts/Overseer/meeting-place/domain/meeting-place";
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
-import { TerritoryIsLocked } from "@/contexts/Overseer/territories/domain/territory-is-locked";
+import { TerritoryIsLocked } from "@/src/contexts/Overseer/territories/domain/territory-current-assigned";
 import { TerritoryLabel } from "@/contexts/Overseer/territories/domain/territory-label";
 import { TerritoryLastDateCompleted } from "@/contexts/Overseer/territories/domain/territory-last-date-completed";
 import { TerritoryLocality } from "@/contexts/Overseer/territories/domain/territory-locality";

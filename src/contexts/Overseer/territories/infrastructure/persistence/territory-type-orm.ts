@@ -10,7 +10,7 @@ import { TypeOrmRepository } from "@/shared/infrastructure/persistence/typeorm/t
 
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
-import { TerritoryIsLocked } from "@/contexts/Overseer/territories/domain/territory-is-locked";
+import { TerritoryIsLocked } from "@/src/contexts/Overseer/territories/domain/territory-current-assigned";
 import { TerritoryNotFount } from "@/contexts/Overseer/territories/domain/territory-not-fount";
 import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
 import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/territory-repository";

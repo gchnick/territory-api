@@ -1,10 +1,13 @@
 import { Criteria } from "@/shared/domain/criteria/criteria";
-import { DeepPartial } from "@/shared/domain/deep-partial";
 import { Nullable } from "@/shared/domain/nullable";
 
-import { Territory } from "./territory";
+import { Territory, TerritoryPrimitives } from "./territory";
 import { TerritoryId } from "./territory-id";
 import { TerritoryNumber } from "./territory-number";
+
+export type PartialTerritoryPrimitives = Partial<
+  Omit<TerritoryPrimitives, "id" | "meetingPlaces">
+>;
 
 export abstract class TerritoryRepository {
   abstract save(territory: Territory): Promise<void>;
@@ -17,9 +20,10 @@ export abstract class TerritoryRepository {
 
   abstract findById(id: TerritoryId): Promise<Nullable<Territory>>;
 
-  abstract update(id: TerritoryId, data: DeepPartial<Territory>): Promise<void>;
-
-  abstract update(id: TerritoryId, data: Territory): Promise<void>;
+  abstract update(
+    id: TerritoryId,
+    data: PartialTerritoryPrimitives,
+  ): Promise<void>;
 
   abstract delete(id: TerritoryId): Promise<void>;
 

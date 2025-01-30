@@ -15,7 +15,7 @@ import {
 import { UserRole } from "@/contexts/shared/users/domain/user-role";
 
 export class UserPrisma implements UserRepository {
-  constructor(private readonly repository: NestPrismaService) {}
+  constructor(private readonly _repository: NestPrismaService) {}
 
   async save(user: User): Promise<void> {
     const {
@@ -38,12 +38,12 @@ export class UserPrisma implements UserRepository {
         }),
       },
     };
-    await this.repository.users.create({ data });
+    await this._repository.users.create({ data });
   }
 
   async findByEmail(email: UserEmail): Promise<Nullable<User>> {
     const username = email.value;
-    const result = await this.repository.users.findUnique({
+    const result = await this._repository.users.findUnique({
       where: { username },
       include: { roles: { include: { role: true } } },
     });
@@ -68,7 +68,7 @@ export class UserPrisma implements UserRepository {
 
   async findById(id: UserId): Promise<Nullable<User>> {
     const user_id = id.value;
-    const result = await this.repository.users.findUnique({
+    const result = await this._repository.users.findUnique({
       where: { user_id },
       include: { roles: { include: { role: true } } },
     });
@@ -93,7 +93,7 @@ export class UserPrisma implements UserRepository {
 
   async findRole(name: RoleName): Promise<Nullable<UserRole>> {
     const role = name.value;
-    const result = await this.repository.roles.findUnique({ where: { role } });
+    const result = await this._repository.roles.findUnique({ where: { role } });
 
     if (!result) return null;
 
@@ -112,7 +112,7 @@ export class UserPrisma implements UserRepository {
       description,
     };
 
-    await this.repository.roles.create({ data });
+    await this._repository.roles.create({ data });
   }
 
   async update(id: UserId, user: PartialUserPrimitive): Promise<void> {
@@ -134,7 +134,7 @@ export class UserPrisma implements UserRepository {
       verified,
     };
 
-    await this.repository.users.update({ where: { user_id }, data });
+    await this._repository.users.update({ where: { user_id }, data });
   }
 
   async deleteAll(): Promise<void> {
@@ -142,7 +142,7 @@ export class UserPrisma implements UserRepository {
     const enviroment = EnviromentValueObject.fromValue(nodeEnv);
 
     if (!enviroment.isProduction()) {
-      await this.repository.users.deleteMany({});
+      await this._repository.users.deleteMany({});
     }
   }
 }

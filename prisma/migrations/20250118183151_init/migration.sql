@@ -13,10 +13,10 @@ CREATE TABLE "congregations" (
 
 -- CreateTable
 CREATE TABLE "territories" (
-    "teritory_id" TEXT NOT NULL PRIMARY KEY,
+    "territory_id" TEXT NOT NULL PRIMARY KEY,
     "number" INTEGER NOT NULL,
     "label" TEXT NOT NULL,
-    "sector" TEXT NOT NULL,
+    "sector" TEXT,
     "quantity_houses" INTEGER NOT NULL DEFAULT 0,
     "locality" TEXT NOT NULL,
     "locality_in_part" TEXT,
@@ -36,7 +36,7 @@ CREATE TABLE "meeting_places" (
     "latitude" TEXT,
     "longitude" TEXT,
     "territory_id" TEXT NOT NULL,
-    CONSTRAINT "meeting_places_territory_id_fkey" FOREIGN KEY ("territory_id") REFERENCES "territories" ("teritory_id") ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT "meeting_places_territory_id_fkey" FOREIGN KEY ("territory_id") REFERENCES "territories" ("territory_id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -67,7 +67,7 @@ CREATE TABLE "registries" (
     "territory_id" TEXT NOT NULL,
     "period_id" TEXT NOT NULL,
     CONSTRAINT "registries_conductor_id_fkey" FOREIGN KEY ("conductor_id") REFERENCES "conductors" ("conductor_id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "registries_territory_id_fkey" FOREIGN KEY ("territory_id") REFERENCES "territories" ("teritory_id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "registries_territory_id_fkey" FOREIGN KEY ("territory_id") REFERENCES "territories" ("territory_id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "registries_period_id_fkey" FOREIGN KEY ("period_id") REFERENCES "periods" ("period_id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
