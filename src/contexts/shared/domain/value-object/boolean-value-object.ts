@@ -1,7 +1,14 @@
+import { InvalidArgumentError } from "./invalid-argument-error";
 import { Primitives, ValueObject } from "./value-object";
 
 export class BooleanValueObject extends ValueObject<boolean> {
-  static parse(value: string) {
+  constructor(value: string) {
+    const booleanValue = BooleanValueObject.toBoolean(value);
+    super(booleanValue);
+    this.#ensureIsBoolean(value);
+  }
+
+  static toBoolean(value: string) {
     return value === "true" ? true : false;
   }
 
@@ -12,11 +19,9 @@ export class BooleanValueObject extends ValueObject<boolean> {
     return value === "true" || value === "false";
   }
 
-  static isBooleanParse(value: string) {
+  #ensureIsBoolean(value: string) {
     if (!BooleanValueObject.isBoolean(value)) {
-      return value;
+      throw new InvalidArgumentError(`${value} is not a boolean`);
     }
-
-    return BooleanValueObject.parse(value);
   }
 }

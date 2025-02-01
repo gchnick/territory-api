@@ -1,46 +1,63 @@
-import { FilterPrimitives } from "./filter";
+import { Nullable } from "../nullable";
+import { FiltersPrimitives } from "./filter";
 import { Filters } from "./filters";
+import { InvalidCriteria } from "./invalid-critera";
 import { Order } from "./order";
 
 export type CriteriaPrimitives = {
-  filters: FilterPrimitives[];
-  orderBy?: string;
-  orderType?: string;
+  filters: FiltersPrimitives[];
+  orderBy?: Nullable<string>;
+  orderType?: Nullable<string>;
+  cursor?: Nullable<string>;
+  limit?: Nullable<number>;
 };
 
 export class Criteria {
   readonly filters: Filters;
   readonly order: Order;
-  readonly limit?: number;
-  readonly cursor?: string;
+  readonly cursor: Nullable<string>;
+  readonly limit: Nullable<number>;
 
-  constructor(filters: Filters, order: Order, limit?: number, cursor?: string) {
+  constructor(
+    filters: Filters,
+    order: Order,
+    cursor: Nullable<string>,
+    limit: Nullable<number>,
+  ) {
     this.filters = filters;
     this.order = order;
-    this.limit = limit;
     this.cursor = cursor;
+    this.limit = limit;
+
+    if (!limit && cursor) {
+      throw new InvalidCriteria();
+    }
   }
 
-  hasFilters(): boolean {
-    return this.filters.value.length > 0;
+  static fromPrimitives(
+    filters: FiltersPrimitives[],
+    orderBy?: Nullable<string>,
+    orderType?: Nullable<string>,
+    cursor?: Nullable<string>,
+    limit?: Nullable<number>,
+  ): Criteria {
+    return new Criteria(
+      Filters.fromPrimitives(filters),
+      Order.fromPrimitives(orderBy, orderType),
+      cursor,
+      limit,
+    );
+  }
+
+  static withFilters(filters: FiltersPrimitives[]): Criteria {
+    return Criteria.fromPrimitives(filters);
   }
 
   hasOrder(): boolean {
     return !this.order.isNone();
   }
 
-  static fromPrimitives(
-    filters: FilterPrimitives[],
-    orderBy?: string,
-    orderType?: string,
-    limit?: number,
-    cursor?: string,
-  ): Criteria {
-    return new Criteria(
-      Filters.fromPrimitives(filters),
-      Order.fromValues(orderBy, orderType),
-      limit,
-      cursor,
-    );
+  hasFilters(): boolean {
+    return !this.filters.isEmpty();
   }
 }
