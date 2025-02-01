@@ -2,6 +2,7 @@ import { Command } from "@/shared/domain/command";
 
 type Params = {
   id: string;
+  congregationId: number;
   number: number;
   label: string;
   sector?: string;
@@ -13,6 +14,7 @@ type Params = {
 
 export class CreateTerritoryCommand extends Command {
   id: string;
+  congregationId: number;
   number: number;
   label: string;
   sector?: string;
@@ -23,6 +25,7 @@ export class CreateTerritoryCommand extends Command {
 
   constructor({
     id,
+    congregationId,
     number,
     label,
     sector,
@@ -33,6 +36,7 @@ export class CreateTerritoryCommand extends Command {
   }: Params) {
     super();
     this.id = id;
+    this.congregationId = congregationId;
     this.number = number;
     this.label = label;
     this.sector = sector;

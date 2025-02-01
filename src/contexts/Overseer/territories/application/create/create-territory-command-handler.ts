@@ -2,14 +2,16 @@ import { Command } from "@/shared/domain/command";
 import { CommandHandler } from "@/shared/domain/command-handler";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
-import { TerritoryId } from "../../domain/territory-id";
-import { TerritoryLabel } from "../../domain/territory-label";
-import { TerritoryLastDateCompleted } from "../../domain/territory-last-date-completed";
-import { TerritoryLocality } from "../../domain/territory-locality";
-import { TerritoryLocalityInPart } from "../../domain/territory-locality-in-part";
-import { TerritoryNumber } from "../../domain/territory-number";
-import { TerritoryQuantityHouse } from "../../domain/territory-quantity-house";
-import { TerritorySector } from "../../domain/territory-sector";
+import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
+import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
+import { TerritoryLabel } from "@/contexts/Overseer/territories/domain/territory-label";
+import { TerritoryLastDateCompleted } from "@/contexts/Overseer/territories/domain/territory-last-date-completed";
+import { TerritoryLocality } from "@/contexts/Overseer/territories/domain/territory-locality";
+import { TerritoryLocalityInPart } from "@/contexts/Overseer/territories/domain/territory-locality-in-part";
+import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
+import { TerritoryQuantityHouse } from "@/contexts/Overseer/territories/domain/territory-quantity-house";
+import { TerritorySector } from "@/contexts/Overseer/territories/domain/territory-sector";
+
 import { CreateTerritoryCommand } from "./create-territory-command";
 import { TerritoryCreator } from "./territory-creator";
 
@@ -25,6 +27,7 @@ export class CreateTerritoryCommandHandler
 
   async handle(command: CreateTerritoryCommand): Promise<void> {
     const id = new TerritoryId(command.id);
+    const congregationId = new CongregationId(command.congregationId);
     const number = new TerritoryNumber(command.number);
     const label = new TerritoryLabel(command.label);
     const sector = command.sector
@@ -41,6 +44,7 @@ export class CreateTerritoryCommandHandler
 
     await this.territoryCreator.create({
       id,
+      congregationId,
       number,
       label,
       sector,

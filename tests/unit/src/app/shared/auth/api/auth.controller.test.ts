@@ -1,6 +1,6 @@
-import createMockCommandBus from "@/tests/unit/src/context/shared/infrastructure/command-bus/mock-command-bus";
-import createMockLogger from "@/tests/unit/src/context/shared/infrastructure/mock-logger";
-import createMockQueryBus from "@/tests/unit/src/context/shared/infrastructure/query-bus/mock-query-bus";
+import createMockCommandBus from "@/tests/unit/src/contexts/shared/infrastructure/command-bus/mock-command-bus";
+import createMockLogger from "@/tests/unit/src/contexts/shared/infrastructure/mock-logger";
+import createMockQueryBus from "@/tests/unit/src/contexts/shared/infrastructure/query-bus/mock-query-bus";
 import { Mock } from "@/tests/utils/mock";
 
 import { AuthPostController } from "@/app/shared/auth/api/auth-post.controller";

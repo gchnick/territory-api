@@ -1,4 +1,4 @@
-import createMockLogger from "@/tests/unit/src/context/shared/infrastructure/mock-logger";
+import createMockLogger from "@/tests/unit/src/contexts/shared/infrastructure/mock-logger";
 import { Mock } from "@/tests/utils/mock";
 
 import { HealthController } from "@/src/app/shared/health/api/health.controller";

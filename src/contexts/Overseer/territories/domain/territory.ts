@@ -1,7 +1,7 @@
 import { AggregateRoot } from "@/shared/domain/aggregate-root";
 import { Nullable } from "@/shared/domain/nullable";
 
-import { CongregationId } from "@/contexts/Overseer/congregations/congregation-id";
+import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
 import {
   MeetingPlace,
   MeetingPlacePrimitives,
@@ -24,10 +24,10 @@ export type TerritoryPrimitives = {
   congregationId: number;
   number: number;
   label: string;
-  sector: Nullable<string>;
+  sector?: Nullable<string>;
   locality: string;
-  localityInPart: Nullable<string>;
-  map: Nullable<string>;
+  localityInPart?: Nullable<string>;
+  map?: Nullable<string>;
   quantityHouses: number;
   lastDateCompleted: Date;
   currentAssigned: boolean;
@@ -157,11 +157,11 @@ export class Territory extends AggregateRoot {
     congregationId: number;
     number: number;
     label: string;
-    sector?: string;
+    sector?: Nullable<string>;
     locality: string;
-    localityInPart?: string;
+    localityInPart?: Nullable<string>;
     quantityHouses: number;
-    map?: string;
+    map?: Nullable<string>;
     currentAssigned: boolean;
     lastDateCompleted: Date;
     meetingPlaces: MeetingPlacePrimitives[];

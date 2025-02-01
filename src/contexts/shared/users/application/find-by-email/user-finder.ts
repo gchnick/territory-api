@@ -1,9 +1,9 @@
 import Logger from "@/shared/domain/logger";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
-import { UserEmail } from "@/src/contexts/shared/users/domain/user-email";
-import { UserNotFount } from "@/src/contexts/shared/users/domain/user-not-fount";
-import { UserRepository } from "@/src/contexts/shared/users/domain/user-repository";
+import { UserEmail } from "@/contexts/shared/users/domain/user-email";
+import { UserNotFount } from "@/contexts/shared/users/domain/user-not-fount";
+import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
 
 import { UserResponse } from "./user-response";
 

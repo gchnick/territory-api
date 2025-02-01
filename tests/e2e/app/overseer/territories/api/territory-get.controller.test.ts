@@ -1,13 +1,13 @@
 import {
-  FastifyAdapter,
-  NestFastifyApplication,
+    FastifyAdapter,
+    NestFastifyApplication,
 } from "@nestjs/platform-fastify";
 import { Test, TestingModule } from "@nestjs/testing";
 import * as nock from "nock";
 
 import { baseTestModuleImports } from "@/tests/e2e/app/helpers/base-test-module-imports";
 import { saveInitialTerritories } from "@/tests/e2e/app/overseer/territories/helpers";
-import { TerritoryMother } from "@/tests/unit/src/context/Overseer/territories/domain/territory-mother";
+import { TerritoryMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-mother";
 
 import { TerritoryModule } from "@/app/overseer/territories/territory.module";
 

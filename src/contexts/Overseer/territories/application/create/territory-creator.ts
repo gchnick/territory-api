@@ -1,7 +1,13 @@
-import { MeetingPlace } from "@/src/contexts/Overseer/meeting-place/domain/meeting-place";
+import { EventBus } from "@/shared/domain/event-bus";
+import Logger from "@/shared/domain/logger";
+import { Nullable } from "@/shared/domain/nullable";
+import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
+
+import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
+import { MeetingPlace } from "@/contexts/Overseer/meeting-place/domain/meeting-place";
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
+import { TerritoryCurrentAssigned } from "@/contexts/Overseer/territories/domain/territory-current-assigned";
 import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
-import { TerritoryIsLocked } from "@/src/contexts/Overseer/territories/domain/territory-current-assigned";
 import { TerritoryLabel } from "@/contexts/Overseer/territories/domain/territory-label";
 import { TerritoryLastDateCompleted } from "@/contexts/Overseer/territories/domain/territory-last-date-completed";
 import { TerritoryLocality } from "@/contexts/Overseer/territories/domain/territory-locality";
@@ -13,11 +19,6 @@ import { TerritoryQuantityHouse } from "@/contexts/Overseer/territories/domain/t
 import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/territory-repository";
 import { TerritorySector } from "@/contexts/Overseer/territories/domain/territory-sector";
 
-import { EventBus } from "@/shared/domain/event-bus";
-import Logger from "@/shared/domain/logger";
-import { Nullable } from "@/shared/domain/nullable";
-import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
-
 @Injectable()
 export class TerritoryCreator {
   constructor(
@@ -28,6 +29,7 @@ export class TerritoryCreator {
 
   async create(params: {
     id: TerritoryId;
+    congregationId: CongregationId;
     number: TerritoryNumber;
     label: TerritoryLabel;
     sector: Nullable<TerritorySector>;
@@ -37,10 +39,11 @@ export class TerritoryCreator {
     lastDateCompleted: TerritoryLastDateCompleted;
   }): Promise<void> {
     const map: Nullable<TerritoryMap> = undefined;
-    const isLocked = new TerritoryIsLocked(false);
+    const currentAssigned = new TerritoryCurrentAssigned(false);
     const meetingPlaces: MeetingPlace[] = [];
     const territory = Territory.create(
       params.id,
+      params.congregationId,
       params.number,
       params.label,
       params.sector,
@@ -48,7 +51,7 @@ export class TerritoryCreator {
       params.localityInPart,
       params.quantityHouses,
       map,
-      isLocked,
+      currentAssigned,
       params.lastDateCompleted,
       meetingPlaces,
     );
