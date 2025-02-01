@@ -1,7 +1,7 @@
 import {
   CardinalPoint,
   CardinalPoints,
-} from "@/contexts/Overseer/territories/domain/cardinal-points";
+} from "@/contexts/Overseer/congregations/domain/cardinal-points";
 import { InvalidArgumentError } from "@/contexts/shared/domain/value-object/invalid-argument-error";
 
 describe("CardinalPiont should", () => {

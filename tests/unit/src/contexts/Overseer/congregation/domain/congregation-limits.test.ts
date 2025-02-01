@@ -3,13 +3,13 @@ import { faker } from "@faker-js/faker";
 import {
   CardinalPoint,
   CardinalPoints,
-} from "@/contexts/Overseer/territories/domain/cardinal-points";
-import { TerritoryLimits } from "@/contexts/Overseer/territories/domain/territory-limits";
+} from "@/contexts/Overseer/congregations/domain/cardinal-points";
+import { CongregationLimits } from "@/contexts/Overseer/congregations/domain/congregation-limits";
 import { InvalidArgumentError } from "@/contexts/shared/domain/value-object/invalid-argument-error";
 
-import { TerritoryLimitsMother } from "./territory-limits.mother";
+import { CongregationLimitsMother } from "./congregation-limits.mother";
 
-describe("TerritoryLimits should", () => {
+describe("CongregationLimits should", () => {
   it("return limit value", () => {
     const expectedLimits = {
       north: faker.location.streetAddress(),
@@ -17,7 +17,7 @@ describe("TerritoryLimits should", () => {
       east: faker.location.streetAddress(),
       west: faker.location.streetAddress(),
     };
-    const limits = TerritoryLimitsMother.create({
+    const limits = CongregationLimitsMother.create({
       north: expectedLimits.north,
       south: expectedLimits.south,
       east: expectedLimits.east,
@@ -36,21 +36,22 @@ describe("TerritoryLimits should", () => {
   });
 
   it("throw error when cardinal point repeat in constructor instance", () => {
-    const limitsWithRepeatCardinalPoint = TerritoryLimitsMother.create().values;
+    const limitsWithRepeatCardinalPoint =
+      CongregationLimitsMother.create().values;
     limitsWithRepeatCardinalPoint.set(
       CardinalPoint.fromValue("NORTH"),
       "Direction faker",
     );
 
     const repeatInstance = () => {
-      new TerritoryLimits(limitsWithRepeatCardinalPoint);
+      new CongregationLimits(limitsWithRepeatCardinalPoint);
     };
 
     expect(repeatInstance).toThrow(InvalidArgumentError);
   });
 
   it("return undefine when cardinal point not fount", () => {
-    const limitsWithoutNorth = TerritoryLimitsMother.with([
+    const limitsWithoutNorth = CongregationLimitsMother.with([
       { cardinalPoint: CardinalPoints.SOUTH },
       { cardinalPoint: CardinalPoints.EAST },
       { cardinalPoint: CardinalPoints.WEST },
@@ -71,7 +72,7 @@ describe("TerritoryLimits should", () => {
       },
     ];
 
-    const limits = TerritoryLimitsMother.with([
+    const limits = CongregationLimitsMother.with([
       {
         cardinalPoint: CardinalPoints.NORTH,
         limit: "49543 Kuvalis Overpass",

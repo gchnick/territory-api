@@ -1,6 +1,6 @@
 import { CreateTerritoryCommand } from "@/contexts/Overseer/territories/application/create/create-territory-command";
 
-import { CongregationIdMother } from "../../../congregation/domain/territory-congregation-id-mother";
+import { CongregationIdMother } from "../../../congregation/domain/congregation-id-mother";
 import { TerritoryIdMother } from "../../domain/territory-id-mother";
 import { TerritoryLabelMother } from "../../domain/territory-label-mother";
 import { TerritoryLastDateCompletedMother } from "../../domain/territory-last-date-completed-mother";

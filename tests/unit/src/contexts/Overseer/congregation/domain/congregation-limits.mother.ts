@@ -3,17 +3,17 @@ import { faker } from "@faker-js/faker";
 import {
   CardinalPoint,
   CardinalPoints,
-} from "@/contexts/Overseer/territories/domain/cardinal-points";
-import { TerritoryLimits } from "@/contexts/Overseer/territories/domain/territory-limits";
+} from "@/contexts/Overseer/congregations/domain/cardinal-points";
+import { CongregationLimits } from "@/contexts/Overseer/congregations/domain/congregation-limits";
 
-export const TerritoryLimitsMother = {
+export const CongregationLimitsMother = {
   create({
     north = faker.location.streetAddress(),
     south = faker.location.streetAddress(),
     east = faker.location.streetAddress(),
     west = faker.location.streetAddress(),
-  } = {}): TerritoryLimits {
-    return TerritoryLimits.fromPrimitives([
+  } = {}): CongregationLimits {
+    return CongregationLimits.fromPrimitives([
       { cardinalPoint: "NORTH", limit: north },
       { cardinalPoint: "SOUTH", limit: south },
       { cardinalPoint: "EAST", limit: east },
@@ -25,13 +25,13 @@ export const TerritoryLimitsMother = {
       cardinalPoint: CardinalPoints;
       limit?: string;
     }[],
-  ): TerritoryLimits {
+  ): CongregationLimits {
     const limits: Map<CardinalPoint, string> = new Map();
     for (const { cardinalPoint, limit } of plainData)
       limits.set(
         new CardinalPoint(cardinalPoint),
         limit ?? faker.location.streetAddress(),
       );
-    return new TerritoryLimits(limits);
+    return new CongregationLimits(limits);
   },
 };

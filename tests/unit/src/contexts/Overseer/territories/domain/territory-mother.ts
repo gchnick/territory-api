@@ -1,4 +1,4 @@
-import { CongregationIdMother } from "@/tests/unit/src/contexts/Overseer/congregation/domain/territory-congregation-id-mother";
+import { CongregationIdMother } from "@/tests/unit/src/contexts/Overseer/congregation/domain/congregation-id-mother";
 
 import { CreateTerritoryCommand } from "@/contexts/Overseer/territories/application/create/create-territory-command";
 import { FindByNumberQuery } from "@/contexts/Overseer/territories/application/find-by-number/find-by-number-query";
