@@ -1,9 +1,8 @@
 import Logger from "@/shared/domain/logger";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
-import { Territory } from "../../domain/territory";
+import { TerritoryCurrentAssigned } from "../../domain/territory-current-assigned";
 import { TerritoryId } from "../../domain/territory-id";
-import { TerritoryIsLocked } from "../../domain/territory-current-assigned";
 import { TerritoryLabel } from "../../domain/territory-label";
 import { TerritoryLastDateCompleted } from "../../domain/territory-last-date-completed";
 import { TerritoryLocality } from "../../domain/territory-locality";
@@ -12,7 +11,10 @@ import { TerritoryMap } from "../../domain/territory-map";
 import { TerritoryNumber } from "../../domain/territory-number";
 import { TerritoryNumberAlreadyRegistry } from "../../domain/territory-number-already-registry";
 import { TerritoryQuantityHouse } from "../../domain/territory-quantity-house";
-import { TerritoryRepository } from "../../domain/territory-repository";
+import {
+  PartialTerritoryPrimitives,
+  TerritoryRepository,
+} from "../../domain/territory-repository";
 import { TerritorySector } from "../../domain/territory-sector";
 
 @Injectable()
@@ -25,52 +27,45 @@ export class TerritoryUpdater {
   async update(
     id: TerritoryId,
     params: {
-      number?: TerritoryNumber;
+      currentAssigned?: TerritoryCurrentAssigned;
       label?: TerritoryLabel;
-      sector?: TerritorySector;
+      lastDateCompleted?: TerritoryLastDateCompleted;
       locality?: TerritoryLocality;
       localityInPart?: TerritoryLocalityInPart;
-      quantityHouses?: TerritoryQuantityHouse;
       map?: TerritoryMap;
-      isLocked?: TerritoryIsLocked;
-      lastDateCompleted?: TerritoryLastDateCompleted;
+      number?: TerritoryNumber;
+      quantityHouses?: TerritoryQuantityHouse;
+      sector?: TerritorySector;
     },
   ): Promise<void> {
     this.logger.log(`Updating territory by id <${id.value}>`, "Territory");
 
     const {
-      number,
+      currentAssigned,
       label,
-      locality,
-      quantityHouses,
-      isLocked,
       lastDateCompleted,
+      locality,
+      localityInPart,
+      map,
+      number,
+      quantityHouses,
+      sector,
     } = params;
 
+    const primitives: PartialTerritoryPrimitives = {
+      currentAssigned: currentAssigned?.value,
+      label: label?.value,
+      lastDateCompleted: lastDateCompleted?.value,
+      locality: locality?.value,
+      localityInPart: localityInPart?.value,
+      map: map?.value,
+      number: number?.value,
+      quantityHouses: quantityHouses?.value,
+      sector: sector?.value,
+    };
+
     try {
-      number &&
-      label &&
-      locality &&
-      quantityHouses &&
-      isLocked &&
-      lastDateCompleted
-        ? await this.repository.update(
-            id,
-            new Territory(
-              id,
-              number,
-              label,
-              params.sector,
-              locality,
-              params.localityInPart,
-              quantityHouses,
-              params.map,
-              isLocked,
-              lastDateCompleted,
-              [], // FIXME: TODO: Implement meetingPlace
-            ),
-          )
-        : await this.repository.update(id, params);
+      await this.repository.update(id, primitives);
     } catch (error) {
       if (error instanceof TerritoryNumberAlreadyRegistry) {
         throw new TerritoryNumberAlreadyRegistry(
