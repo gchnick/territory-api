@@ -1,6 +1,6 @@
 import {
-    FastifyAdapter,
-    NestFastifyApplication,
+  FastifyAdapter,
+  NestFastifyApplication,
 } from "@nestjs/platform-fastify";
 import { Test, TestingModule } from "@nestjs/testing";
 import * as nock from "nock";
@@ -77,12 +77,15 @@ describe("TerritoryGetController (e2e)", () => {
     });
 
     it("should fetch all territories be not locked", async () => {
-      const available = territories.filter(f => !f.isLocked.value);
+      const available = territories.filter(f => !f.currentAssigned.value);
       const expectedLength = available.length;
 
       const response = await app.inject({
         method: "GET",
-        url: "/territories/?filters[0][field]=isLocked&filters[0][operator]=EQUAL&filters[0][value]=false&orderBy=lastDateCompleted&order=ASC",
+        url:
+          "/territories?" +
+          "filters[0][field]=isAssigned&filters[0][operator]=EQUAL&filters[0][value]=false" +
+          "&orderBy=lastCompleted&order=ASC",
       });
 
       expect(response.statusCode).toBe(200);
