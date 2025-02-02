@@ -3,17 +3,16 @@ import Logger from "@/shared/domain/logger";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
 import { Encode } from "@/contexts/shared/auth/domain/encode";
+import { RoleName } from "@/contexts/shared/users/domain/role/role-name";
 import { User } from "@/contexts/shared/users/domain/user";
 import { UserEmail } from "@/contexts/shared/users/domain/user-email";
 import { UserEnabled } from "@/contexts/shared/users/domain/user-enabled";
 import { UserId } from "@/contexts/shared/users/domain/user-id";
 import { UserPassword } from "@/contexts/shared/users/domain/user-password";
 import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
+import { UserRole } from "@/contexts/shared/users/domain/user-role";
+import { UserRoleNotFount } from "@/contexts/shared/users/domain/user-role-not-fount";
 import { UserVerified } from "@/contexts/shared/users/domain/user-verified";
-
-import { RoleName } from "../../domain/role/role-name";
-import { UserRole } from "../../domain/user-role";
-import { UserRoleNotFount } from "../../domain/user-role-not-fount";
 
 @Injectable()
 export class UserCreator {
@@ -32,7 +31,11 @@ export class UserCreator {
   }): Promise<void> {
     const verifiedDefault = new UserVerified(false);
     const enabledDefault = new UserEnabled(true);
-    const userRoles = await this.rolesParse(params.roles);
+    const userRoles = await UserCreator.rolesParse(
+      this.repository,
+      this.logger,
+      params.roles,
+    );
 
     const user = User.create(
       params.id,
@@ -51,7 +54,11 @@ export class UserCreator {
     await this.eventBus.publish(user.pullDomainEvents());
   }
 
-  async rolesParse(values?: RoleName[]): Promise<UserRole[]> {
+  static async rolesParse(
+    repository: UserRepository,
+    logger: Logger,
+    values?: RoleName[],
+  ): Promise<UserRole[]> {
     const roles: UserRole[] = [];
 
     if (!values) {
@@ -59,9 +66,9 @@ export class UserCreator {
     }
 
     for (const role of values) {
-      const data = await this.repository.findRole(role);
+      const data = await repository.findRole(role);
       if (!data) {
-        this.logger.warn(`User role <${role.value}> not fount`, "User");
+        logger.warn(`User role <${role.value}> not fount`, "User");
         throw new UserRoleNotFount(`User role <${role.value}> not fount`);
       }
       roles.push(data);
