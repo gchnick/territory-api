@@ -2,8 +2,8 @@ import { ExistsResponse } from "@/shared/domain/exists-response";
 import Logger from "@/shared/domain/logger";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
-import { UserId } from "../../domain/user-id";
-import { UserRepository } from "../../domain/user-repository";
+import { UserId } from "@/contexts/shared/users/domain/user-id";
+import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
 
 @Injectable()
 export class UserQuestioner {
@@ -13,7 +13,7 @@ export class UserQuestioner {
   ) {}
 
   async ask(id: UserId): Promise<ExistsResponse> {
-    this.logger.log(`Finding if user by id <${id.value}> exists`, "Territory");
+    this.logger.log(`Finding if user by id <${id.value}> exists`, "User");
     const user = await this.userRepository.findById(id);
 
     return user ? new ExistsResponse(true) : new ExistsResponse(false);

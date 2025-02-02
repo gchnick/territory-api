@@ -3,7 +3,8 @@ import { Query } from "@/shared/domain/query";
 import { QueryHandler } from "@/shared/domain/query-handler";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
-import { UserId } from "../../domain/user-id";
+import { UserId } from "@/contexts/shared/users/domain/user-id";
+
 import { ExistsByIdQuery } from "./exists-by-id-query";
 import { UserQuestioner } from "./user-questioner";
 

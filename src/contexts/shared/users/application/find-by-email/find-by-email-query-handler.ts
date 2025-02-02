@@ -2,7 +2,7 @@ import { Query } from "@/shared/domain/query";
 import { QueryHandler } from "@/shared/domain/query-handler";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
-import { UserEmail } from "@/src/contexts/shared/users/domain/user-email";
+import { UserEmail } from "@/contexts/shared/users/domain/user-email";
 
 import { FindByEmailQuery } from "./find-by-email-query";
 import { UserFinder } from "./user-finder";
