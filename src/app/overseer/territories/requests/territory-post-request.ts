@@ -1,4 +1,5 @@
 import {
+  IsBoolean,
   IsDateString,
   IsNotEmpty,
   IsNumber,
@@ -7,16 +8,19 @@ import {
 } from "class-validator";
 
 export class TerritoryPostRequest {
+  @IsBoolean()
+  @IsOptional()
+  currentAssigned!: boolean;
+
   @IsNumber()
-  number!: number;
+  congregationId!: number;
 
   @IsString()
   @IsNotEmpty()
   label!: string;
 
-  @IsString()
-  @IsOptional()
-  sector?: string;
+  @IsDateString()
+  lastDateCompleted!: string;
 
   @IsString()
   @IsNotEmpty()
@@ -26,9 +30,17 @@ export class TerritoryPostRequest {
   @IsOptional()
   localityInPart?: string;
 
+  @IsString()
+  @IsOptional()
+  map!: string;
+
+  @IsNumber()
+  number!: number;
+
   @IsNumber()
   quantityHouses!: number;
 
-  @IsDateString()
-  lastDateCompleted!: string;
+  @IsString()
+  @IsOptional()
+  sector?: string;
 }
