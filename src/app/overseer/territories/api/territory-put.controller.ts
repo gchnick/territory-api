@@ -12,7 +12,7 @@ import {
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 
-import { TerritoryPutRequest } from "@/src/app/overseer/territories/requests/territory-put-request";
+import { TerritoryPutRequest } from "@/app/overseer/territories/requests/territory-put-request";
 
 import { CommandBus } from "@/shared/domain/command-bus";
 import { ExistsResponse } from "@/shared/domain/exists-response";
@@ -43,14 +43,16 @@ export class TerritoryPutController {
   ) {
     try {
       const {
-        number,
+        congregationId,
+        currentAssigned,
         label,
-        sector,
         locality,
         localityInPart,
-        quantityHouses,
+        number,
+        map,
         lastDateCompleted,
-        isLocked,
+        quantityHouses,
+        sector,
       } = body;
 
       const query = new ExistsByIdQuery(id);
@@ -58,15 +60,16 @@ export class TerritoryPutController {
 
       if (exists) {
         const command = new UpdateTerritoryCommand({
+          currentAssigned,
           id,
-          number,
           label,
-          sector,
+          lastDateCompleted: new Date(lastDateCompleted),
           locality,
           localityInPart,
+          number,
+          map,
           quantityHouses,
-          lastDateCompleted: new Date(lastDateCompleted),
-          isLocked,
+          sector,
         });
 
         await this.commandBus.dispatch(command);
@@ -77,15 +80,22 @@ export class TerritoryPutController {
         );
       }
 
+      if (!congregationId)
+        throw new BadRequestException(
+          "CongregationId is required to create a new territory",
+        );
+
       const command = new CreateTerritoryCommand({
+        congregationId,
         id,
-        number,
         label,
-        sector,
+        lastDateCompleted: new Date(lastDateCompleted),
         locality,
         localityInPart,
+        number,
+        map,
         quantityHouses,
-        lastDateCompleted: new Date(lastDateCompleted),
+        sector,
       });
 
       await this.commandBus.dispatch(command);
