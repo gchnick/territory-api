@@ -1,13 +1,7 @@
 import { Module } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { TypeOrmModule } from "@nestjs/typeorm";
-import { DataSource } from "typeorm";
 
 import { AuthModule } from "@/app/shared/auth/auth.module";
 
-import { MeetingPlaceAvailability } from "@/contexts/Overseer/meeting-place/domain/meeting-place-availability";
-import { AvailabilityEntity } from "@/contexts/Overseer/meeting-place/infrastructure/persistence/typeorm/availability-entity";
-import { MeetingPlaceEntity } from "@/contexts/Overseer/meeting-place/infrastructure/persistence/typeorm/meeting-place-entity";
 import { CreateTerritoryCommandHandler } from "@/contexts/Overseer/territories/application/create/create-territory-command-handler";
 import { TerritoryCreator } from "@/contexts/Overseer/territories/application/create/territory-creator";
 import { ExistsByIdQueryHandler } from "@/contexts/Overseer/territories/application/exists/exists-by-id-query-handler";
@@ -21,8 +15,7 @@ import { TerritoriesByCriteriaSearcher } from "@/contexts/Overseer/territories/a
 import { TerritoryUpdater } from "@/contexts/Overseer/territories/application/update/territory-updater";
 import { UpdateTerritoryCommandHandler } from "@/contexts/Overseer/territories/application/update/update-territory-command-handler";
 import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/territory-repository";
-import { TerritoryTypeOrm } from "@/contexts/Overseer/territories/infrastructure/persistence/territory-type-orm";
-import { TerritoryEntity } from "@/contexts/Overseer/territories/infrastructure/persistence/typeorm/territory-entity";
+import { TerritoryPrisma } from "@/contexts/Overseer/territories/infrastructure/persistence/territory-prisma";
 
 import { TerritoryDeleteController } from "./api/territory-delete.controller";
 import { TerritoryGetController } from "./api/territory-get.controller";
@@ -31,15 +24,7 @@ import { TerritoryPostController } from "./api/territory-post.controller";
 import { TerritoryPutController } from "./api/territory-put.controller";
 
 @Module({
-  imports: [
-    AuthModule,
-    TypeOrmModule.forFeature([
-      TerritoryEntity,
-      MeetingPlaceEntity,
-      MeetingPlaceAvailability,
-      AvailabilityEntity,
-    ]),
-  ],
+  imports: [AuthModule],
   controllers: [
     TerritoryGetController,
     TerritoryPostController,
@@ -48,11 +33,10 @@ import { TerritoryPutController } from "./api/territory-put.controller";
     TerritoryDeleteController,
   ],
   providers: [
+    TerritoryPrisma,
     {
       provide: TerritoryRepository,
-      useFactory: (d: DataSource, c: ConfigService) =>
-        new TerritoryTypeOrm(d, c),
-      inject: [DataSource, ConfigService],
+      useExisting: TerritoryPrisma,
     },
     TerritoryCreator,
     TerritoryUpdater,
