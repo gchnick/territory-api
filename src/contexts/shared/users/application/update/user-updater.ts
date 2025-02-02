@@ -1,18 +1,18 @@
-import { EventBus } from "@/shared/domain/event-bus";
 import Logger from "@/shared/domain/logger";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
-import { Encode } from "@/src/contexts/shared/auth/domain/encode";
-
-import { RoleName } from "../../domain/role/role-name";
-import { User } from "../../domain/user";
-import { UserEmail } from "../../domain/user-email";
-import { UserEmailAlreadyRegistry } from "../../domain/user-email-already-registry";
-import { UserId } from "../../domain/user-id";
-import { UserName } from "../../domain/user-name";
-import { UserPassword } from "../../domain/user-password";
-import { UserRepository } from "../../domain/user-repository";
-import { UserCreator } from "../create/user-creator";
+import { Encode } from "@/contexts/shared/auth/domain/encode";
+import { UserCreator } from "@/contexts/shared/users/application/create/user-creator";
+import { RoleName } from "@/contexts/shared/users/domain/role/role-name";
+import { User } from "@/contexts/shared/users/domain/user";
+import { UserEmail } from "@/contexts/shared/users/domain/user-email";
+import { UserEmailAlreadyRegistry } from "@/contexts/shared/users/domain/user-email-already-registry";
+import { UserId } from "@/contexts/shared/users/domain/user-id";
+import { UserPassword } from "@/contexts/shared/users/domain/user-password";
+import {
+  PartialUserPrimitive,
+  UserRepository,
+} from "@/contexts/shared/users/domain/user-repository";
 
 @Injectable()
 export class UserUpdater {
@@ -20,13 +20,11 @@ export class UserUpdater {
     private readonly logger: Logger,
     private readonly repository: UserRepository,
     private readonly encode: Encode,
-    private readonly eventBus: EventBus,
   ) {}
 
   async update(
     id: UserId,
     params: {
-      name?: UserName;
       email?: UserEmail;
       password?: UserPassword;
       roles?: RoleName[];
@@ -34,32 +32,25 @@ export class UserUpdater {
   ): Promise<void> {
     this.logger.log(`Updating user by id <${id.value}>`, "User");
 
-    const userCreator = new UserCreator(
-      this.logger,
+    const { email, password, roles } = params;
+    const userRoles = await UserCreator.rolesParse(
       this.repository,
-      this.encode,
-      this.eventBus,
+      this.logger,
+      roles,
     );
 
-    const { name, email, password, roles } = params;
+    const passwordHashed = password?.value
+      ? await this.encode.hash(password.value, User.SALT_OR_ROUNDS_ENCODE)
+      : undefined;
+
+    const primitive: PartialUserPrimitive = {
+      email: email?.value,
+      roles: userRoles.map(r => r.toPrimitives()),
+      password: passwordHashed,
+    };
 
     try {
-      if (name && email && password && roles) {
-        await userCreator.create({ id, name, email, password, roles });
-      } else {
-        const passwordHashed = password?.value
-          ? await this.encode.hash(password.value, User.SALT_OR_ROUNDS_ENCODE)
-          : undefined;
-        const userRoles = await userCreator.rolesParse(roles);
-
-        const _params = {
-          ...params,
-          password: passwordHashed,
-          roles: userRoles,
-        };
-
-        await this.repository.update(id, _params);
-      }
+      await this.repository.update(id, primitive);
     } catch (error) {
       if (error instanceof UserEmailAlreadyRegistry) {
         throw new UserEmailAlreadyRegistry(
