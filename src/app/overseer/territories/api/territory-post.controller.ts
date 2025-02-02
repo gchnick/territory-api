@@ -42,6 +42,7 @@ export class TerritoryPostController {
     try {
       const {
         number,
+        congregationId,
         label,
         sector,
         locality,
@@ -52,6 +53,7 @@ export class TerritoryPostController {
 
       const command = new CreateTerritoryCommand({
         id: Uuid.random().value,
+        congregationId,
         number,
         label,
         sector,
