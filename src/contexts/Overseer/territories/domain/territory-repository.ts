@@ -6,7 +6,7 @@ import { TerritoryId } from "./territory-id";
 import { TerritoryNumber } from "./territory-number";
 
 export type PartialTerritoryPrimitives = Partial<
-  Omit<TerritoryPrimitives, "id" | "meetingPlaces">
+  Omit<TerritoryPrimitives, "id" | "meetingPlaces" | "congregationId">
 >;
 
 export abstract class TerritoryRepository {

@@ -20,18 +20,18 @@ import { TerritorySector } from "./territory-sector";
 import { TerritoryCreatedDomainEvent } from "./territoy-created-domain-event";
 
 export type TerritoryPrimitives = {
-  id: string;
   congregationId: number;
-  number: number;
+  currentAssigned: boolean;
+  id: string;
   label: string;
-  sector?: Nullable<string>;
+  lastDateCompleted: Date;
   locality: string;
   localityInPart?: Nullable<string>;
   map?: Nullable<string>;
-  quantityHouses: number;
-  lastDateCompleted: Date;
-  currentAssigned: boolean;
   meetingPlaces: MeetingPlacePrimitives[];
+  number: number;
+  quantityHouses: number;
+  sector?: Nullable<string>;
 };
 
 export class Territory extends AggregateRoot {
