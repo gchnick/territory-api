@@ -1,48 +1,56 @@
 import { Command } from "@/shared/domain/command";
 
 type Params = {
-  id: string;
   congregationId: number;
-  number: number;
+  currentAssigned?: boolean;
+  id: string;
   label: string;
-  sector?: string;
+  lastDateCompleted: Date;
   locality: string;
   localityInPart?: string;
+  number: number;
+  map?: string;
   quantityHouses: number;
-  lastDateCompleted: Date;
+  sector?: string;
 };
 
 export class CreateTerritoryCommand extends Command {
-  id: string;
   congregationId: number;
-  number: number;
+  currentAssigned?: boolean;
+  id: string;
   label: string;
-  sector?: string;
+  lastDateCompleted: Date;
   locality: string;
   localityInPart?: string;
+  number: number;
+  map?: string;
   quantityHouses: number;
-  lastDateCompleted: Date;
+  sector?: string;
 
   constructor({
-    id,
     congregationId,
-    number,
+    currentAssigned,
+    id,
     label,
-    sector,
+    lastDateCompleted,
     locality,
     localityInPart,
+    number,
+    map,
     quantityHouses,
-    lastDateCompleted,
+    sector,
   }: Params) {
     super();
-    this.id = id;
     this.congregationId = congregationId;
-    this.number = number;
+    this.currentAssigned = currentAssigned;
+    this.id = id;
     this.label = label;
-    this.sector = sector;
+    this.lastDateCompleted = lastDateCompleted;
     this.locality = locality;
     this.localityInPart = localityInPart;
+    this.number = number;
+    this.map = map;
     this.quantityHouses = quantityHouses;
-    this.lastDateCompleted = lastDateCompleted;
+    this.sector = sector;
   }
 }
