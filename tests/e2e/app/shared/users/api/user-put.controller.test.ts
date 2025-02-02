@@ -4,6 +4,10 @@ import {
 } from "@nestjs/platform-fastify";
 import { Test, TestingModule } from "@nestjs/testing";
 
+import { UserEmailMother } from "@/tests/unit/src/contexts/shared/users/domain/user-email-mother";
+import { UserIdMother } from "@/tests/unit/src/contexts/shared/users/domain/user-id-mother";
+import { UserPasswordMother } from "@/tests/unit/src/contexts/shared/users/domain/user-password-mother";
+
 import { UserModule } from "@/app/shared/user/user.module";
 
 import { User } from "@/contexts/shared/users/domain/user";
@@ -15,9 +19,6 @@ import { LoggerModule } from "@/core/logger/logger.module";
 import { QueryModule } from "@/core/query-bus/query.module";
 import { SharedModule } from "@/core/shared/shared.module";
 
-import { UserIdMother } from "../../../../../unit/src/context/shared/users/domain/user-id-mother";
-import { UserNameMother } from "../../../../../unit/src/context/shared/users/domain/user-name-mother";
-import { UserPasswordMother } from "../../../../../unit/src/context/shared/users/domain/user-password-mother";
 import { SignupPostRequestMother } from "../../auth/requests/signup-post-request-mother";
 import {
   createAllRoles,
@@ -83,7 +84,7 @@ describe("UserPutController (e2e)", () => {
     it("should update user with id already registry", async () => {
       const id = users[0].id.value;
       const request = {
-        name: UserNameMother.create().value,
+        email: UserEmailMother.create().value,
         password: UserPasswordMother.create().value,
       };
 
