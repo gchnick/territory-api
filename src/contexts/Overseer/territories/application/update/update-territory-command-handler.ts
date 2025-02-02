@@ -2,8 +2,8 @@ import { Command } from "@/shared/domain/command";
 import { CommandHandler } from "@/shared/domain/command-handler";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
+import { TerritoryCurrentAssigned } from "../../domain/territory-current-assigned";
 import { TerritoryId } from "../../domain/territory-id";
-import { TerritoryIsLocked } from "../../domain/territory-current-assigned";
 import { TerritoryLabel } from "../../domain/territory-label";
 import { TerritoryLastDateCompleted } from "../../domain/territory-last-date-completed";
 import { TerritoryLocality } from "../../domain/territory-locality";
@@ -27,36 +27,38 @@ export class UpdateTerritoryCommandHandler
 
   async handle(command: UpdateTerritoryCommand): Promise<void> {
     const {
+      currentAssigned,
       id,
       label,
-      number,
-      sector,
+      lastDateCompleted,
       locality,
       localityInPart,
       map,
+      number,
       quantityHouses,
-      isLocked,
-      lastDateCompleted,
+      sector,
     } = command;
 
     const territoryId = new TerritoryId(id);
 
     await this.territoryUpdater.update(territoryId, {
+      currentAssigned: currentAssigned
+        ? new TerritoryCurrentAssigned(currentAssigned)
+        : undefined,
       label: label ? new TerritoryLabel(label) : undefined,
-      number: number ? new TerritoryNumber(number) : undefined,
-      sector: sector ? new TerritorySector(sector) : undefined,
+      lastDateCompleted: lastDateCompleted
+        ? new TerritoryLastDateCompleted(lastDateCompleted)
+        : undefined,
       locality: locality ? new TerritoryLocality(locality) : undefined,
       localityInPart: localityInPart
         ? new TerritoryLocalityInPart(localityInPart)
         : undefined,
       map: map ? new TerritoryMap(map) : undefined,
+      number: number ? new TerritoryNumber(number) : undefined,
       quantityHouses: quantityHouses
         ? new TerritoryQuantityHouse(quantityHouses)
         : undefined,
-      isLocked: isLocked ? new TerritoryIsLocked(isLocked) : undefined,
-      lastDateCompleted: lastDateCompleted
-        ? new TerritoryLastDateCompleted(lastDateCompleted)
-        : undefined,
+      sector: sector ? new TerritorySector(sector) : undefined,
     });
   }
 }

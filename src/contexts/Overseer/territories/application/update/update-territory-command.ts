@@ -1,52 +1,52 @@
 import { Command } from "@/shared/domain/command";
 
 type Params = {
+  currentAssigned?: boolean;
   id: string;
   number?: number;
   label?: string;
-  sector?: string;
+  lastDateCompleted?: Date;
   locality?: string;
   localityInPart?: string;
   map?: string;
   quantityHouses?: number;
-  isLocked?: boolean;
-  lastDateCompleted?: Date;
+  sector?: string;
 };
 
 export class UpdateTerritoryCommand extends Command {
+  currentAssigned?: boolean;
   id: string;
-  number?: number;
   label?: string;
-  sector?: string;
+  lastDateCompleted?: Date;
   locality?: string;
   localityInPart?: string;
   map?: string;
+  number?: number;
   quantityHouses?: number;
-  isLocked?: boolean;
-  lastDateCompleted?: Date;
+  sector?: string;
 
   constructor({
+    currentAssigned,
     id,
-    number,
     label,
-    sector,
+    lastDateCompleted,
     locality,
     localityInPart,
     map,
+    number,
     quantityHouses,
-    isLocked,
-    lastDateCompleted,
+    sector,
   }: Params) {
     super();
+    this.currentAssigned = currentAssigned;
     this.id = id;
-    this.number = number;
     this.label = label;
-    this.sector = sector;
     this.locality = locality;
     this.localityInPart = localityInPart;
-    this.map = map;
-    this.quantityHouses = quantityHouses;
-    this.isLocked = isLocked;
     this.lastDateCompleted = lastDateCompleted;
+    this.map = map;
+    this.number = number;
+    this.quantityHouses = quantityHouses;
+    this.sector = sector;
   }
 }
