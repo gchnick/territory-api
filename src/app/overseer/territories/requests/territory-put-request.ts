@@ -1,8 +1,46 @@
-import { IsBoolean } from "class-validator";
+import {
+  IsBoolean,
+  IsDateString,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from "class-validator";
 
-import { TerritoryPostRequest } from "@/src/app/overseer/territories/requests/territory-post-request";
+export class TerritoryPutRequest {
+  @IsNumber()
+  @IsOptional()
+  congregationId?: number;
 
-export class TerritoryPutRequest extends TerritoryPostRequest {
   @IsBoolean()
-  isLocked!: boolean;
+  currentAssigned!: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  label!: string;
+
+  @IsDateString()
+  lastDateCompleted!: string;
+
+  @IsString()
+  @IsNotEmpty()
+  locality!: string;
+
+  @IsString()
+  @IsOptional()
+  localityInPart?: string;
+
+  @IsString()
+  @IsOptional()
+  map?: string;
+
+  @IsNumber()
+  number!: number;
+
+  @IsNumber()
+  quantityHouses!: number;
+
+  @IsString()
+  @IsOptional()
+  sector?: string;
 }
