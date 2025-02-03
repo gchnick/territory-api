@@ -38,8 +38,9 @@ describe("FindByNumberQueryHandler should", () => {
       const query = FindByNumberQueryMother.create();
 
       const territory = TerritoryMother.fromQuery(query);
+      const congregationId = territory.congregation;
 
-      repository.shouldNotSearch(territory.number);
+      repository.shouldNotSearch(congregationId, territory.number);
 
       await handler.handle(query);
     }).rejects.toThrow(TerritoryNotFount);
