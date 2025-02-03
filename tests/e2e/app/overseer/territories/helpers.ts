@@ -4,8 +4,6 @@ import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/terr
 export async function saveInitialTerritories(
   repo: TerritoryRepository,
   territories: Territory[],
-): Promise<void> {
-  for (const t of territories) {
-    await repo.save(t);
-  }
+): Promise<void[]> {
+  return Promise.all(territories.map(territory => repo.save(territory)));
 }
