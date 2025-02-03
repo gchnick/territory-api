@@ -9,8 +9,7 @@ import {
 
 export class TerritoryPutRequest {
   @IsNumber()
-  @IsOptional()
-  congregationId?: number;
+  congregationId!: number;
 
   @IsBoolean()
   currentAssigned!: boolean;

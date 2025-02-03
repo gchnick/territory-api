@@ -48,10 +48,13 @@ export class TerritoryGetController {
     }
   }
 
-  @Get("/:number")
-  async findByNumber(@Param("number", ParseIntPipe) number: number) {
+  @Get("/:congregationNumber/:number")
+  async findByNumber(
+    @Param("congregationNumber", ParseIntPipe) congregationNumber: number,
+    @Param("number", ParseIntPipe) number: number,
+  ) {
     try {
-      const query = new FindByNumberQuery(number);
+      const query = new FindByNumberQuery(congregationNumber, number);
       return await this.queryBus.ask<TerritoryResponse>(query);
     } catch (error) {
       this.#handlerError(error);

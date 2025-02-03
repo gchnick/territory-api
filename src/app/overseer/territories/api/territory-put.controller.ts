@@ -61,6 +61,7 @@ export class TerritoryPutController {
       if (exists) {
         const command = new UpdateTerritoryCommand({
           currentAssigned,
+          congregationId,
           id,
           label,
           lastDateCompleted: new Date(lastDateCompleted),
@@ -79,11 +80,6 @@ export class TerritoryPutController {
           { status: HttpStatus.OK },
         );
       }
-
-      if (!congregationId)
-        throw new BadRequestException(
-          "CongregationId is required to create a new territory",
-        );
 
       const command = new CreateTerritoryCommand({
         congregationId,

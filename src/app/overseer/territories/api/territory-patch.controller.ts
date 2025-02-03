@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   BadRequestException,
   Body,
@@ -47,11 +45,14 @@ export class TerritoryPatchController {
         localityInPart,
         quantityHouses,
         lastDateCompleted,
-        isLocked,
+        currentAssigned,
+        map,
+        congregationId,
       } = body;
 
       const command = new UpdateTerritoryCommand({
         id,
+        congregationId,
         number,
         label,
         sector,
@@ -61,7 +62,8 @@ export class TerritoryPatchController {
         lastDateCompleted: lastDateCompleted
           ? new Date(lastDateCompleted)
           : undefined,
-        isLocked,
+        currentAssigned,
+        map,
       });
 
       await this.commandBus.dispatch(command);
