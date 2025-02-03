@@ -8,12 +8,14 @@ import request from "supertest";
 
 import { AppModule } from "@/app/app.module";
 
+import { baseTestModuleImports } from "../helpers/base-test-module-imports";
+
 describe("Health", () => {
   let app: NestFastifyApplication;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
+      imports: [...baseTestModuleImports(), AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication<NestFastifyApplication>(
