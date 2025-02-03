@@ -63,12 +63,11 @@ export class AuthPostController {
     @Req() request: Request,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const { name, email, password, roles } = body;
+    const { email, password, roles } = body;
 
     try {
       const command = new CreateUserCommand({
         id: Uuid.random().value,
-        name,
         email,
         password,
         roles,

@@ -89,7 +89,7 @@ export class User extends AggregateRoot {
     return user;
   }
 
-  static fromPrimitive(plainData: {
+  static fromPrimitives(plainData: {
     id: string;
     email: string;
     password: string;

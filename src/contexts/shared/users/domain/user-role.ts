@@ -7,7 +7,7 @@ import { Role, RoleName } from "./role/role-name";
 export type UserRolePrimitives = {
   id: number;
   name: Role;
-  description: Nullable<string>;
+  description?: string;
 };
 
 export class UserRole {
@@ -28,7 +28,7 @@ export class UserRole {
   static fromPrimitives(plainData: {
     id: number;
     name: string;
-    description: Nullable<string>;
+    description?: string;
   }): UserRole {
     const { description } = plainData;
     return new UserRole(

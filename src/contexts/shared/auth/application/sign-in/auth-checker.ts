@@ -30,7 +30,10 @@ export class AuthChecker {
       throw new UserCredentialInvalid("Credentials are not valid");
     }
 
-    this.logger.log(`Cheking authentication user <${user.name.value}>`, "User");
+    this.logger.log(
+      `Cheking authentication user <${user.email.value}>`,
+      "User",
+    );
     const isMatch = await user.comparePassword(this.encode, password);
 
     if (!isMatch) {
@@ -39,13 +42,13 @@ export class AuthChecker {
 
     if (!user.verified) {
       throw new UserUnverified(
-        `The user <${user.name.value}> is unverified. Please, check your email to confirm your account`,
+        `The user <${user.email.value}> is unverified. Please, check your email to confirm your account`,
       );
     }
 
     if (!user.enabled) {
       throw new UserDisabled(
-        `The user <${user.name.value}> is disabled. Please, contact your administrator`,
+        `The user <${user.email.value}> is disabled. Please, contact your administrator`,
       );
     }
 

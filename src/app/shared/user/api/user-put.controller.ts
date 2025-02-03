@@ -46,7 +46,7 @@ export class UserPutController {
     @Param("id", ParseUUIDPipe) id: string,
   ) {
     try {
-      const { name, email, password, roles } = body;
+      const { email, password, roles } = body;
 
       const query = new ExistsByIdQuery(id);
       const { exists } = await this.queryBus.ask<ExistsResponse>(query);
@@ -54,7 +54,6 @@ export class UserPutController {
       if (exists) {
         const command = new UpdateUserCommand({
           id,
-          name,
           email,
           password,
           roles,
@@ -72,7 +71,6 @@ export class UserPutController {
 
       const command = new CreateUserCommand({
         id,
-        name,
         email,
         password,
         roles,
