@@ -1,17 +1,14 @@
-import {
-  Role,
-  RoleName,
-} from "@/src/contexts/shared/users/domain/role/role-name";
-import { User } from "@/src/contexts/shared/users/domain/user";
-import { UserRepository } from "@/src/contexts/shared/users/domain/user-repository";
-import { UserRole } from "@/src/contexts/shared/users/domain/user-role";
+import { UserMother } from "@/tests/unit/src/contexts/shared/users/domain/user-mother";
+import { UserRoleMother } from "@/tests/unit/src/contexts/shared/users/domain/user-role-mother";
 
-import { UserMother } from "../../../../unit/src/context/shared/users/domain/user-mother";
-import { UserRoleMother } from "../../../../unit/src/context/shared/users/domain/user-role-mother";
+import { Role, RoleName } from "@/contexts/shared/users/domain/role/role-name";
+import { User } from "@/contexts/shared/users/domain/user";
+import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
+import { UserRole } from "@/contexts/shared/users/domain/user-role";
 
 export const createAllRoles = (): UserRole[] =>
-  Object.keys(Role).map(r =>
-    UserRoleMother.create({ name: RoleName.fromValue(r).value }),
+  Object.keys(Role).map((role, index) =>
+    UserRoleMother.create({ id: index, name: RoleName.fromValue(role).value }),
   );
 
 export const createUsers = (roles: UserRole[]): User[] => {
@@ -24,17 +21,13 @@ export const createUsers = (roles: UserRole[]): User[] => {
 export const saveInitialRoles = async (
   repo: UserRepository,
   roles: UserRole[],
-): Promise<void> => {
-  for (const r of roles) {
-    await repo.saveRole(r);
-  }
+): Promise<void[]> => {
+  return Promise.all(roles.map(role => repo.saveRole(role)));
 };
 
 export const saveInitialUsers = async (
   repo: UserRepository,
   users: User[],
-): Promise<void> => {
-  for (const u of users) {
-    await repo.save(u);
-  }
+): Promise<void[]> => {
+  return Promise.all(users.map(user => repo.save(user)));
 };
