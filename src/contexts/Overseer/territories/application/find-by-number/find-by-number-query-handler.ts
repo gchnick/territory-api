@@ -1,7 +1,10 @@
+/* eslint-disable unicorn/no-array-method-this-argument */
+/* eslint-disable unicorn/no-array-callback-reference */
 import { Query } from "@/shared/domain/query";
 import { QueryHandler } from "@/shared/domain/query-handler";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
+import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
 import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
 
 import { FindByNumberQuery } from "./find-by-number-query";
@@ -19,7 +22,8 @@ export class FindByNumberQueryHandler
   }
 
   async handle(query: FindByNumberQuery): Promise<TerritoryResponse> {
+    const congregationId = new CongregationId(query.congregationId);
     const number = new TerritoryNumber(query.number);
-    return await this.territoryFinder.find(number);
+    return this.territoryFinder.find(congregationId, number);
   }
 }

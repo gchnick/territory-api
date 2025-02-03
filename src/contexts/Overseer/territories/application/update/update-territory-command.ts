@@ -1,6 +1,7 @@
 import { Command } from "@/shared/domain/command";
 
 type Params = {
+  congregationId: number;
   currentAssigned?: boolean;
   id: string;
   number?: number;
@@ -14,6 +15,7 @@ type Params = {
 };
 
 export class UpdateTerritoryCommand extends Command {
+  congregationId: number;
   currentAssigned?: boolean;
   id: string;
   label?: string;
@@ -26,6 +28,7 @@ export class UpdateTerritoryCommand extends Command {
   sector?: string;
 
   constructor({
+    congregationId,
     currentAssigned,
     id,
     label,
@@ -38,6 +41,7 @@ export class UpdateTerritoryCommand extends Command {
     sector,
   }: Params) {
     super();
+    this.congregationId = congregationId;
     this.currentAssigned = currentAssigned;
     this.id = id;
     this.label = label;

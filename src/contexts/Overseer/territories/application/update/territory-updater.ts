@@ -1,21 +1,22 @@
 import Logger from "@/shared/domain/logger";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
-import { TerritoryCurrentAssigned } from "../../domain/territory-current-assigned";
-import { TerritoryId } from "../../domain/territory-id";
-import { TerritoryLabel } from "../../domain/territory-label";
-import { TerritoryLastDateCompleted } from "../../domain/territory-last-date-completed";
-import { TerritoryLocality } from "../../domain/territory-locality";
-import { TerritoryLocalityInPart } from "../../domain/territory-locality-in-part";
-import { TerritoryMap } from "../../domain/territory-map";
-import { TerritoryNumber } from "../../domain/territory-number";
-import { TerritoryNumberAlreadyRegistry } from "../../domain/territory-number-already-registry";
-import { TerritoryQuantityHouse } from "../../domain/territory-quantity-house";
+import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
+import { TerritoryCurrentAssigned } from "@/contexts/Overseer/territories/domain/territory-current-assigned";
+import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
+import { TerritoryLabel } from "@/contexts/Overseer/territories/domain/territory-label";
+import { TerritoryLastDateCompleted } from "@/contexts/Overseer/territories/domain/territory-last-date-completed";
+import { TerritoryLocality } from "@/contexts/Overseer/territories/domain/territory-locality";
+import { TerritoryLocalityInPart } from "@/contexts/Overseer/territories/domain/territory-locality-in-part";
+import { TerritoryMap } from "@/contexts/Overseer/territories/domain/territory-map";
+import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
+import { TerritoryNumberAlreadyRegistry } from "@/contexts/Overseer/territories/domain/territory-number-already-registry";
+import { TerritoryQuantityHouse } from "@/contexts/Overseer/territories/domain/territory-quantity-house";
 import {
   PartialTerritoryPrimitives,
   TerritoryRepository,
-} from "../../domain/territory-repository";
-import { TerritorySector } from "../../domain/territory-sector";
+} from "@/contexts/Overseer/territories/domain/territory-repository";
+import { TerritorySector } from "@/contexts/Overseer/territories/domain/territory-sector";
 
 @Injectable()
 export class TerritoryUpdater {
@@ -26,6 +27,7 @@ export class TerritoryUpdater {
 
   async update(
     id: TerritoryId,
+    congregationId: CongregationId,
     params: {
       currentAssigned?: TerritoryCurrentAssigned;
       label?: TerritoryLabel;
@@ -65,7 +67,7 @@ export class TerritoryUpdater {
     };
 
     try {
-      await this.repository.update(id, primitives);
+      await this.repository.update(id, congregationId, primitives);
     } catch (error) {
       if (error instanceof TerritoryNumberAlreadyRegistry) {
         throw new TerritoryNumberAlreadyRegistry(

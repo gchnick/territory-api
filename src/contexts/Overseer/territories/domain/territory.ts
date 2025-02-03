@@ -26,12 +26,12 @@ export type TerritoryPrimitives = {
   label: string;
   lastDateCompleted: Date;
   locality: string;
-  localityInPart?: Nullable<string>;
-  map?: Nullable<string>;
+  localityInPart?: string;
+  map?: string;
   meetingPlaces: MeetingPlacePrimitives[];
   number: number;
   quantityHouses: number;
-  sector?: Nullable<string>;
+  sector?: string;
 };
 
 export class Territory extends AggregateRoot {
@@ -157,11 +157,11 @@ export class Territory extends AggregateRoot {
     congregationId: number;
     number: number;
     label: string;
-    sector?: Nullable<string>;
+    sector?: string;
     locality: string;
-    localityInPart?: Nullable<string>;
+    localityInPart?: string;
     quantityHouses: number;
-    map?: Nullable<string>;
+    map?: string;
     currentAssigned: boolean;
     lastDateCompleted: Date;
     meetingPlaces: MeetingPlacePrimitives[];
@@ -190,7 +190,7 @@ export class Territory extends AggregateRoot {
           fieldService,
           availability,
         }) =>
-          MeetingPlace.fromPrimitive({
+          MeetingPlace.fromPrimitives({
             id,
             place,
             phone,
