@@ -1,6 +1,7 @@
 import { InvalidArgumentError } from "@/shared/domain/value-object/invalid-argument-error";
 
 import { CardinalPoint, CardinalPoints } from "./cardinal-points";
+import { LimitNotFound } from "./limit-not-found";
 
 export type Limits = Partial<Record<CardinalPoints, string>>;
 
@@ -36,6 +37,16 @@ export class CongregationLimits {
       }
     }
     return;
+  }
+
+  getOrThrow(cardinalPoint: CardinalPoint): string {
+    const cardinalValue = this.get(cardinalPoint);
+    if (!cardinalValue)
+      throw new LimitNotFound(
+        `The limit to cardinal point <${cardinalPoint.value}> is not found`,
+      );
+
+    return cardinalValue;
   }
 
   static fromPrimitives(
