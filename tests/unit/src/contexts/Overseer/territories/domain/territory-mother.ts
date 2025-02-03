@@ -3,8 +3,8 @@ import { CongregationIdMother } from "@/tests/unit/src/contexts/Overseer/congreg
 import { CreateTerritoryCommand } from "@/contexts/Overseer/territories/application/create/create-territory-command";
 import { FindByNumberQuery } from "@/contexts/Overseer/territories/application/find-by-number/find-by-number-query";
 import {
-    Territory,
-    TerritoryPrimitives,
+  Territory,
+  TerritoryPrimitives,
 } from "@/contexts/Overseer/territories/domain/territory";
 
 import { TerritoryCurrentAssignedMother } from "./territory-current-assigned-mother";
@@ -19,10 +19,10 @@ import { TerritoryQuantityHouseMother } from "./territory-quantity-house-mother"
 import { TerritorySectorMother } from "./territory-sector-mother";
 
 export const TerritoryMother = {
-  createSuccession(quantity = 50): Territory[] {
+  createSuccession(quantity = 50, congregationId: number): Territory[] {
     const territory: Territory[] = [];
     for (let number = 1; number <= quantity; number++) {
-      territory.push(this.create({ number }));
+      territory.push(this.create({ number, congregationId }));
     }
     return territory;
   },
@@ -70,7 +70,7 @@ export const TerritoryMother = {
     });
   },
   fromQuery(query: FindByNumberQuery): Territory {
-    const { number } = query;
-    return this.create({ number });
+    const { congregationId, number } = query;
+    return this.create({ congregationId, number });
   },
 };

@@ -22,7 +22,7 @@ export const UserMother = {
       ...params,
     };
 
-    return User.fromPrimitive(primitives);
+    return User.fromPrimitives(primitives);
   },
   fromCommand(command: CreateUserCommand): User {
     const { id, email, password, roles } = command;

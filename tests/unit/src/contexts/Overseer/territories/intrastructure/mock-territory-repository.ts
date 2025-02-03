@@ -2,6 +2,7 @@
 import { Criteria } from "@/shared/domain/criteria/criteria";
 import { Nullable } from "@/shared/domain/nullable";
 
+import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
 import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
@@ -29,8 +30,11 @@ export class MockTerritoryRepository implements TerritoryRepository {
     return this.mockSearchAll() as Promise<Array<Territory>>;
   }
 
-  async findByNumber(number: TerritoryNumber): Promise<Nullable<Territory>> {
-    expect(this.mockFindByNumber).toHaveBeenCalledWith(number);
+  async findByNumber(
+    congregationId: CongregationId,
+    number: TerritoryNumber,
+  ): Promise<Nullable<Territory>> {
+    expect(this.mockFindByNumber).toHaveBeenCalledWith(congregationId, number);
     return this.mockFindByNumber() as Promise<Nullable<Territory>>;
   }
 
@@ -41,9 +45,10 @@ export class MockTerritoryRepository implements TerritoryRepository {
 
   async update(
     id: TerritoryId,
+    congregationId: CongregationId,
     data: PartialTerritoryPrimitives,
   ): Promise<void> {
-    expect(this.mockUpdate).toHaveBeenCalledWith(id, data);
+    expect(this.mockUpdate).toHaveBeenCalledWith(id, congregationId, data);
     this.mockUpdate();
   }
 
@@ -71,13 +76,16 @@ export class MockTerritoryRepository implements TerritoryRepository {
   }
 
   shouldSearch(territory: Territory): void {
-    this.mockFindByNumber(territory.number);
+    this.mockFindByNumber(territory.congregation, territory.number);
     this.mockFindByNumber.mockReturnValueOnce(territory);
   }
 
-  shouldNotSearch(number: TerritoryNumber): void {
+  shouldNotSearch(
+    congregationId: CongregationId,
+    number: TerritoryNumber,
+  ): void {
     const nullableTerritory: Nullable<Territory> = undefined;
-    this.mockFindByNumber(number);
+    this.mockFindByNumber(congregationId, number);
     this.mockFindByNumber.mockReturnValueOnce(nullableTerritory);
   }
 
