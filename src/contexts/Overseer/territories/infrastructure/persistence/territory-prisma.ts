@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Prisma } from "@prisma/client";
 
+import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
 import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
@@ -20,7 +20,7 @@ export class TerritoryPrisma implements TerritoryRepository {
   async save(territory: Territory): Promise<void> {
     const {
       id: territory_id,
-      congregationId,
+      congregationId: congregation_id,
       number,
       label,
       locality,
@@ -32,25 +32,25 @@ export class TerritoryPrisma implements TerritoryRepository {
       map: map_image_url,
     } = territory.toPrimitives();
 
-    const data: Prisma.territoriesCreateInput = {
-      congregation: {
-        connect: {
-          number: congregationId,
+    await this._repository.territories.create({
+      data: {
+        congregation: {
+          connect: {
+            congregation_id,
+          },
         },
+        territory_id,
+        label,
+        last_date_completed,
+        locality,
+        locality_in_part,
+        number,
+        current_assigned,
+        map_image_url,
+        quantity_houses,
+        sector,
       },
-      territory_id,
-      label,
-      last_date_completed,
-      locality,
-      locality_in_part,
-      number,
-      current_assigned,
-      map_image_url,
-      quantity_houses,
-      sector,
-    };
-
-    await this._repository.territories.create({ data });
+    });
   }
 
   async searchAll(): Promise<Array<Territory> | Territory> {
@@ -66,9 +66,9 @@ export class TerritoryPrisma implements TerritoryRepository {
         locality: t.locality,
         number: t.number,
         quantityHouses: t.quantity_houses,
-        localityInPart: t.locality_in_part,
-        map: t.map_image_url,
-        sector: t.sector,
+        localityInPart: t.locality_in_part ?? undefined,
+        map: t.map_image_url ?? undefined,
+        sector: t.sector ?? undefined,
         meetingPlaces: [],
       }),
     );
@@ -80,6 +80,7 @@ export class TerritoryPrisma implements TerritoryRepository {
       id: "territory_id",
       isAssigned: "current_assigned",
       lastCompleted: "last_date_completed",
+      congregation: "congregation_id",
     });
 
     const result = await this._repository.territories.findMany({
@@ -96,20 +97,22 @@ export class TerritoryPrisma implements TerritoryRepository {
         locality: t.locality,
         number: t.number,
         quantityHouses: t.quantity_houses,
-        localityInPart: t.locality_in_part,
-        map: t.map_image_url,
-        sector: t.sector,
+        localityInPart: t.locality_in_part ?? undefined,
+        map: t.map_image_url ?? undefined,
+        sector: t.sector ?? undefined,
         meetingPlaces: [],
       }),
     );
   }
 
   async findByNumber(
+    congregationId: CongregationId,
     territoryNumber: TerritoryNumber,
   ): Promise<Nullable<Territory>> {
+    const congregation_id = congregationId.value;
     const number = territoryNumber.value;
     const result = await this._repository.territories.findUnique({
-      where: { number },
+      where: { congregation_id_number: { congregation_id, number } },
     });
 
     if (result === null) return;
@@ -123,9 +126,9 @@ export class TerritoryPrisma implements TerritoryRepository {
       locality: result.locality,
       number: result.number,
       quantityHouses: result.quantity_houses,
-      localityInPart: result.locality_in_part,
-      map: result.map_image_url,
-      sector: result.sector,
+      localityInPart: result.locality_in_part ?? undefined,
+      map: result.map_image_url ?? undefined,
+      sector: result.sector ?? undefined,
       meetingPlaces: [],
     });
   }
@@ -147,20 +150,21 @@ export class TerritoryPrisma implements TerritoryRepository {
       locality: result.locality,
       number: result.number,
       quantityHouses: result.quantity_houses,
-      localityInPart: result.locality_in_part,
-      map: result.map_image_url,
-      sector: result.sector,
+      localityInPart: result.locality_in_part ?? undefined,
+      map: result.map_image_url ?? undefined,
+      sector: result.sector ?? undefined,
       meetingPlaces: [],
     });
   }
 
   async update(
     id: TerritoryId,
+    congregationId: CongregationId,
     territory: PartialTerritoryPrimitives,
   ): Promise<void> {
+    const congregation_id = congregationId.value;
     const territory_id = id.value;
     const {
-      congregationId,
       currentAssigned: current_assigned,
       label,
       lastDateCompleted: last_date_completed,
@@ -172,10 +176,10 @@ export class TerritoryPrisma implements TerritoryRepository {
       sector,
     } = territory;
 
-    const data: Prisma.territoriesUpdateInput = {
+    const data: Prisma.TerritoriesUpdateInput = {
       congregation: {
         connect: {
-          number: congregationId,
+          congregation_id,
         },
       },
       current_assigned,
@@ -207,7 +211,7 @@ export class TerritoryPrisma implements TerritoryRepository {
     const enviroment = EnviromentValueObject.fromValue(nodeEnv);
 
     if (!enviroment.isProduction()) {
-      await this._repository.territories.deleteMany({});
+      await this._repository.$executeRaw`DELETE FROM Territories;`;
     }
   }
 }

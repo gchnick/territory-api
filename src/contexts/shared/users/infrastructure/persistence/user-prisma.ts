@@ -1,6 +1,3 @@
-/* eslint-disable unicorn/no-null */
-import { Prisma } from "@prisma/client";
-
 import { Nullable } from "@/contexts/shared/domain/nullable";
 import { EnviromentValueObject } from "@/contexts/shared/domain/value-object/enviroment-value-object";
 import { NestPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/nest-prisma-service";
@@ -25,44 +22,47 @@ export class UserPrisma implements UserRepository {
       roles,
     } = user.toPrimitives();
 
-    const data: Prisma.usersCreateInput = {
-      user_id,
-      username,
-      password,
-      roles: {
-        connect: roles.map(role => {
-          return {
-            role_id: role.id,
-            user_id_role_id: { role_id: role.id, user_id },
-          };
-        }),
+    const connectOrCreate = roles.map(r => ({
+      where: { role_id: r.id },
+      create: {
+        role_id: r.id,
+        role: r.name,
+        description: r.description,
       },
-    };
-    await this._repository.users.create({ data });
+    }));
+
+    await this._repository.users.create({
+      data: {
+        user_id,
+        username,
+        password,
+        roles: {
+          connectOrCreate,
+        },
+      },
+    });
   }
 
   async findByEmail(email: UserEmail): Promise<Nullable<User>> {
     const username = email.value;
     const result = await this._repository.users.findUnique({
       where: { username },
-      include: { roles: { include: { role: true } } },
+      include: { roles: true },
     });
 
-    if (!result) return null;
+    if (!result) return;
 
-    return User.fromPrimitive({
+    return User.fromPrimitives({
       id: result.user_id,
       email: result.username,
       password: result.password,
       enabled: result.enabled,
       verified: result.verified,
-      roles: result.roles.map(rol => {
-        return {
-          id: rol.role_id,
-          description: rol.role.description,
-          name: RoleName.fromValue(rol.role.role).value,
-        };
-      }),
+      roles: result.roles.map(rol => ({
+        id: rol.role_id,
+        description: rol.description ?? undefined,
+        name: RoleName.fromValue(rol.role).value,
+      })),
     });
   }
 
@@ -70,24 +70,22 @@ export class UserPrisma implements UserRepository {
     const user_id = id.value;
     const result = await this._repository.users.findUnique({
       where: { user_id },
-      include: { roles: { include: { role: true } } },
+      include: { roles: true },
     });
 
-    if (!result) return null;
+    if (!result) return;
 
-    return User.fromPrimitive({
+    return User.fromPrimitives({
       id: result.user_id,
       email: result.username,
       password: result.password,
       enabled: result.enabled,
       verified: result.verified,
-      roles: result.roles.map(rol => {
-        return {
-          id: rol.role_id,
-          description: rol.role.description,
-          name: RoleName.fromValue(rol.role.role).value,
-        };
-      }),
+      roles: result.roles.map(rol => ({
+        id: rol.role_id,
+        description: rol.description ?? undefined,
+        name: RoleName.fromValue(rol.role).value,
+      })),
     });
   }
 
@@ -95,46 +93,45 @@ export class UserPrisma implements UserRepository {
     const role = name.value;
     const result = await this._repository.roles.findUnique({ where: { role } });
 
-    if (!result) return null;
+    if (!result) return;
 
     return UserRole.fromPrimitives({
-      id: result.id,
+      id: result.role_id,
       name: result.role,
-      description: result.description,
+      description: result.description ?? undefined,
     });
   }
 
   async saveRole(userRole: UserRole): Promise<void> {
-    const { name: role, description } = userRole.toPrimitives();
+    const { id: role_id, name: role, description } = userRole.toPrimitives();
 
-    const data: Prisma.rolesCreateInput = {
-      role,
-      description,
-    };
-
-    await this._repository.roles.create({ data });
+    await this._repository.roles.create({
+      data: { role_id, role, description },
+    });
   }
 
   async update(id: UserId, user: PartialUserPrimitive): Promise<void> {
-    const user_id = id.value;
     const { email: username, enabled, password, roles, verified } = user;
+    const connect = roles?.map(r => ({
+      role_id: r.id,
+    }));
 
-    const data: Prisma.usersUpdateInput = {
-      username,
-      password,
-      enabled,
-      roles: {
-        connect: roles?.map(role => {
-          return {
-            role_id: role.id,
-            user_id_role_id: { role_id: role.id, user_id },
-          };
-        }),
-      },
-      verified,
-    };
+    const transaction = [
+      this._repository.users.update({
+        where: { user_id: id.value },
+        data: {
+          username,
+          password,
+          enabled,
+          roles: {
+            connect,
+          },
+          verified,
+        },
+      }),
+    ];
 
-    await this._repository.users.update({ where: { user_id }, data });
+    await this._repository.$transaction(transaction);
   }
 
   async deleteAll(): Promise<void> {
@@ -142,7 +139,7 @@ export class UserPrisma implements UserRepository {
     const enviroment = EnviromentValueObject.fromValue(nodeEnv);
 
     if (!enviroment.isProduction()) {
-      await this._repository.users.deleteMany({});
+      await this._repository.$executeRaw`DELETE FROM Users;`;
     }
   }
 }
