@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["typedSql"]
 }
 
 datasource db {
@@ -7,8 +8,8 @@ datasource db {
   url      = env("SQLITE_DATABASE")
 }
 
-model congregations {
-  number                Int     @id
+model Congregations {
+  congregation_id       Int     @id
   name                  String  @unique
   circuit               String
   number_of_territories Int?    @default(0)
@@ -18,12 +19,12 @@ model congregations {
   east_limit            String
   west_limit            String
 
-  territories territories[]
+  territory    Territories[]
 }
 
-model territories {
-  territory_id         String   @id @default(uuid())
-  number              Int      @unique
+model Territories {
+  territory_id        String   @unique
+  number              Int
   label               String   @unique
   sector              String?
   quantity_houses     Int      @default(0)
@@ -33,14 +34,16 @@ model territories {
   last_date_completed DateTime
   current_assigned    Boolean  @default(false)
 
-  meeting_place meeting_places[]
-  registry      registries[]
+  meeting_place MeetingPlaces[]
+  registry      Registries[]
 
-  congregation    congregations @relation(fields: [congregation_id], references: [number])
+  congregation    Congregations @relation(fields: [congregation_id], references: [congregation_id])
   congregation_id Int
+
+  @@id([congregation_id, number])
 }
 
-model meeting_places {
+model MeetingPlaces {
   meeting_place_id String  @id @default(uuid())
   place            String
   mobile_phone     String?
@@ -48,93 +51,82 @@ model meeting_places {
   latitude         String?
   longitude        String?
 
-  availability meeting_place_availability[]
-  assignaments assignaments[]
+  availability MeetingPlaceAvailability[]
+  assignaments Assignaments[]
 
-  territory    territories @relation(fields: [territory_id], references: [territory_id], onDelete: Cascade)
+  territory    Territories @relation(fields: [territory_id], references: [territory_id], onDelete: Cascade)
   territory_id String
 }
 
-model meeting_place_availability {
+model MeetingPlaceAvailability {
   day       String
   frequency String
   moment    String
 
-  meeting_place    meeting_places @relation(fields: [meeting_place_id], references: [meeting_place_id], onDelete: Cascade)
+  meeting_place    MeetingPlaces @relation(fields: [meeting_place_id], references: [meeting_place_id], onDelete: Cascade)
   meeting_place_id String
 
   @@id([meeting_place_id, day])
 }
 
-model periods {
+model Periods {
   period_id   String    @id @default(uuid())
   description String
   start_date  DateTime
   finish_date DateTime?
 
-  registries registries[]
+  registries Registries[]
 }
 
-model registries {
+model Registries {
   registry_id    String    @id @default(uuid())
   date_assigned  DateTime
   date_completed DateTime?
 
-  assigned_to  conductors @relation(fields: [conductor_id], references: [conductor_id], onDelete: Cascade)
+  assigned_to  Conductors @relation(fields: [conductor_id], references: [conductor_id], onDelete: Cascade)
   conductor_id String
 
-  territory    territories @relation(fields: [territory_id], references: [territory_id], onDelete: Cascade)
+  territory    Territories @relation(fields: [territory_id], references: [territory_id], onDelete: Cascade)
   territory_id String
-  period       periods     @relation(fields: [period_id], references: [period_id], onDelete: Cascade)
+  period       Periods     @relation(fields: [period_id], references: [period_id], onDelete: Cascade)
   period_id    String
 }
 
-model family_groups {
-  id    Int    @id() @default(autoincrement())
-  label String
+model FamilyGroups {
+  family_group_id Int    @id() @default(autoincrement())
+  label           String
 
-  publishers publishers[]
+  publishers Publishers[]
 }
 
-model phones {
+model Phones {
   phone_id Int    @id @default(autoincrement())
   label    String
   number   String @unique
 
-  publishers publisher__phone[]
+  publishers Publishers[] @relation("PhoneOfPublisher")
 }
 
-model roles {
-  id          Int     @id @default(autoincrement())
-  role        String  @unique
+model Roles {
+  role_id     Int          @id @default(autoincrement())
+  role        String       @unique
   description String?
-
-  publishers user__role[]
+  users       Users[] @relation("RoleOfUser")
 }
 
-model user__role {
-  user    users  @relation(fields: [user_id], references: [user_id])
-  user_id String
-  role    roles  @relation(fields: [role_id], references: [id])
-  role_id Int
-
-  @@id([user_id, role_id])
-}
-
-model users {
+model Users {
   user_id  String  @id @default(uuid())
   username String  @unique
   password String
   enabled  Boolean @default(true)
   verified Boolean @default(false)
+  roles Roles[] @relation("RoleOfUser")
 
-  roles user__role[]
-
-  publisher    publishers? @relation(fields: [publisher_id], references: [publisher_id])
+  publisher    Publishers? @relation(fields: [publisher_id], references: [publisher_id])
   publisher_id String?     @unique
 }
 
-model publishers {
+model Publishers {
   publisher_id  String    @id @default(uuid())
   householder   Boolean   @default(false)
   sort_name     String    @unique
@@ -151,94 +143,85 @@ model publishers {
   is_aparted    Boolean   @default(false)
   email         String?   @unique
 
-  conductors        conductors[]
-  user              users?
-  phones            publisher__phone[]
-  reports reports_current_file[]
-  backup_reports dead_file[]
-  emergency_contact emergency_contacts?
+  conductors        Conductors[]
+  user              Users?
+  phones            Phones[] @relation("PhoneOfPublisher")
+  reports           ReportsCurrentFile[]
+  backup_reports    DeadFile[]
+  emergency_contact EmergencyContacts?
 
-  is_elder       elders?
-  is_ministerial ministerial_servants?
-  is_pionner     pioneers?
-  is_missionary  missionaries?
+  is_elder       Elders?
+  is_ministerial MinisterialServants?
+  is_pionner     Pioneers?
+  is_missionary  Missionaries?
 
-  family_group    family_groups? @relation(fields: [family_group_id], references: [id], onDelete: Cascade)
+  family_group    FamilyGroups? @relation(fields: [family_group_id], references: [family_group_id], onDelete: Cascade)
   family_group_id Int
 
   @@unique([firts_name, last_name])
 }
 
-model publisher__phone {
-  publisher    publishers @relation(fields: [publisher_id], references: [publisher_id])
-  publisher_id String
-  phone        phones     @relation(fields: [phone_id], references: [phone_id])
-  phone_id     Int
-
-  @@id([publisher_id, phone_id])
-}
-
-model emergency_contacts {
+model EmergencyContacts {
   id        Int    @id @default(autoincrement())
   full_name String
   phone     String @unique
 
-  publisher    publishers? @relation(fields: [publisher_id], references: [publisher_id])
+  publisher    Publishers? @relation(fields: [publisher_id], references: [publisher_id])
   publisher_id String      @unique
 }
 
-model elders {
+model Elders {
   id Int @id @default(autoincrement())
 
-  publisher    publishers @relation(fields: [publisher_id], references: [publisher_id])
+  publisher    Publishers @relation(fields: [publisher_id], references: [publisher_id])
   publisher_id String     @unique
 }
 
-model ministerial_servants {
+model MinisterialServants {
   id Int @id @default(autoincrement())
 
-  publisher    publishers @relation(fields: [publisher_id], references: [publisher_id])
+  publisher    Publishers @relation(fields: [publisher_id], references: [publisher_id])
   publisher_id String     @unique
 }
 
-model pioneers {
+model Pioneers {
   id Int @id @default(autoincrement())
 
-  publisher    publishers @relation(fields: [publisher_id], references: [publisher_id])
+  publisher    Publishers @relation(fields: [publisher_id], references: [publisher_id])
   publisher_id String     @unique
 }
 
-model missionaries {
+model Missionaries {
   id Int @id @default(autoincrement())
 
-  publisher    publishers @relation(fields: [publisher_id], references: [publisher_id])
+  publisher    Publishers @relation(fields: [publisher_id], references: [publisher_id])
   publisher_id String     @unique
 }
 
-model conductors {
+model Conductors {
   conductor_id       String    @id @default(uuid())
   last_date_assigned DateTime?
 
-  assignaments assignaments[]
-  registries   registries[]
-  availability conductor_availability[]
+  assignaments Assignaments[]
+  registries   Registries[]
+  availability ConductorAvailability[]
 
-  publisher    publishers @relation(fields: [publisher_id], references: [publisher_id], onDelete: Cascade)
+  publisher    Publishers @relation(fields: [publisher_id], references: [publisher_id], onDelete: Cascade)
   publisher_id String
 }
 
-model conductor_availability {
+model ConductorAvailability {
   day       String
   frequency String
   moment    String
 
-  conductor    conductors @relation(fields: [conductor_id], references: [conductor_id], onDelete: Cascade)
+  conductor    Conductors @relation(fields: [conductor_id], references: [conductor_id], onDelete: Cascade)
   conductor_id String
 
   @@id([conductor_id, day])
 }
 
-model programs {
+model Programs {
   program_id   String   @id @default(uuid())
   since_week   DateTime
   until_week   DateTime
@@ -246,86 +229,86 @@ model programs {
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
-  assignaments assignaments[]
+  assignaments Assignaments[]
 }
 
-model assignaments {
+model Assignaments {
   assignament_id String   @id @default(uuid())
   date           DateTime
   covered        Boolean  @default(false)
 
-  meeting_places   meeting_places @relation(fields: [meeting_place_id], references: [meeting_place_id], onDelete: Cascade)
+  meeting_places   MeetingPlaces @relation(fields: [meeting_place_id], references: [meeting_place_id], onDelete: Cascade)
   meeting_place_id String
-  conductor        conductors     @relation(fields: [coductor_id], references: [conductor_id], onDelete: Cascade)
+  conductor        Conductors    @relation(fields: [coductor_id], references: [conductor_id], onDelete: Cascade)
   coductor_id      String
-  programs         programs       @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
+  programs         Programs      @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
   program_id       String
 }
 
-model months_year_service {
-  month_id Int @id @default(autoincrement())
-  date DateTime
+model MonthsYearService {
+  month_id Int      @id @default(autoincrement())
+  date     DateTime
 
-  reports reports_current_file[]
-  backup_reports dead_file[]
-  total_publisher_report total_publisher_reports[]
-  total_pioneer_report total_pioneer_reports[]
-  total_auxiliary_pioneer_report total_auxiliary_pioneers_reports[]
+  reports                        ReportsCurrentFile[]
+  backup_reports                 DeadFile[]
+  total_publisher_report         TotalPublisherReports[]
+  total_pioneer_report           TotalPioneerReports[]
+  total_auxiliary_pioneer_report TotalAuxiliaryPioneersReports[]
 }
 
-model reports_current_file {
-  report_id Int @id @default(autoincrement())
-  participated_in_some_facet Boolean @default(false)
-  hours Decimal?
-  bible_courses Int?
-  is_pioneer Boolean @default(false)
-  is_auxiliar_pioneer Boolean @default(false)
-  comment String?
+model ReportsCurrentFile {
+  report_id                  Int      @id @default(autoincrement())
+  participated_in_some_facet Boolean  @default(false)
+  hours                      Decimal?
+  bible_courses              Int?
+  is_pioneer                 Boolean  @default(false)
+  is_auxiliar_pioneer        Boolean  @default(false)
+  comment                    String?
 
-  month months_year_service @relation(fields: [months_year_service_id], references: [month_id])
+  month                  MonthsYearService @relation(fields: [months_year_service_id], references: [month_id])
   months_year_service_id Int
-  publisher publishers @relation(fields: [publisher_id], references: [publisher_id])
- publisher_id String
+  publisher              Publishers        @relation(fields: [publisher_id], references: [publisher_id])
+  publisher_id           String
 }
 
-model dead_file {
-  report_id Int @id @default(autoincrement())
-  participated_in_some_facet Boolean @default(false)
-  hours Decimal?
-  bible_courses Int?
-  is_pioneer Boolean @default(false)
-  is_auxiliar_pioneer Boolean @default(false)
-  comment String?
+model DeadFile {
+  report_id                  Int      @id @default(autoincrement())
+  participated_in_some_facet Boolean  @default(false)
+  hours                      Decimal?
+  bible_courses              Int?
+  is_pioneer                 Boolean  @default(false)
+  is_auxiliar_pioneer        Boolean  @default(false)
+  comment                    String?
 
-  month months_year_service @relation(fields: [months_year_service_id], references: [month_id])
+  month                  MonthsYearService @relation(fields: [months_year_service_id], references: [month_id])
   months_year_service_id Int
-  publisher publishers @relation(fields: [publisher_id], references: [publisher_id])
- publisher_id String
+  publisher              Publishers        @relation(fields: [publisher_id], references: [publisher_id])
+  publisher_id           String
 }
 
-model total_publisher_reports {
-  report_id Int @id @default(autoincrement())
-  total_publishers Int
+model TotalPublisherReports {
+  report_id               Int @id @default(autoincrement())
+  total_publishers        Int
   total_publisher_reports Int
 
-  month months_year_service @relation(fields: [month_id], references: [month_id])
+  month    MonthsYearService @relation(fields: [month_id], references: [month_id])
   month_id Int
 }
 
-model total_pioneer_reports {
-  report_id Int @id @default(autoincrement())
-  total_publishers Int
+model TotalPioneerReports {
+  report_id               Int @id @default(autoincrement())
+  total_publishers        Int
   total_publisher_reports Int
 
-  month months_year_service @relation(fields: [month_id], references: [month_id])
+  month    MonthsYearService @relation(fields: [month_id], references: [month_id])
   month_id Int
 }
 
-model total_auxiliary_pioneers_reports {
-  report_id Int @id @default(autoincrement())
-  total_pioneers Int
+model TotalAuxiliaryPioneersReports {
+  report_id             Int @id @default(autoincrement())
+  total_pioneers        Int
   total_pioneer_reports Int
 
-  month months_year_service @relation(fields: [month_id], references: [month_id])
+  month    MonthsYearService @relation(fields: [month_id], references: [month_id])
   month_id Int
 }
