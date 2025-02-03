@@ -1,28 +1,28 @@
-import { ConfigModule } from "@nestjs/config";
+import { ConditionalModule, ConfigModule } from "@nestjs/config";
 import { RouterModule } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
-import { TypeOrmModule } from "@nestjs/typeorm";
+
+import { PrismaModule } from "@/contexts/shared/infrastructure/persistence/prisma/prisma.module";
 
 import { CommandModule } from "@/core/command-bus/command.module";
 import configOptions from "@/core/config/config-options";
 import jwtAsyncOptions from "@/core/config/jwt-async-options";
 import routes from "@/core/config/routes";
-import typeOrmOptions from "@/core/config/typeorm/type-orm-options";
 import { EventBusModule } from "@/core/event-bus/event-bus.module";
 import { LoggerModule } from "@/core/logger/logger.module";
 import { QueryModule } from "@/core/query-bus/query.module";
-
-import { TYPE_ORM_ENTITIES } from "./constants";
+import { SeedModule } from "@/core/seed/seed.module";
 
 export const baseTestModuleImports = () => {
   return [
-    LoggerModule,
     CommandModule,
-    QueryModule,
-    EventBusModule,
-    TypeOrmModule.forRootAsync(typeOrmOptions(TYPE_ORM_ENTITIES)),
+    ConditionalModule.registerWhen(SeedModule, SeedModule.CONDITION_KEY),
     ConfigModule.forRoot(configOptions()),
+    EventBusModule,
     JwtModule.registerAsync(jwtAsyncOptions()),
+    LoggerModule,
+    PrismaModule,
+    QueryModule,
     RouterModule.register(routes()),
   ];
 };
