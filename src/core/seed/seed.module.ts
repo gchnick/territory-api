@@ -5,4 +5,6 @@ import { SeedController } from "./seed-post.controller";
 @Module({
   controllers: [SeedController],
 })
-export class SeedModule {}
+export class SeedModule {
+  static CONDITION_KEY = "USE_SEEDS";
+}

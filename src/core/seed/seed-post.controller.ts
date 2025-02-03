@@ -1,17 +1,43 @@
-import { readFile } from "node:fs/promises";
-
 import { Controller, HttpCode, HttpStatus, Post } from "@nestjs/common";
-import { DataSource } from "typeorm";
+import { insertTerritories } from "@prisma/client/sql";
+
+import { NestPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/nest-prisma-service";
+
+import { territoriesSeed } from "./data-seed";
 
 @Controller("seed")
 export class SeedController {
-  constructor(private readonly _dataSource: DataSource) {}
+  constructor(private readonly _repository: NestPrismaService) {}
 
   @Post("/run")
   @HttpCode(HttpStatus.OK)
   async run() {
-    const query = await readFile("data-seed.sql", "utf8");
-    const queryRunner = this._dataSource.createQueryRunner();
-    await queryRunner.manager.query(query);
+    for (const {
+      id,
+      congregationId,
+      number,
+      label,
+      sector,
+      quantityHouses,
+      locality,
+      localityInPart,
+      lastDateCompleted,
+    } of territoriesSeed) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      await this._repository.$queryRawTyped(
+        insertTerritories(
+          id,
+          congregationId,
+          number,
+          label,
+          sector,
+          quantityHouses,
+          locality,
+          localityInPart,
+          lastDateCompleted,
+          false,
+        ),
+      );
+    }
   }
 }
