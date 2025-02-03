@@ -7,21 +7,30 @@ import * as nock from "nock";
 
 import { baseTestModuleImports } from "@/tests/e2e/app/helpers/base-test-module-imports";
 import { saveInitialTerritories } from "@/tests/e2e/app/overseer/territories/helpers";
+import { CongregationMother } from "@/tests/unit/src/contexts/Overseer/congregation/domain/congregation-mother";
 import { TerritoryMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-mother";
 
+import { CongregationModule } from "@/app/overseer/congregations/congregation.module";
 import { TerritoryModule } from "@/app/overseer/territories/territory.module";
 
+import { Congregation } from "@/contexts/Overseer/congregations/domain/congregation";
+import { CongregationRepository } from "@/contexts/Overseer/congregations/domain/congregation-repository";
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/territory-repository";
 
 describe("TerritoryGetController (e2e)", () => {
   const LENGHT_INITIAL_TERRITORY = 20;
   let app: NestFastifyApplication;
-  let repo: TerritoryRepository;
+  let congregationRepo: CongregationRepository;
+  let territoryRepo: TerritoryRepository;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [...baseTestModuleImports(), TerritoryModule],
+      imports: [
+        ...baseTestModuleImports(),
+        CongregationModule,
+        TerritoryModule,
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication<NestFastifyApplication>(
@@ -29,7 +38,8 @@ describe("TerritoryGetController (e2e)", () => {
     );
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
-    repo = app.get(TerritoryRepository);
+    congregationRepo = app.get(CongregationRepository);
+    territoryRepo = app.get(TerritoryRepository);
     nock.disableNetConnect();
     nock.enableNetConnect("127.0.0.1");
   });
@@ -43,11 +53,18 @@ describe("TerritoryGetController (e2e)", () => {
   });
 
   describe("/v1/api/territories (GET)", () => {
+    let congregation: Congregation;
     let territories: Array<Territory>;
     beforeEach(async () => {
-      await repo.deleteAll();
-      territories = TerritoryMother.createSuccession(LENGHT_INITIAL_TERRITORY);
-      await saveInitialTerritories(repo, territories);
+      await congregationRepo.deleteAll();
+      await territoryRepo.deleteAll();
+      congregation = CongregationMother.create();
+      territories = TerritoryMother.createSuccession(
+        LENGHT_INITIAL_TERRITORY,
+        congregation.number.value,
+      );
+      await congregationRepo.save(congregation);
+      await saveInitialTerritories(territoryRepo, territories);
     });
 
     it("should fetch all territories", async () => {
@@ -61,13 +78,14 @@ describe("TerritoryGetController (e2e)", () => {
       expect(response.payload).not.toBeFalsy();
     });
 
-    it("should find territory by number", async () => {
+    it("should find territory by number and congregation", async () => {
+      const congregationNumber = congregation.number.value;
       const numberParam = 10;
       const expectedLabel = territories[numberParam - 1].label.value;
 
       const response = await app.inject({
         method: "GET",
-        url: `/territories/${numberParam}`,
+        url: `/territories/${congregationNumber}/${numberParam}`,
       });
 
       expect(response.statusCode).toBe(200);
@@ -76,7 +94,8 @@ describe("TerritoryGetController (e2e)", () => {
       expect(JSON.parse(response.payload).data.label).toBe(expectedLabel);
     });
 
-    it("should fetch all territories be not locked", async () => {
+    it("should fetch all territories be not assigned", async () => {
+      const congregationNumber = congregation.number.value;
       const available = territories.filter(f => !f.currentAssigned.value);
       const expectedLength = available.length;
 
@@ -84,7 +103,8 @@ describe("TerritoryGetController (e2e)", () => {
         method: "GET",
         url:
           "/territories?" +
-          "filters[0][field]=isAssigned&filters[0][operator]=EQUAL&filters[0][value]=false" +
+          `filters[0][field]=congregation&filters[0][operator]=EQUAL&filters[0][value]=${congregationNumber}` +
+          "filters[1][field]=isAssigned&filters[1][operator]=EQUAL&filters[1][value]=false" +
           "&orderBy=lastCompleted&order=ASC",
       });
 
