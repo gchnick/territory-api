@@ -48,7 +48,7 @@ export class MeetingPlace {
     this.availability = availability;
   }
 
-  static fromPrimitive(plainData: {
+  static fromPrimitives(plainData: {
     id: string;
     place: string;
     phone?: string;
