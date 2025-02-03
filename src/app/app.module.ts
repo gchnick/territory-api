@@ -3,6 +3,7 @@ import { ConditionalModule, ConfigModule } from "@nestjs/config";
 import { RouterModule } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
 
+import { CongregationModule } from "@/app/overseer/congregations/congregation.module";
 import { TerritoryModule } from "@/app/overseer/territories/territory.module";
 import { AuthModule } from "@/app/shared/auth/auth.module";
 import { HealthModule } from "@/app/shared/health/health.module";
@@ -21,19 +22,20 @@ import { SeedModule } from "@/core/seed/seed.module";
 
 @Module({
   imports: [
-    UserModule,
     AuthModule,
-    HealthModule,
-    TerritoryModule,
-    LoggerModule,
     CommandModule,
-    QueryModule,
-    EventBusModule,
-    PrismaModule,
+    ConditionalModule.registerWhen(SeedModule, SeedModule.CONDITION_KEY),
     ConfigModule.forRoot(configOptions()),
+    CongregationModule,
+    EventBusModule,
+    HealthModule,
     JwtModule.registerAsync(jwtAsyncOptions()),
+    LoggerModule,
+    PrismaModule,
+    QueryModule,
     RouterModule.register(routes()),
-    ConditionalModule.registerWhen(SeedModule, "USE_SEEDS"),
+    TerritoryModule,
+    UserModule,
   ],
 })
 export class AppModule {}
