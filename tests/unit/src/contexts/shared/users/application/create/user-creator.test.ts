@@ -34,7 +34,6 @@ describe("UserCreator should", () => {
 
     await userCreator.create({
       id: expectedUser.id,
-      name: expectedUser.name,
       email: expectedUser.email,
       password: expectedUser.password,
       roles: [expectedRoleName],

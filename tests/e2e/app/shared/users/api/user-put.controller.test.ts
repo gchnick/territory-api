@@ -4,6 +4,14 @@ import {
 } from "@nestjs/platform-fastify";
 import { Test, TestingModule } from "@nestjs/testing";
 
+import { baseTestModuleImports } from "@/tests/e2e/app/helpers/base-test-module-imports";
+import { SignupPostRequestMother } from "@/tests/e2e/app/shared/auth/requests/signup-post-request-mother";
+import {
+  createAllRoles,
+  createUsers,
+  saveInitialRoles,
+  saveInitialUsers,
+} from "@/tests/e2e/app/shared/users/helper";
 import { UserEmailMother } from "@/tests/unit/src/contexts/shared/users/domain/user-email-mother";
 import { UserIdMother } from "@/tests/unit/src/contexts/shared/users/domain/user-id-mother";
 import { UserPasswordMother } from "@/tests/unit/src/contexts/shared/users/domain/user-password-mother";
@@ -13,20 +21,6 @@ import { UserModule } from "@/app/shared/user/user.module";
 import { User } from "@/contexts/shared/users/domain/user";
 import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
 
-import { CommandModule } from "@/core/command-bus/command.module";
-import { EventBusModule } from "@/core/event-bus/event-bus.module";
-import { LoggerModule } from "@/core/logger/logger.module";
-import { QueryModule } from "@/core/query-bus/query.module";
-import { SharedModule } from "@/core/shared/shared.module";
-
-import { SignupPostRequestMother } from "../../auth/requests/signup-post-request-mother";
-import {
-  createAllRoles,
-  createUsers,
-  saveInitialRoles,
-  saveInitialUsers,
-} from "../helper";
-
 describe("UserPutController (e2e)", () => {
   const roles = createAllRoles();
   let app: NestFastifyApplication;
@@ -34,14 +28,7 @@ describe("UserPutController (e2e)", () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        UserModule,
-        SharedModule,
-        LoggerModule,
-        CommandModule,
-        QueryModule,
-        EventBusModule,
-      ],
+      imports: [...baseTestModuleImports(), UserModule],
     }).compile();
 
     app = moduleFixture.createNestApplication<NestFastifyApplication>(
@@ -49,7 +36,9 @@ describe("UserPutController (e2e)", () => {
     );
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
-    repo = app.get(UserRepository);
+    repo = await app.get(UserRepository);
+    // eslint-disable-next-line no-console
+    console.log("🚀 ~ beforeEach ~ repo:", repo);
     await saveInitialRoles(repo, roles);
   });
 
@@ -68,7 +57,7 @@ describe("UserPutController (e2e)", () => {
     it("should create a new user if not already registry", async () => {
       const id = UserIdMother.create();
       const request = SignupPostRequestMother.create({
-        roles: ["SERVICE_OVERSSER"],
+        roles: ["SERVICE_OVERSEER"],
       });
 
       const response = await app.inject({

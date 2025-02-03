@@ -4,24 +4,20 @@ import {
 } from "@nestjs/platform-fastify";
 import { Test, TestingModule } from "@nestjs/testing";
 
+import { baseTestModuleImports } from "@/tests/e2e/app/helpers/base-test-module-imports";
+import {
+  createAllRoles,
+  createUsers,
+  saveInitialRoles,
+  saveInitialUsers,
+} from "@/tests/e2e/app/shared/users/helper";
+
 import { AuthModule } from "@/app/shared/auth/auth.module";
 import { UserModule } from "@/app/shared/user/user.module";
 
 import { User } from "@/contexts/shared/users/domain/user";
 import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
 
-import { CommandModule } from "@/core/command-bus/command.module";
-import { EventBusModule } from "@/core/event-bus/event-bus.module";
-import { LoggerModule } from "@/core/logger/logger.module";
-import { QueryModule } from "@/core/query-bus/query.module";
-import { SharedModule } from "@/core/shared/shared.module";
-
-import {
-  createAllRoles,
-  createUsers,
-  saveInitialRoles,
-  saveInitialUsers,
-} from "../../users/helper";
 import { AuthPostRequestMother } from "../requests/auth-post-request-mother";
 import { SignupPostRequestMother } from "../requests/signup-post-request-mother";
 
@@ -32,15 +28,7 @@ describe("AuthPostController (e2e)", () => {
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        UserModule,
-        AuthModule,
-        SharedModule,
-        LoggerModule,
-        CommandModule,
-        QueryModule,
-        EventBusModule,
-      ],
+      imports: [...baseTestModuleImports(), UserModule, AuthModule],
     }).compile();
 
     app = moduleFixture.createNestApplication<NestFastifyApplication>(
@@ -48,7 +36,9 @@ describe("AuthPostController (e2e)", () => {
     );
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
-    repo = app.get(UserRepository);
+    repo = await app.get(UserRepository);
+    // eslint-disable-next-line no-console
+    console.log("🚀 ~ beforeAll ~ repo:", repo);
     await saveInitialRoles(repo, roles);
   });
 
@@ -98,7 +88,7 @@ describe("AuthPostController (e2e)", () => {
 
     it("should signup a new user", async () => {
       const request = SignupPostRequestMother.create({
-        roles: ["SERVICE_OVERSSER"],
+        roles: ["SERVICE_OVERSEER"],
       });
 
       const response = await app.inject({
