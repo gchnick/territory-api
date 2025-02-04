@@ -26,10 +26,10 @@ export const prepareRolesInDB = async (repo: UserRepository) => {
   return roles;
 };
 
-const createUsers = (roles: UserRole[]): User[] => {
+const createUsers = (roles: UserRole[], password?: string): User[] => {
   const overseer = roles.find(r => r.name.value === Role.SERVICE_OVERSEER);
   return overseer
-    ? [UserMother.create({ roles: [overseer.toPrimitives()] })]
+    ? [UserMother.create({ roles: [overseer.toPrimitives()], password })]
     : [];
 };
 
@@ -43,9 +43,10 @@ const saveInitialUsers = async (
 export const prepareUsersInDB = async (
   repo: UserRepository,
   roles: UserRole[],
+  password?: string,
 ) => {
   await repo.deleteAll();
-  const users = createUsers(roles);
+  const users = createUsers(roles, password);
   await saveInitialUsers(repo, users);
   return users;
 };
