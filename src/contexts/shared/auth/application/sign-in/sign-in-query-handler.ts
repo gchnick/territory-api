@@ -22,6 +22,6 @@ export class SignInQueryHandler
   async handle(query: SignInQuery): Promise<AuthResponse> {
     const email = new UserEmail(query.email);
     const password = new UserPassword(query.password);
-    return await this.authChecker.check(email, password);
+    return this.authChecker.check(email, password);
   }
 }
