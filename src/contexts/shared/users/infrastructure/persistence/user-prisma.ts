@@ -134,12 +134,21 @@ export class UserPrisma implements UserRepository {
     await this._repository.$transaction(transaction);
   }
 
+  async deleteAllRoles(): Promise<void> {
+    const nodeEnv = globalThis.process.env.NODE_ENV as string;
+    const enviroment = EnviromentValueObject.fromValue(nodeEnv);
+
+    if (!enviroment.isProduction()) {
+      await this._repository.roles.deleteMany({});
+    }
+  }
+
   async deleteAll(): Promise<void> {
     const nodeEnv = globalThis.process.env.NODE_ENV as string;
     const enviroment = EnviromentValueObject.fromValue(nodeEnv);
 
     if (!enviroment.isProduction()) {
-      await this._repository.$executeRaw`DELETE FROM Users;`;
+      await this._repository.users.deleteMany({});
     }
   }
 }
