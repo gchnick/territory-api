@@ -22,7 +22,7 @@ import { CreateUserCommand } from "@/contexts/shared/users/application/create/cr
 import { ExistsByIdQuery } from "@/contexts/shared/users/application/exists/exists-by-id-query";
 import { UpdateUserCommand } from "@/contexts/shared/users/application/update/update-user-command";
 
-import { UserPostRequest } from "./requests/user-post-request";
+import { UserPutRequest } from "./requests/user-put-request";
 
 @ApiTags("User")
 @Controller()
@@ -40,7 +40,7 @@ export class UserPutController {
   @ApiResponse({ status: 403, description: "Forbidden. Token related" })
   async create(
     @Req() request: Request,
-    @Body(new ValidationPipe({ transform: true })) body: UserPostRequest,
+    @Body(new ValidationPipe({ transform: true })) body: UserPutRequest,
     @Param("id", ParseUUIDPipe) id: string,
   ) {
     try {
