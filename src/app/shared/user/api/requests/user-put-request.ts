@@ -8,13 +8,15 @@ import {
 
 export class UserPutRequest {
   @IsEmail()
-  email!: string;
+  @IsOptional()
+  email?: string;
 
   @IsString()
   @IsNotEmpty()
-  password!: string;
+  @IsOptional()
+  password?: string;
 
   @IsArray()
   @IsOptional()
-  roles!: string[];
+  roles?: string[];
 }
