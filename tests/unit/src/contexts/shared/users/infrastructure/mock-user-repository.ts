@@ -48,6 +48,10 @@ export class MockUserRepository implements UserRepository {
     this.mockUpdate();
   }
 
+  async deleteAllRoles(): Promise<void> {
+    this.mockTruncate();
+  }
+
   async deleteAll(): Promise<void> {
     this.mockTruncate();
   }
