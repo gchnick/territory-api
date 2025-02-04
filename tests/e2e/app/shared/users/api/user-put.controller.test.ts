@@ -88,5 +88,20 @@ describe("UserPutController (e2e)", () => {
 
       expect(response.statusCode).toBe(200);
     });
+
+    it("should update roles of user with id already registry", async () => {
+      const id = users[0].id.value;
+      const request = {
+        roles: [Role.PUBLISHER, Role.PUBLIC_WITNESSING],
+      };
+
+      const response = await app.inject({
+        method: "PUT",
+        url: `/users/${id}`,
+        payload: request,
+      });
+
+      expect(response.statusCode).toBe(200);
+    });
   });
 });
