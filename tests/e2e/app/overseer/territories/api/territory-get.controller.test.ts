@@ -50,6 +50,7 @@ describe("TerritoryGetController (e2e)", () => {
 
   afterAll(async () => {
     await app.close();
+    nock.enableNetConnect();
   });
 
   describe("/v1/api/territories (GET)", () => {
