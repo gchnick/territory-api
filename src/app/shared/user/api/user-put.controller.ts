@@ -66,6 +66,11 @@ export class UserPutController {
           { status: HttpStatus.OK },
         );
       }
+      if (!email || !password || !roles) {
+        return new BadRequestException(
+          "Email, password and roles is required to create new user",
+        );
+      }
 
       const command = new CreateUserCommand({
         id,
