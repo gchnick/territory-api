@@ -1,7 +1,6 @@
 export interface EnviromentVariables {
   NODE_ENV: string;
   PORT: number;
-  SQLITE_DATABASE: string;
   DATABASE: {
     HOST: string;
     PORT: number;
@@ -13,18 +12,29 @@ export interface EnviromentVariables {
   JWT_SECRET: string;
 }
 
+const {
+  NODE_ENV = "development",
+  PORT = "3000",
+  DATABASE_HOST: HOST = "localhost",
+  DATABASE_PORT = "5432",
+  DATABASE_NAME: NAME = "app_database",
+  DATABASE_USERNAME: USERNAME = "dbusername",
+  DATABASE_PASSWORD: PASSWORD = "dbpassword",
+  ENCRYPTION_SECRET = "encryptionsecret",
+  JWT_SECRET = "jwtsecret",
+} = process.env;
+
 const configuration = (): EnviromentVariables => ({
-  NODE_ENV: process.env.NODE_ENV || "development",
-  PORT: Number.parseInt(process.env.PORT as string, 10) || 3000,
-  SQLITE_DATABASE: process.env.SQLITE_DATABASE || "db/sql",
+  NODE_ENV,
+  PORT: Number.parseInt(PORT, 10),
   DATABASE: {
-    HOST: process.env.DATABASE_HOST || "localhost",
-    PORT: Number.parseInt(process.env.DATABASE_PORT as string, 10) || 5432,
-    NAME: process.env.DATABASE_NAME || "db/sql",
-    USERNAME: process.env.DATABASE_USERNAME || "dbusername",
-    PASSWORD: process.env.DATABASE_PASSWORD || "dbpassword",
+    HOST,
+    PORT: Number.parseInt(DATABASE_PORT, 10),
+    NAME,
+    USERNAME,
+    PASSWORD,
   },
-  ENCRYPTION_SECRET: process.env.ENCRYPTION_SECRET || "encryptionsecret",
-  JWT_SECRET: process.env.JWT_SECRET || "jwtsecret",
+  ENCRYPTION_SECRET,
+  JWT_SECRET,
 });
 export default configuration;
