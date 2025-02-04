@@ -1,3 +1,4 @@
+import { RolesMother } from "@/tests/unit/src/contexts/shared/users/domain/role/role-name-mother";
 import { UserMother } from "@/tests/unit/src/contexts/shared/users/domain/user-mother";
 import { UserRoleMother } from "@/tests/unit/src/contexts/shared/users/domain/user-role-mother";
 
@@ -7,7 +8,7 @@ import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
 import { UserRole } from "@/contexts/shared/users/domain/user-role";
 
 const createAllRoles = (): UserRole[] =>
-  Object.keys(Role).map((role, index) =>
+  RolesMother.create().map((role, index) =>
     UserRoleMother.create({ id: index, name: RoleName.fromValue(role).value }),
   );
 
