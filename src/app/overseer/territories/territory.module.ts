@@ -16,6 +16,7 @@ import { TerritoryUpdater } from "@/contexts/Overseer/territories/application/up
 import { UpdateTerritoryCommandHandler } from "@/contexts/Overseer/territories/application/update/update-territory-command-handler";
 import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/territory-repository";
 import { TerritoryPrisma } from "@/contexts/Overseer/territories/infrastructure/persistence/territory-prisma";
+import { NestPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/nest-prisma-service";
 
 import { TerritoryDeleteController } from "./api/territory-delete.controller";
 import { TerritoryGetController } from "./api/territory-get.controller";
@@ -36,7 +37,10 @@ import { TerritoryPutController } from "./api/territory-put.controller";
     TerritoryPrisma,
     {
       provide: TerritoryRepository,
-      useExisting: TerritoryPrisma,
+      useFactory(p: NestPrismaService) {
+        return new TerritoryPrisma(p);
+      },
+      inject: [NestPrismaService],
     },
     TerritoryCreator,
     TerritoryUpdater,
