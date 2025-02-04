@@ -21,5 +21,7 @@ export abstract class UserRepository {
 
   abstract update(id: UserId, data: PartialUserPrimitive): Promise<void>;
 
+  abstract deleteAllRoles(): Promise<void>;
+
   abstract deleteAll(): Promise<void>;
 }
