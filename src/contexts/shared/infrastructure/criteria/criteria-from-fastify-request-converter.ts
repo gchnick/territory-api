@@ -12,11 +12,10 @@ export class CriteriaFromFastifyRequestConverter {
   }
 
   public toCriteria(request: fastify.FastifyRequest): Criteria {
-    // const [, querystring] = request.url.split("?");
-    // const query = new URLSearchParams(querystring);
-    const url = new URL(request.url);
+    const [, querystring] = request.url.split("?");
+    const searchParams = new URLSearchParams(querystring);
 
-    return this.#urlConverter.toCriteria(url);
+    return this.#urlConverter.toCriteriaFrom(searchParams);
   }
 
   public toFiltersPrimitives(
