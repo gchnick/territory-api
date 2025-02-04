@@ -8,7 +8,6 @@ import {
   ParseUUIDPipe,
   Put,
   Req,
-  Res,
   ValidationPipe,
 } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
@@ -41,7 +40,6 @@ export class UserPutController {
   @ApiResponse({ status: 403, description: "Forbidden. Token related" })
   async create(
     @Req() request: Request,
-    @Res({ passthrough: true }) response: Response,
     @Body(new ValidationPipe({ transform: true })) body: UserPostRequest,
     @Param("id", ParseUUIDPipe) id: string,
   ) {
@@ -78,7 +76,13 @@ export class UserPutController {
 
       await this.commandBus.dispatch(command);
 
-      return response.headers.set("location", `${request.url}/${command.id}`);
+      return Response.json(
+        {},
+        {
+          status: HttpStatus.CREATED,
+          headers: { location: `${request.url}` },
+        },
+      );
     } catch (error) {
       if (error instanceof InvalidArgumentError) {
         this.logger.warn(error.message, "User");
