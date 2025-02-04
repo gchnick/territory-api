@@ -112,11 +112,24 @@ export class UserPrisma implements UserRepository {
 
   async update(id: UserId, user: PartialUserPrimitive): Promise<void> {
     const { email: username, enabled, password, roles, verified } = user;
-    const connect = roles?.map(r => ({
-      role_id: r.id,
-    }));
+
+    const currentRolesResult = await this._repository.users.findUnique({
+      select: { roles: { select: { role_id: true } } },
+      where: { user_id: id.value },
+    });
+
+    const currentRoles = currentRolesResult?.roles.map(r => r.role_id);
+    const futureRoles = roles?.map(r => r.id);
+
+    const { remove, add } = this.#updateRolesQuery(currentRoles, futureRoles);
 
     const transaction = [
+      this._repository.users.update({
+        where: { user_id: id.value },
+        data: {
+          roles: { disconnect: remove.map(id => ({ role_id: id })) },
+        },
+      }),
       this._repository.users.update({
         where: { user_id: id.value },
         data: {
@@ -124,7 +137,7 @@ export class UserPrisma implements UserRepository {
           password,
           enabled,
           roles: {
-            connect,
+            connect: add.map(id => ({ role_id: id })),
           },
           verified,
         },
@@ -150,5 +163,14 @@ export class UserPrisma implements UserRepository {
     if (!enviroment.isProduction()) {
       await this._repository.users.deleteMany({});
     }
+  }
+
+  #updateRolesQuery(currentRoles: number[] = [], futureRoles: number[] = []) {
+    const current = new Set(currentRoles);
+    const future = new Set(futureRoles);
+    return {
+      remove: [...current.difference(future)],
+      add: [...future.difference(current)],
+    };
   }
 }
