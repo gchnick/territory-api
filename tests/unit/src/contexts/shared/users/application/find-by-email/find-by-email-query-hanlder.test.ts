@@ -3,9 +3,9 @@ import { UserMother } from "@/tests/unit/src/contexts/shared/users/domain/user-m
 import { MockUserRepository } from "@/tests/unit/src/contexts/shared/users/infrastructure/mock-user-repository";
 import { Mock } from "@/tests/utils/mock";
 
-import { FindByEmailQueryHandler } from "@/src/contexts/shared/users/application/find-by-email/find-by-email-query-handler";
-import { UserFinder } from "@/src/contexts/shared/users/application/find-by-email/user-finder";
-import { UserNotFount } from "@/src/contexts/shared/users/domain/user-not-fount";
+import { FindByEmailQueryHandler } from "@/contexts/shared/users/application/find-by-email/find-by-email-query-handler";
+import { UserFinder } from "@/contexts/shared/users/application/find-by-email/user-finder";
+import { UserNotFount } from "@/contexts/shared/users/domain/user-not-fount";
 
 import Logger from "@/contexts/shared/domain/logger";
 

@@ -1,5 +1,5 @@
-import { CreateUserCommand } from "@/src/contexts/shared/users/application/create/create-user.command";
-import { Role } from "@/src/contexts/shared/users/domain/role/role-name";
+import { CreateUserCommand } from "@/contexts/shared/users/application/create/create-user.command";
+import { Role } from "@/contexts/shared/users/domain/role/role-name";
 
 import { UserEmailMother } from "../../domain/user-email-mother";
 import { UserIdMother } from "../../domain/user-id-mother";

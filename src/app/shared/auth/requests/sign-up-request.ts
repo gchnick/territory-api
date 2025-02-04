@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsEmail, IsNotEmpty, IsString } from "class-validator";
 
-import { Role } from "@/src/contexts/shared/users/domain/role/role-name";
+import { Role } from "@/contexts/shared/users/domain/role/role-name";
 
 export class SignUpRequest {
   @IsString()

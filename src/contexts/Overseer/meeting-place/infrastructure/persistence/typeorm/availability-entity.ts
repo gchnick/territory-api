@@ -1,6 +1,6 @@
 import { EntitySchema } from "typeorm";
 
-import { ValueObjectTransformer } from "@/src/contexts/shared/infrastructure/persistence/typeorm/value-object-transformer";
+import { ValueObjectTransformer } from "@/contexts/shared/infrastructure/persistence/typeorm/value-object-transformer";
 
 import { AvailabilityId } from "@/contexts/Overseer/meeting-place/domain/availability/availibility-id";
 import { MeetingPlaceAvailability } from "@/contexts/Overseer/meeting-place/domain/meeting-place-availability";

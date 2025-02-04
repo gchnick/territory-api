@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { UserVerified } from "@/src/contexts/shared/users/domain/user-verified";
+import { UserVerified } from "@/contexts/shared/users/domain/user-verified";
 
 export const UserVerifedMother = {
   create(value?: boolean): UserVerified {

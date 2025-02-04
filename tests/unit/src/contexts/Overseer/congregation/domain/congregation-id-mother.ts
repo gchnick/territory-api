@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { CongregationId } from "@/src/contexts/Overseer/congregations/domain/congregation-id";
+import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
 
 export const CongregationIdMother = {
   create(value?: number): CongregationId {

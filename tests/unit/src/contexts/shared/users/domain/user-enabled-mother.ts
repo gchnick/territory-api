@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { UserEnabled } from "@/src/contexts/shared/users/domain/user-enabled";
+import { UserEnabled } from "@/contexts/shared/users/domain/user-enabled";
 
 export const UserEnabledMother = {
   create(value?: boolean): UserEnabled {

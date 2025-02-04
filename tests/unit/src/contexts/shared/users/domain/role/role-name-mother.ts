@@ -1,7 +1,7 @@
 import {
-  Role,
-  RoleName,
-} from "@/src/contexts/shared/users/domain/role/role-name";
+    Role,
+    RoleName,
+} from "@/contexts/shared/users/domain/role/role-name";
 
 export const RoleNameMother = {
   create(role?: string): RoleName {

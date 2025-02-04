@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { UserEmail } from "@/src/contexts/shared/users/domain/user-email";
+import { UserEmail } from "@/contexts/shared/users/domain/user-email";
 
 export const UserEmailMother = {
   create(email?: string): UserEmail {

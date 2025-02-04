@@ -8,14 +8,14 @@ import {
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 
-import { Roles } from "@/src/app/shared/auth/decorators/roles.decorator";
-import { AuthGuard } from "@/src/app/shared/auth/guards/auth.guard";
-import { RolesGuard } from "@/src/app/shared/auth/guards/roles.guard";
+import { Roles } from "@/app/shared/auth/decorators/roles.decorator";
+import { AuthGuard } from "@/app/shared/auth/guards/auth.guard";
+import { RolesGuard } from "@/app/shared/auth/guards/roles.guard";
 
 import { CommandBus } from "@/shared/domain/command-bus";
 
 import { DeleteTerritoryCommand } from "@/contexts/Overseer/territories/application/delete/delete-territory-command";
-import { Role } from "@/src/contexts/shared/users/domain/role/role-name";
+import { Role } from "@/contexts/shared/users/domain/role/role-name";
 
 @ApiTags("Territory")
 @Controller()

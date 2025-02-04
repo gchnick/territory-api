@@ -1,8 +1,8 @@
 import { Global, Module } from "@nestjs/common";
 
-import { AuthModule } from "@/src/app/shared/auth/auth.module";
-import { TerritoryModule } from "@/src/app/overseer/territories/territory.module";
-import { UserModule } from "@/src/app/shared/user/user.module";
+import { TerritoryModule } from "@/app/overseer/territories/territory.module";
+import { AuthModule } from "@/app/shared/auth/auth.module";
+import { UserModule } from "@/app/shared/user/user.module";
 
 import { Query } from "@/shared/domain/query";
 import { QueryBus } from "@/shared/domain/query-bus";

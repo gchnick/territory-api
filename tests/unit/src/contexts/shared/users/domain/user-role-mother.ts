@@ -1,7 +1,7 @@
 import {
-  UserRole,
-  UserRolePrimitives,
-} from "@/src/contexts/shared/users/domain/user-role";
+    UserRole,
+    UserRolePrimitives,
+} from "@/contexts/shared/users/domain/user-role";
 
 import { RoleDescriptionMother } from "./role/role-description-mother";
 import { RoleIdMother } from "./role/role-id-mother";
