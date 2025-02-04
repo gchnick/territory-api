@@ -4,11 +4,6 @@ import { IsArray, IsEmail, IsNotEmpty, IsString } from "class-validator";
 import { Role } from "@/contexts/shared/users/domain/role/role-name";
 
 export class SignUpRequest {
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty({ description: "Name user", nullable: false })
-  name!: string;
-
   @IsEmail()
   @IsNotEmpty()
   @ApiProperty({
