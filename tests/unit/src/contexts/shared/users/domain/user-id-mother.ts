@@ -4,6 +4,6 @@ import { UserId } from "@/contexts/shared/users/domain/user-id";
 
 export const UserIdMother = {
   create(id?: string): UserId {
-    return new UserId(id ?? faker.string.uuid.toString());
+    return new UserId(id ?? faker.string.uuid());
   },
 };
