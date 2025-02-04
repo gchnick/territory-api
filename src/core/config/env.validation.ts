@@ -44,10 +44,6 @@ class EnviromentVariables {
   @Max(65_535)
   PORT!: number;
 
-  @IsString()
-  @IsNotEmpty()
-  SQLITE_DATABASE!: string;
-
   @ValidateNested()
   DATABASE!: DatabaseEnv;
 
@@ -61,12 +57,10 @@ class EnviromentVariables {
 }
 
 export function validate(config: Record<string, unknown>): EnviromentVariables {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
   const validatedConfig = plainToInstance(EnviromentVariables, config, {
     enableImplicitConversion: true,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   const errors = validateSync(validatedConfig, {
     skipMissingProperties: false,
   });
@@ -75,6 +69,5 @@ export function validate(config: Record<string, unknown>): EnviromentVariables {
     throw new Error(errors.toString());
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return validatedConfig;
 }
