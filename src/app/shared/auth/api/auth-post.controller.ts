@@ -7,7 +7,6 @@ import {
   InternalServerErrorException,
   Post,
   Req,
-  Res,
   UnauthorizedException,
 } from "@nestjs/common";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
@@ -58,11 +57,7 @@ export class AuthPostController {
   @ApiResponse({ status: 201, description: "User was created" })
   @ApiResponse({ status: 400, description: "Bad request" })
   @ApiResponse({ status: 403, description: "Forbidden. Credentials invalid" })
-  async signUp(
-    @Body() body: SignUpRequest,
-    @Req() request: Request,
-    @Res({ passthrough: true }) response: Response,
-  ) {
+  async signUp(@Body() body: SignUpRequest, @Req() request: Request) {
     const { email, password, roles } = body;
 
     try {
@@ -75,21 +70,27 @@ export class AuthPostController {
 
       await this.commandBus.dispatch(command);
 
-      return response.headers.set("Location", `${request.url}/${command.id}`);
+      return Response.json(
+        {},
+        {
+          status: HttpStatus.CREATED,
+          headers: { location: `${request.url}/${command.id}` },
+        },
+      );
     } catch (error) {
       this.#handlerError(error);
     }
   }
 
   #handlerError(error: unknown) {
-    if (error instanceof InvalidArgumentError) {
-      this.logger.log(error.message, "Auth");
-      throw new BadRequestException(error.message);
-    }
-
     if (error instanceof UserCredentialInvalid) {
       this.logger.log(error.message, "Auth");
       throw new UnauthorizedException(error.message);
+    }
+
+    if (error instanceof InvalidArgumentError) {
+      this.logger.log(error.message, "Auth");
+      throw new BadRequestException(error.message);
     }
 
     this.logger.error("Check server logs", error);
