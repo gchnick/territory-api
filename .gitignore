@@ -1,6 +1,6 @@
 node_modules/
 dist/
-db/*.db
+prisma/db/*
 src/core/seed/*seed.ts
 .tmp
 .idea
