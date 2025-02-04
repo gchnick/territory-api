@@ -1,3 +1,5 @@
+import { ConfigService } from "@nestjs/config";
+
 import Logger from "@/shared/domain/logger";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
@@ -11,6 +13,8 @@ import { UserPassword } from "@/contexts/shared/users/domain/user-password";
 import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
 import { UserUnverified } from "@/contexts/shared/users/domain/user-unverified";
 
+import { EnviromentVariables } from "@/core/config/configuration";
+
 import { AuthResponse } from "./auth-response";
 
 @Injectable()
@@ -20,6 +24,7 @@ export class AuthChecker {
     private readonly userRepository: UserRepository,
     private readonly encode: Encode,
     private readonly jwt: Jwt,
+    private readonly configService: ConfigService<EnviromentVariables>,
   ) {}
 
   async check(email: UserEmail, password: UserPassword) {
@@ -57,7 +62,8 @@ export class AuthChecker {
       email: user.email.value,
       roles: user.roles.map(r => r.name.value),
     };
-    const token = await this.jwt.signAsync(payload);
+    const secret = this.configService.get<string>("JWT_SECRET");
+    const token = await this.jwt.signAsync(payload, { secret });
 
     return new AuthResponse(token);
   }
