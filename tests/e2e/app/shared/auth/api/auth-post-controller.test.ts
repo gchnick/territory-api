@@ -3,13 +3,12 @@ import {
   NestFastifyApplication,
 } from "@nestjs/platform-fastify";
 import { Test, TestingModule } from "@nestjs/testing";
+import * as nock from "nock";
 
 import { baseTestModuleImports } from "@/tests/e2e/app/helpers/base-test-module-imports";
 import {
-  createAllRoles,
-  createUsers,
-  saveInitialRoles,
-  saveInitialUsers,
+  prepareRolesInDB,
+  prepareUsersInDB,
 } from "@/tests/e2e/app/shared/users/helper";
 
 import { AuthModule } from "@/app/shared/auth/auth.module";
@@ -17,14 +16,15 @@ import { UserModule } from "@/app/shared/user/user.module";
 
 import { User } from "@/contexts/shared/users/domain/user";
 import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
+import { UserRole } from "@/contexts/shared/users/domain/user-role";
 
 import { AuthPostRequestMother } from "../requests/auth-post-request-mother";
 import { SignupPostRequestMother } from "../requests/signup-post-request-mother";
 
 describe("AuthPostController (e2e)", () => {
-  const roles = createAllRoles();
   let app: NestFastifyApplication;
   let repo: UserRepository;
+  let roles: UserRole[];
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -37,21 +37,25 @@ describe("AuthPostController (e2e)", () => {
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
     repo = await app.get(UserRepository);
-    // eslint-disable-next-line no-console
-    console.log("🚀 ~ beforeAll ~ repo:", repo);
-    await saveInitialRoles(repo, roles);
+    roles = await prepareRolesInDB(repo);
+
+    nock.disableNetConnect();
+    nock.enableNetConnect("127.0.0.1");
+  });
+
+  afterEach(() => {
+    nock.cleanAll();
   });
 
   afterAll(async () => {
     await app.close();
+    nock.enableNetConnect();
   });
 
   describe("/v1/api/auth/login (POST)", () => {
     let users: Array<User>;
     beforeEach(async () => {
-      await repo.deleteAll();
-      users = createUsers(roles);
-      await saveInitialUsers(repo, users);
+      users = await prepareUsersInDB(repo, roles);
     });
 
     it("should generate token with valid credentials", async () => {
@@ -65,7 +69,7 @@ describe("AuthPostController (e2e)", () => {
 
       const response = await app.inject({
         method: "POST",
-        url: "/login",
+        url: "/auth/login",
         payload: request,
       });
 
@@ -78,7 +82,7 @@ describe("AuthPostController (e2e)", () => {
 
       const response = await app.inject({
         method: "POST",
-        url: "/login",
+        url: "/auth/login",
         payload: request,
       });
 
