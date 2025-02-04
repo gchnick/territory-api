@@ -3,8 +3,11 @@ import { FiltersPrimitives } from "./filter";
 
 export class CriteriaFromUrlConverter {
   public toCriteria(url: URL): Criteria {
-    const { searchParams } = url;
+    const searchParams = url.searchParams;
+    return this.toCriteriaFrom(searchParams);
+  }
 
+  public toCriteriaFrom(searchParams: URLSearchParams) {
     const filters = this.parseFilters(searchParams);
 
     return Criteria.fromPrimitives(
