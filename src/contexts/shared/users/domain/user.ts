@@ -65,7 +65,7 @@ export class User extends AggregateRoot {
     encode: Encode,
     password: UserPassword,
   ): Promise<boolean> {
-    return await encode.compare(password.value, this.password.value);
+    return encode.compare(password.value, this.password.value);
   }
 
   static create(
