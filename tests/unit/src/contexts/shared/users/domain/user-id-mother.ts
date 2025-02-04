@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { UserId } from "@/src/contexts/shared/users/domain/user-id";
+import { UserId } from "@/contexts/shared/users/domain/user-id";
 
 export const UserIdMother = {
   create(id?: string): UserId {
