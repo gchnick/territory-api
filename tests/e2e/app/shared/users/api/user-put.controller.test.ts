@@ -13,6 +13,7 @@ import { UserPasswordMother } from "@/tests/unit/src/contexts/shared/users/domai
 
 import { UserModule } from "@/app/shared/user/user.module";
 
+import { Role } from "@/contexts/shared/users/domain/role/role-name";
 import { User } from "@/contexts/shared/users/domain/user";
 import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
 import { UserRole } from "@/contexts/shared/users/domain/user-role";
@@ -51,19 +52,20 @@ describe("UserPutController (e2e)", () => {
 
   describe("/v1/api/users (PUT)", () => {
     let users: Array<User>;
+
     beforeEach(async () => {
       users = await prepareUsersInDB(repo, roles);
     });
 
     it("should create a new user if not already registry", async () => {
-      const id = UserIdMother.create();
+      const id = UserIdMother.create().value;
       const request = SignupPostRequestMother.create({
-        roles: ["SERVICE_OVERSEER"],
+        roles: [Role.SERVICE_OVERSEER],
       });
 
       const response = await app.inject({
         method: "PUT",
-        url: `/users/${id.value}`,
+        url: `/users/${id}`,
         payload: request,
       });
 
