@@ -28,9 +28,10 @@ export const prepareRolesInDB = async (repo: UserRepository) => {
 
 const createUsers = (roles: UserRole[], password?: string): User[] => {
   const overseer = roles.find(r => r.name.value === Role.SERVICE_OVERSEER);
-  return overseer
+  if (!overseer) return [];
+  return password
     ? [UserMother.create({ roles: [overseer.toPrimitives()], password })]
-    : [];
+    : [UserMother.create({ roles: [overseer.toPrimitives()] })];
 };
 
 const saveInitialUsers = async (
