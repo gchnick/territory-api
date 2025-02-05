@@ -1,6 +1,6 @@
 import {
-    Congregation,
-    CongregationPrimitives,
+  Congregation,
+  CongregationPrimitives,
 } from "@/contexts/Overseer/congregations/domain/congregation";
 
 import { CongregationCircuitMother } from "./congregation-circuit-mother";
