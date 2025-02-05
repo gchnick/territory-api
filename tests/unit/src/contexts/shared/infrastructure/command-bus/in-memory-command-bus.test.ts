@@ -1,4 +1,3 @@
-/* eslint-disable jest/no-mocks-import */
 import { CommandNotRegisteredError } from "@/shared/domain/command-not-registered-error";
 import { CommandHandlers } from "@/shared/infrastructure/command-bus/command-handlers";
 import { InMemoryCommandBus } from "@/shared/infrastructure/command-bus/in-memory-command-bus";
