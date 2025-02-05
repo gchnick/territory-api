@@ -31,7 +31,7 @@ describe("InMemoryQueryBus", () => {
     const queryHandlers = new QueryHandlers([]);
     const queryBus = new InMemoryQueryBus(queryHandlers);
 
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises, jest/valid-expect
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises, vitest/valid-expect
     expect(queryBus.ask(unhandledQuery)).rejects.toBeInstanceOf(
       QueryNotRegisteredError,
     );
