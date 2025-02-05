@@ -13,6 +13,7 @@ import { TerritoryModule } from "@/app/overseer/territories/territory.module";
 
 import { Congregation } from "@/contexts/Overseer/congregations/domain/congregation";
 import { CongregationRepository } from "@/contexts/Overseer/congregations/domain/congregation-repository";
+import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/territory-repository";
 
 import { TerritoryPostRequestMother } from "../requests/territory-post-request-mother";
@@ -52,12 +53,14 @@ describe("TerritoryPostController (e2e)", () => {
 
   describe("/v1/api/territories (POST)", () => {
     let congregation: Congregation;
+    let territories: Array<Territory>;
     beforeEach(async () => {
       const result = await prepareTerritoriesInDB(
         congregationRepo,
         territoryRepo,
       );
       congregation = result.congregation;
+      territories = result.territories;
     });
 
     it("should create a new territory", async () => {
@@ -78,7 +81,7 @@ describe("TerritoryPostController (e2e)", () => {
 
     it("should send 400 status code when terriory number already registry in congragation", async () => {
       const requestTerritory = TerritoryPostRequestMother.create({
-        number: 2,
+        number: territories[1].number.value,
         congregationId: congregation.number.value,
       });
 
