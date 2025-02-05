@@ -3,11 +3,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Criteria } from "@/contexts/shared/domain/criteria/criteria";
 import { Filter } from "@/contexts/shared/domain/criteria/filter";
+import { BooleanValueObject } from "@/contexts/shared/domain/value-object/boolean-value-object";
 
 type Mappings = { [key: string]: string };
+type Typecaster = {
+  [key: string]: (input: string) => string | number | boolean;
+};
+
+export const BooleanCasting = (v: string) => BooleanValueObject.toBoolean(v);
+const NoCasting = (input: string) => input;
 
 type PrismaOptions = {
-  select?: { [key: string]: boolean };
   where?: { [key: string]: string };
   cursor?: any;
   take?: number;
@@ -17,20 +23,19 @@ type PrismaOptions = {
 
 export class CriteriaToPrismaConverter {
   convert(
-    fieldsToSelect: string[],
     criteria: Criteria,
     mappings: Mappings = {},
+    typecaster: Typecaster = {},
   ): PrismaOptions {
     const fieldToCursor: string = "id";
     const query: PrismaOptions = {};
 
-    query.select = fieldsToSelect.reduce((acc, field) => {
-      return { ...acc, ...this.#generateSelectQuery(field, mappings) };
-    }, {});
-
     if (criteria.hasFilters()) {
       query.where = criteria.filters.value.reduce((acc, filter) => {
-        return { ...acc, ...this.#generateWhereQuery(filter, mappings) };
+        return {
+          ...acc,
+          ...this.#generateWhereQuery(filter, mappings, typecaster),
+        };
       }, {});
     }
 
@@ -41,7 +46,8 @@ export class CriteriaToPrismaConverter {
     }
 
     if (criteria.hasOrder()) {
-      const field = criteria.order.orderBy.value;
+      const field =
+        mappings[criteria.order.orderBy.value] || criteria.order.orderBy.value;
       const order = criteria.order.orderType.isAsc() ? "asc" : "desc";
       query.orderBy = { [field]: order };
     }
@@ -53,16 +59,14 @@ export class CriteriaToPrismaConverter {
     return query;
   }
 
-  #generateSelectQuery(fieldToSelect: string, mappings: Mappings = {}) {
-    const field = mappings[fieldToSelect] || fieldToSelect;
-    const value = true;
-
-    return { [field]: value };
-  }
-
-  #generateWhereQuery(filter: Filter, mappings: Mappings = {}) {
+  #generateWhereQuery(
+    filter: Filter,
+    mappings: Mappings = {},
+    typecaster: Typecaster = {},
+  ) {
     const field = mappings[filter.field.value] || filter.field.value;
-    const value = filter.value.value;
+    const typecasting = typecaster[filter.field.value] || NoCasting;
+    const value = typecasting(filter.value.value);
 
     if (filter.operator.isContains()) {
       return { [field]: { contains: value } };
