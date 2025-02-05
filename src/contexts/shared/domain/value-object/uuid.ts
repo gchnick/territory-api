@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import { v4 as uuid, validate } from "uuid";
 
 import { InvalidArgumentError } from "./invalid-argument-error";
@@ -14,9 +16,9 @@ export class Uuid extends ValueObject<string> {
   }
 
   private ensureIsValidUuid(id: string): void {
-    if (!validate(id)) {
+    if (typeof id !== "string" || !validate(id)) {
       throw new InvalidArgumentError(
-        `<${this.constructor.name}> does not allow the value <${id}>`,
+        `<${this.constructor.name}> does not allow the value <${id}`,
       );
     }
   }

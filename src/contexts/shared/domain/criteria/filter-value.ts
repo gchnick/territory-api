@@ -6,7 +6,11 @@ export class FilterValue extends StringValueObject {
     super(value);
   }
 
-  parceValue() {
-    return BooleanValueObject.isBooleanParse(this.value);
+  hasBoolean() {
+    return BooleanValueObject.isBoolean(this.value);
+  }
+
+  toBoolean() {
+    return new BooleanValueObject(this.value).value;
   }
 }

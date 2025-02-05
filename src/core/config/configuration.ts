@@ -1,13 +1,40 @@
-export default () => ({
-  nodeEnv: process.env.NODE_ENV,
-  port: Number.parseInt(process.env.PORT as string, 10) || 3000,
-  database: {
-    host: process.env.DATABASE_HOST || "localhost",
-    port: Number.parseInt(process.env.DATABASE_PORT as string, 10) || 5432,
-    name: process.env.DATABASE_NAME || "db/sql",
-    username: process.env.DATABASE_USERNAME || "dbusername",
-    password: process.env.DATABASE_PASSWORD || "dbpassword",
+export interface EnviromentVariables {
+  NODE_ENV: string;
+  PORT: number;
+  DATABASE: {
+    HOST: string;
+    PORT: number;
+    NAME: string;
+    USERNAME: string;
+    PASSWORD: string;
+  };
+  ENCRYPTION_SECRET: string;
+  JWT_SECRET: string;
+}
+
+const {
+  NODE_ENV = "development",
+  PORT = "3000",
+  DATABASE_HOST: HOST = "localhost",
+  DATABASE_PORT = "5432",
+  DATABASE_NAME: NAME = "app_database",
+  DATABASE_USERNAME: USERNAME = "dbusername",
+  DATABASE_PASSWORD: PASSWORD = "dbpassword",
+  ENCRYPTION_SECRET = "encryptionsecret",
+  JWT_SECRET = "jwtsecret",
+} = process.env;
+
+const configuration = (): EnviromentVariables => ({
+  NODE_ENV,
+  PORT: Number.parseInt(PORT, 10),
+  DATABASE: {
+    HOST,
+    PORT: Number.parseInt(DATABASE_PORT, 10),
+    NAME,
+    USERNAME,
+    PASSWORD,
   },
-  encryptionSecret: process.env.ENCRYPTION_SECRET,
-  jwtSecret: process.env.JWT_SECRET,
+  ENCRYPTION_SECRET,
+  JWT_SECRET,
 });
+export default configuration;

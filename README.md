@@ -29,7 +29,7 @@ git clone https://github.com/gchnick/territory-api.git
 Run following command:
 
 ```
-yarn build
+node --run build
 ```
 
 ### 3. Go to dist folder
@@ -47,7 +47,7 @@ You can change the values ​​of each of the environment variables to suit you
 Run following command:
 
 ```
-yarn install --production=true
+pnpm install --prod
 ```
 
 ## 6. Create database
@@ -55,7 +55,7 @@ yarn install --production=true
 To create the database files of `SQLITE` following command:
 
 ```
-yarn generate-db
+node --run generate-db
 ```
 
 ### 6. Run server
@@ -63,7 +63,7 @@ yarn generate-db
 Run following command:
 
 ```
-yarn start
+node --run start
 ```
 
 ## How update database
@@ -71,5 +71,7 @@ yarn start
 If there have been updates to the database you can apply them one by one by writing the following command:
 
 ```
-npx prisma migrate resolve --applied "MIGRATION_NAME"
+npx prisma migrate resolve --applied <MIGRATION_NAME>
 ```
+
+Change `<MIGRATION_NAME>` for the filename of migration repective.

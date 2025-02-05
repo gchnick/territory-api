@@ -1,0 +1,1 @@
+POST http://localhost:7070/api/v2/seed/run

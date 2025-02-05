@@ -1,11 +1,12 @@
 import { Routes } from "@nestjs/core";
 
-import { AuthModule } from "@/app/auth/auth.module";
-import { TerritoryModule } from "@/app/territories/territory.module";
-import { UserModule } from "@/app/user/user.module";
+import { TerritoryModule } from "@/app/overseer/territories/territory.module";
+import { AuthModule } from "@/app/shared/auth/auth.module";
+import { UserModule } from "@/app/shared/user/user.module";
 
-export default (): Routes => [
+const routes = (): Routes => [
   { path: "auth", module: AuthModule },
   { path: "users", module: UserModule },
   { path: "territories", module: TerritoryModule },
 ];
+export default routes;

@@ -1,9 +1,9 @@
 import { InvalidArgumentError } from "../value-object/invalid-argument-error";
 import { FilterField } from "./filter-field";
-import { FilterOperator } from "./filter-operator";
+import { FilterOperator, Operator } from "./filter-operator";
 import { FilterValue } from "./filter-value";
 
-export type FilterPrimitives = {
+export type FiltersPrimitives = {
   field: string;
   operator: string;
   value: string;
@@ -24,6 +24,18 @@ export class Filter {
     this.value = value;
   }
 
+  static fromPrimitives(
+    field: string,
+    operator: string,
+    value: string,
+  ): Filter {
+    return new Filter(
+      new FilterField(field),
+      new FilterOperator(Operator[operator as keyof typeof Operator]),
+      new FilterValue(value),
+    );
+  }
+
   static fromValues(values: Map<string, string>): Filter {
     const field = values.get("field");
     const operator = values.get("operator");
@@ -39,24 +51,12 @@ export class Filter {
 
     return new Filter(
       new FilterField(field),
-      FilterOperator.fromPrimitive(operator),
+      new FilterOperator(Operator[operator as keyof typeof Operator]),
       new FilterValue(value),
     );
   }
 
-  static fromPrimitives(
-    field: string,
-    operator: string,
-    value: string,
-  ): Filter {
-    return new Filter(
-      new FilterField(field),
-      FilterOperator.fromPrimitive(operator),
-      new FilterValue(value),
-    );
-  }
-
-  toPrimitives(): FilterPrimitives {
+  toPrimitives(): FiltersPrimitives {
     return {
       field: this.field.value,
       operator: this.operator.value,

@@ -1,14 +1,8 @@
----
 name: 'Lint PR Title'
 
 on:
   pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
-      - labeled
-      - unlabeled
+    types: [opened, edited, synchronize, reopened]
 
 permissions:
   pull-requests: write

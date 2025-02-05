@@ -1,9 +1,13 @@
 node_modules/
 dist/
+prisma/db/*
+src/core/seed/*seed.ts
 .tmp
 .idea
-.env
+*.env
+!.example.env
 coverage/
 .npm
 .vscode
 .nyc_output
+k6-results

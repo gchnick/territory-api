@@ -1,5 +1,5 @@
-import { NewableClass } from "@/contexts/shared/domain/newable-class";
-import { EnumValueObject } from "@/contexts/shared/domain/value-object/enum-value-object";
+import { NewableClass } from "@/shared/domain/newable-class";
+import { EnumValueObject } from "@/shared/domain/value-object/enum-value-object";
 
 export const EnumValueObjectTransformer = <T>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

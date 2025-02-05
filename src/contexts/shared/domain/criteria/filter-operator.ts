@@ -4,8 +4,10 @@ import { InvalidArgumentError } from "../value-object/invalid-argument-error";
 export enum Operator {
   EQUAL = "=",
   NOT_EQUAL = "!=",
-  GT = ">",
-  LT = "<",
+  GREATER_THAN = ">",
+  GREATER_THAN_OR_EQUAL = ">=",
+  LOWER_THAN = "<",
+  LOWER_THAN_OR_EQUAL = "<=",
   CONTAINS = "CONTAINS",
   NOT_CONTAINS = "NOT_CONTAINS",
 }
@@ -13,6 +15,10 @@ export enum Operator {
 export class FilterOperator extends EnumValueObject<Operator> {
   constructor(value: Operator) {
     super(value, Object.values(Operator));
+  }
+
+  static fromPrimitive(operator: string) {
+    return new FilterOperator(Operator[operator as keyof typeof Operator]);
   }
 
   static fromValue(value: string): FilterOperator {
@@ -23,10 +29,6 @@ export class FilterOperator extends EnumValueObject<Operator> {
     }
 
     throw new InvalidArgumentError(`The filter operator ${value} is invalid`);
-  }
-
-  static fromPrimitive(operator: string) {
-    return new FilterOperator(Operator[operator as keyof typeof Operator]);
   }
 
   protected throwErrorForInvalidValue(value: Operator): void {
@@ -53,5 +55,21 @@ export class FilterOperator extends EnumValueObject<Operator> {
 
   isNotEquals(): boolean {
     return this.value.valueOf() === Operator.NOT_EQUAL.valueOf();
+  }
+
+  isGreaterThan(): boolean {
+    return this.value.valueOf() === Operator.GREATER_THAN.valueOf();
+  }
+
+  isGreaterThanOrEqual(): boolean {
+    return this.value.valueOf() === Operator.GREATER_THAN_OR_EQUAL.valueOf();
+  }
+
+  isLowerThan(): boolean {
+    return this.value.valueOf() === Operator.LOWER_THAN.valueOf();
+  }
+
+  isLowerThanOrEqual(): boolean {
+    return this.value.valueOf() === Operator.LOWER_THAN_OR_EQUAL.valueOf();
   }
 }

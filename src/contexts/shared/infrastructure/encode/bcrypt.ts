@@ -1,6 +1,6 @@
 import * as bcrypt from "bcrypt";
 
-import { Encode } from "@/contexts/registry/auth/domain/encode";
+import { Encode } from "@/contexts/shared/auth/domain/encode";
 
 import { Injectable } from "../dependency-injection/injectable";
 
@@ -14,7 +14,7 @@ export class Bcrypt implements Encode {
     data: string | Buffer,
     saltOrRounds: string | number,
   ): Promise<string> {
-    return await bcrypt.hash(data, saltOrRounds);
+    return bcrypt.hash(data, saltOrRounds);
   }
 
   compareSync(data: string | Buffer, encrypted: string): boolean {
@@ -22,6 +22,6 @@ export class Bcrypt implements Encode {
   }
 
   async compare(data: string | Buffer, encrypted: string): Promise<boolean> {
-    return await bcrypt.compare(data, encrypted);
+    return bcrypt.compare(data, encrypted);
   }
 }
