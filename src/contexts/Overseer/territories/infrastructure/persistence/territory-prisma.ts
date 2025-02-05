@@ -1,9 +1,11 @@
 import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
 import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
+import { TerritoryNumberAlreadyRegistry } from "@/contexts/Overseer/territories/domain/territory-number-already-registry";
 import {
   PartialTerritoryPrimitives,
   TerritoryRepository,
@@ -56,8 +58,12 @@ export class TerritoryPrisma implements TerritoryRepository {
         },
       });
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log("🚀 ~ TerritoryPrisma ~ save ~ error:", error);
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === "P2002"
+      ) {
+        throw new TerritoryNumberAlreadyRegistry();
+      }
     }
   }
 
