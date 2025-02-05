@@ -43,7 +43,7 @@ export class CongregationPrisma implements CongregationRepository {
     const enviroment = EnviromentValueObject.fromValue(nodeEnv);
 
     if (!enviroment.isProduction()) {
-      await this._repository.$executeRaw`DELETE FROM Congregations;`;
+      await this._repository.congregations.deleteMany({});
     }
   }
 }
