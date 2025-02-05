@@ -11,7 +11,10 @@ import {
 import { Criteria } from "@/contexts/shared/domain/criteria/criteria";
 import { Nullable } from "@/contexts/shared/domain/nullable";
 import { EnviromentValueObject } from "@/contexts/shared/domain/value-object/enviroment-value-object";
-import { CriteriaToPrismaConverter } from "@/contexts/shared/infrastructure/criteria/criteria-to-prisma-converter";
+import {
+  BooleanCasting,
+  CriteriaToPrismaConverter,
+} from "@/contexts/shared/infrastructure/criteria/criteria-to-prisma-converter";
 import { NestPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/nest-prisma-service";
 
 export class TerritoryPrisma implements TerritoryRepository {
@@ -32,25 +35,30 @@ export class TerritoryPrisma implements TerritoryRepository {
       map: map_image_url,
     } = territory.toPrimitives();
 
-    await this._repository.territories.create({
-      data: {
-        congregation: {
-          connect: {
-            congregation_id,
+    try {
+      await this._repository.territories.create({
+        data: {
+          congregation: {
+            connect: {
+              congregation_id,
+            },
           },
+          territory_id,
+          label,
+          last_date_completed,
+          locality,
+          locality_in_part,
+          number,
+          current_assigned,
+          map_image_url,
+          quantity_houses,
+          sector,
         },
-        territory_id,
-        label,
-        last_date_completed,
-        locality,
-        locality_in_part,
-        number,
-        current_assigned,
-        map_image_url,
-        quantity_houses,
-        sector,
-      },
-    });
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log("🚀 ~ TerritoryPrisma ~ save ~ error:", error);
+    }
   }
 
   async searchAll(): Promise<Array<Territory> | Territory> {
@@ -76,12 +84,16 @@ export class TerritoryPrisma implements TerritoryRepository {
 
   async matching(criteria: Criteria): Promise<Array<Territory> | Territory> {
     const converter = new CriteriaToPrismaConverter();
-    const prismaOptions = converter.convert([], criteria, {
-      id: "territory_id",
-      isAssigned: "current_assigned",
-      lastCompleted: "last_date_completed",
-      congregation: "congregation_id",
-    });
+    const prismaOptions = converter.convert(
+      criteria,
+      {
+        id: "territory_id",
+        congregation: "congregation_id",
+        isAssigned: "current_assigned",
+        lastCompleted: "last_date_completed",
+      },
+      { congregation: Number, isAssigned: BooleanCasting },
+    );
 
     const result = await this._repository.territories.findMany({
       ...prismaOptions,
@@ -211,7 +223,7 @@ export class TerritoryPrisma implements TerritoryRepository {
     const enviroment = EnviromentValueObject.fromValue(nodeEnv);
 
     if (!enviroment.isProduction()) {
-      await this._repository.$executeRaw`DELETE FROM Territories;`;
+      await this._repository.territories.deleteMany({});
     }
   }
 }
