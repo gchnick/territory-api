@@ -65,7 +65,7 @@ export class TerritoryCreator {
     } catch (error) {
       if (error instanceof TerritoryNumberAlreadyRegistry) {
         throw new TerritoryNumberAlreadyRegistry(
-          `Territory Number <${territory.number.value}> already registry`,
+          `Territory Number <${territory.number.value}> already registry to congregation <${territory.congregation.value}>`,
         );
       }
     }
