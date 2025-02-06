@@ -45,13 +45,13 @@ export class AuthChecker {
       throw new UserCredentialInvalid("Credentials are not valid");
     }
 
-    if (!user.verified) {
+    if (!user.verified.value) {
       throw new UserUnverified(
         `The user <${user.email.value}> is unverified. Please, check your email to confirm your account`,
       );
     }
 
-    if (!user.enabled) {
+    if (!user.enabled.value) {
       throw new UserDisabled(
         `The user <${user.email.value}> is disabled. Please, contact your administrator`,
       );
