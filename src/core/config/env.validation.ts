@@ -10,7 +10,7 @@ import {
   validateSync,
 } from "class-validator";
 
-import { Enviroment } from "@/contexts/shared/domain/value-object/enviroment-value-object";
+import { Environments } from "@/contexts/shared/domain/value-object/environment";
 
 class DatabaseEnv {
   @IsString()
@@ -36,8 +36,8 @@ class DatabaseEnv {
 }
 
 class EnviromentVariables {
-  @IsEnum(Enviroment)
-  NODE_ENV!: Enviroment;
+  @IsEnum(Environments)
+  NODE_ENV!: Environments;
 
   @IsNumber()
   @Min(0)

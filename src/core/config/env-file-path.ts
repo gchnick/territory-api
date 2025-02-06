@@ -1,13 +1,14 @@
-import { EnviromentValueObject } from "@/contexts/shared/domain/value-object/enviroment-value-object";
+import {
+  Environment,
+  getNodeEnv,
+} from "@/contexts/shared/domain/value-object/environment";
 
 export const envFilePath = (): string => {
-  process.loadEnvFile();
-  const nodeEnv = String(process.env.NODE_ENV);
-  const environment = EnviromentValueObject.fromValue(nodeEnv);
-  const production = EnviromentValueObject.production();
-  const stage = EnviromentValueObject.stage();
-  const test = EnviromentValueObject.test();
-  const development = EnviromentValueObject.development();
+  const environment = getNodeEnv();
+  const production = Environment.production();
+  const stage = Environment.stage();
+  const test = Environment.test();
+  const development = Environment.development();
 
   const filePath = {
     [production.value]: ".env",
