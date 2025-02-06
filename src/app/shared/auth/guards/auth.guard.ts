@@ -5,36 +5,47 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import * as fastify from "fastify";
 
 import { Jwt } from "@/contexts/shared/auth/domain/jwt";
 import { JwtPayload } from "@/contexts/shared/auth/domain/jwt-payload";
 
+import { EnviromentVariables } from "@/core/config/configuration";
+
+declare module "fastify" {
+  interface FastifyRequest {
+    user?: JwtPayload;
+  }
+}
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private readonly jwtService: Jwt,
-    private readonly configService: ConfigService,
+    private readonly _jwtService: Jwt,
+    private readonly _configService: ConfigService<EnviromentVariables>,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = context.switchToHttp().getRequest<fastify.FastifyRequest>();
     const token = this.#extractTokenFromHeader(request);
     if (!token) {
       throw new UnauthorizedException();
     }
     try {
-      await this.jwtService.verifyAsync<JwtPayload>(token, {
-        secret: this.configService.get<string>("jwtSecret"),
+      const payload = await this._jwtService.verifyAsync<JwtPayload>(token, {
+        secret: this._configService.get<string>("JWT_SECRET"),
       });
-    } catch {
-      throw new UnauthorizedException();
+
+      request.user = payload;
+    } catch (error) {
+      throw new UnauthorizedException(error);
     }
+
     return true;
   }
 
-  #extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] =
-      request.headers.get("authorization")?.split(" ") ?? [];
+  #extractTokenFromHeader(request: fastify.FastifyRequest): string | undefined {
+    const [type, token] = request.headers.authorization?.split(" ") ?? [];
     return type === "Bearer" ? token : undefined;
   }
 }
