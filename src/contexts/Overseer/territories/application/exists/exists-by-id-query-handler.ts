@@ -3,7 +3,8 @@ import { Query } from "@/shared/domain/query";
 import { QueryHandler } from "@/shared/domain/query-handler";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
-import { TerritoryId } from "../../domain/territory-id";
+import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
+
 import { ExistsByIdQuery } from "./exists-by-id-query";
 import { TerritoryQuestioner } from "./territory-questioner";
 

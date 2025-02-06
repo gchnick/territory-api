@@ -2,7 +2,8 @@ import { Command } from "@/shared/domain/command";
 import { CommandHandler } from "@/shared/domain/command-handler";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
-import { TerritoryId } from "../../domain/territory-id";
+import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
+
 import { DeleteTerritoryCommand } from "./delete-territory-command";
 import { TerritoryDeleter } from "./territory-deleter";
 

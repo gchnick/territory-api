@@ -1,16 +1,16 @@
+import { CongregationIdMother } from "@/tests/unit/src/contexts/Overseer/congregation/domain/congregation-id-mother";
+import { TerritoryIdMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-id-mother";
+import { TerritoryLabelMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-label-mother";
+import { TerritoryLastDateCompletedMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-last-date-completed-mother";
+import { TerritoryLocalityInPartMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-locality-in-part-mother";
+import { TerritoryLocalityMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-locality-mother";
+import { TerritoryNumberMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-number-mother";
+import { TerritoryQuantityHouseMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-quantity-house-mother";
+import { TerritorySectorMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-sector-mother";
+
 import { CreateTerritoryCommand } from "@/contexts/Overseer/territories/application/create/create-territory-command";
 
-import { CongregationIdMother } from "../../../congregation/domain/congregation-id-mother";
-import { TerritoryIdMother } from "../../domain/territory-id-mother";
-import { TerritoryLabelMother } from "../../domain/territory-label-mother";
-import { TerritoryLastDateCompletedMother } from "../../domain/territory-last-date-completed-mother";
-import { TerritoryLocalityInPartMother } from "../../domain/territory-locality-in-part-mother";
-import { TerritoryLocalityMother } from "../../domain/territory-locality-mother";
-import { TerritoryNumberMother } from "../../domain/territory-number-mother";
-import { TerritoryQuantityHouseMother } from "../../domain/territory-quantity-house-mother";
-import { TerritorySectorMother } from "../../domain/territory-sector-mother";
-
-type Params = {
+interface Params {
   id: string;
   congregationId: number;
   number: number;
@@ -20,7 +20,7 @@ type Params = {
   localityInPart?: string;
   quantityHouses: number;
   lastDateCompleted: Date;
-};
+}
 
 export const CreateTerritoryCommandMother = {
   create(params?: Partial<Params>): CreateTerritoryCommand {

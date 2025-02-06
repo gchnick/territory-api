@@ -1,4 +1,4 @@
-import { DomainEvent } from "../../domain/domain-event";
+import { DomainEvent } from "@/contexts/shared/domain/domain-event";
 
 export const DomainEventJsonSerializer = {
   serialize(event: DomainEvent): string {

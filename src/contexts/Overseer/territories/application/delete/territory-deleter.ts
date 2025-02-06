@@ -1,8 +1,8 @@
 import Logger from "@/shared/domain/logger";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
-import { TerritoryId } from "../../domain/territory-id";
-import { TerritoryRepository } from "../../domain/territory-repository";
+import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
+import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/territory-repository";
 
 @Injectable()
 export class TerritoryDeleter {
