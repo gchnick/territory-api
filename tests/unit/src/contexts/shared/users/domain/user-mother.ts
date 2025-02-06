@@ -16,8 +16,8 @@ export const UserMother = {
       id: UserIdMother.create().value,
       email: UserEmailMother.create().value,
       password: UserPasswordMother.create().value,
-      verified: UserVerifedMother.create(true).value,
-      enabled: UserEnabledMother.create(true).value,
+      verified: UserVerifedMother.create().value,
+      enabled: UserEnabledMother.create().value,
       roles: [UserRoleMother.create().toPrimitives()],
       ...params,
     };
