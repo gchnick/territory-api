@@ -4,12 +4,14 @@ import { DataSource, EntitySchema, Repository } from "typeorm";
 
 import { AggregateRoot } from "@/shared/domain/aggregate-root";
 
-import { EnviromentValueObject } from "@/contexts/shared/domain/value-object/enviroment-value-object";
+import { Environment } from "@/contexts/shared/domain/value-object/environment";
+
+import { EnviromentVariables } from "@/core/config/configuration";
 
 export abstract class TypeOrmRepository<T extends AggregateRoot> {
   constructor(
     private readonly _dataSource: DataSource,
-    private readonly _configService: ConfigService,
+    private readonly _configService: ConfigService<EnviromentVariables>,
   ) {}
 
   protected abstract entitySchema(): EntitySchema<T>;
@@ -29,7 +31,7 @@ export abstract class TypeOrmRepository<T extends AggregateRoot> {
 
   protected async truncate(): Promise<void> {
     const nodeEnv = this._configService.getOrThrow<string>("NODE_ENV");
-    const environment = EnviromentValueObject.fromValue(nodeEnv);
+    const environment = Environment.fromValue(nodeEnv);
 
     if (environment.isDevelopment() || environment.isTest()) {
       const repository = this.repository();
