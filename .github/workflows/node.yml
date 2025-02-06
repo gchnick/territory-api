@@ -1,4 +1,4 @@
-name: 'Node'
+name: '🐢 Node'
 
 on:
   push:
@@ -12,8 +12,8 @@ jobs:
       - name: Setup Node ⚙️
         uses: ./.github/actions/setup-node
       - name: Build typescript 📦
-        run: npm run build && find dist/main.js
+        run: node --run build && find dist/main.js
       - name: Lint code 💅
-        run: npm run lint
+        run: node --run lint
       - name: Run tests ✅
-        run: npm run test
+        run: node --run test
