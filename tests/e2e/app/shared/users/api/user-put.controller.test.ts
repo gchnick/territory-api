@@ -1,4 +1,3 @@
-import { ConfigService } from "@nestjs/config";
 import {
   FastifyAdapter,
   NestFastifyApplication,
@@ -14,21 +13,14 @@ import { UserPasswordMother } from "@/tests/unit/src/contexts/shared/users/domai
 
 import { UserModule } from "@/app/shared/user/user.module";
 
-import { Jwt } from "@/contexts/shared/auth/domain/jwt";
 import { Role } from "@/contexts/shared/users/domain/role/role-name";
 import { User } from "@/contexts/shared/users/domain/user";
-import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
 import { UserRole } from "@/contexts/shared/users/domain/user-role";
-
-import { EnviromentVariables } from "@/core/config/configuration";
 
 import { prepareRolesInDB, prepareUsersInDB } from "../helper";
 
 describe("UserPutController (e2e)", () => {
   let app: NestFastifyApplication;
-  let repo: UserRepository;
-  let configService: ConfigService<EnviromentVariables>;
-  let jwt: Jwt;
   let roles: UserRole[];
 
   beforeAll(async () => {
@@ -41,10 +33,8 @@ describe("UserPutController (e2e)", () => {
     );
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
-    repo = await app.get(UserRepository);
-    configService = await app.get(ConfigService);
-    jwt = await app.get(Jwt);
-    roles = await prepareRolesInDB(repo);
+    roles = await prepareRolesInDB(app);
+
     nock.disableNetConnect();
     nock.enableNetConnect("127.0.0.1");
   });
@@ -63,7 +53,7 @@ describe("UserPutController (e2e)", () => {
     let token: string;
 
     beforeEach(async () => {
-      const prepare = await prepareUsersInDB(repo, configService, jwt, roles);
+      const prepare = await prepareUsersInDB(app, roles);
       users = prepare.users;
       token = prepare.token;
     });

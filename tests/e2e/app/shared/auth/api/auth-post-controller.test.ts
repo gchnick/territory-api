@@ -20,7 +20,6 @@ import { UserModule } from "@/app/shared/user/user.module";
 import { Encode } from "@/contexts/shared/auth/domain/encode";
 import { Role } from "@/contexts/shared/users/domain/role/role-name";
 import { User } from "@/contexts/shared/users/domain/user";
-import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
 import { UserRole } from "@/contexts/shared/users/domain/user-role";
 
 import { AuthPostRequestMother } from "../requests/auth-post-request-mother";
@@ -28,9 +27,8 @@ import { SignupPostRequestMother } from "../requests/signup-post-request-mother"
 
 describe("AuthPostController (e2e)", () => {
   let app: NestFastifyApplication;
-  let repo: UserRepository;
-  let encode: Encode;
   let roles: UserRole[];
+  let encode: Encode;
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -42,9 +40,8 @@ describe("AuthPostController (e2e)", () => {
     );
     await app.init();
     await app.getHttpAdapter().getInstance().ready();
-    repo = await app.get(UserRepository);
     encode = await app.get(Encode);
-    roles = await prepareRolesInDB(repo);
+    roles = await prepareRolesInDB(app);
 
     nock.disableNetConnect();
     nock.enableNetConnect("127.0.0.1");
@@ -60,7 +57,7 @@ describe("AuthPostController (e2e)", () => {
   });
 
   describe("/v1/api/auth/login (POST)", () => {
-    let users: Array<User>;
+    let users: User[];
     let password: string;
     beforeEach(async () => {
       password = UserPasswordMother.create().value;
@@ -68,7 +65,9 @@ describe("AuthPostController (e2e)", () => {
         password,
         User.SALT_OR_ROUNDS_ENCODE,
       );
-      users = await prepareUsersInDB(repo, roles, passwordEncode);
+
+      const prepare = await prepareUsersInDB(app, roles, passwordEncode);
+      users = prepare.users;
     });
 
     it("should generate token with valid credentials", async () => {
@@ -118,7 +117,7 @@ describe("AuthPostController (e2e)", () => {
       });
 
       expect(response.statusCode).toBe(201);
-      expect(response.headers["Location"]).not.toBeNull();
+      expect(response.headers.Location).not.toBeNull();
     });
   });
 });
