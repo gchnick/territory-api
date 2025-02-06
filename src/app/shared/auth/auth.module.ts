@@ -1,20 +1,25 @@
 import { Module } from "@nestjs/common";
 import { JwtModule, JwtService } from "@nestjs/jwt";
 
-import { UserModule } from "@/app/shared/user/user.module";
-
 import { AuthChecker } from "@/contexts/shared/auth/application/sign-in/auth-checker";
 import { SignInQueryHandler } from "@/contexts/shared/auth/application/sign-in/sign-in-query-handler";
+import { Encode } from "@/contexts/shared/auth/domain/encode";
 import { Jwt } from "@/contexts/shared/auth/domain/jwt";
+import { Bcrypt } from "@/contexts/shared/infrastructure/encode/bcrypt";
+import { NestPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/nest-prisma-service";
+import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
+import { UserPrisma } from "@/contexts/shared/users/infrastructure/persistence/user-prisma";
 
 import { AuthPostController } from "./api/auth-post.controller";
 
 @Module({
-  imports: [UserModule, JwtModule],
+  imports: [JwtModule],
   controllers: [AuthPostController],
   providers: [
     AuthChecker,
     SignInQueryHandler,
+    UserPrisma,
+    Bcrypt,
     JwtService,
     {
       provide: Jwt,
@@ -25,7 +30,18 @@ import { AuthPostController } from "./api/auth-post.controller";
       useFactory: (s: SignInQueryHandler) => [s],
       inject: [SignInQueryHandler],
     },
+    {
+      provide: UserRepository,
+      useFactory(p: NestPrismaService) {
+        return new UserPrisma(p);
+      },
+      inject: [NestPrismaService],
+    },
+    {
+      provide: Encode,
+      useExisting: Bcrypt,
+    },
   ],
-  exports: [Jwt, "AuthQueryHandlers"],
+  exports: [UserRepository, Encode, Jwt, "AuthQueryHandlers"],
 })
 export class AuthModule {}

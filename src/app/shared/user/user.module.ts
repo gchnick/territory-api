@@ -1,9 +1,7 @@
 import { Module } from "@nestjs/common";
 
-import { Bcrypt } from "@/shared/infrastructure/encode/bcrypt";
+import { AuthModule } from "@/app/shared/auth/auth.module";
 
-import { Encode } from "@/contexts/shared/auth/domain/encode";
-import { NestPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/nest-prisma-service";
 import { CreateUserCommandHandler } from "@/contexts/shared/users/application/create/create-user-command-handler";
 import { UserCreator } from "@/contexts/shared/users/application/create/user-creator";
 import { ExistsByIdQueryHandler } from "@/contexts/shared/users/application/exists/exists-by-id-query-handler";
@@ -12,23 +10,13 @@ import { FindByEmailQueryHandler } from "@/contexts/shared/users/application/fin
 import { UserFinder } from "@/contexts/shared/users/application/find-by-email/user-finder";
 import { UpdateUserCommandHandler } from "@/contexts/shared/users/application/update/update-user-command-handler";
 import { UserUpdater } from "@/contexts/shared/users/application/update/user-updater";
-import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
-import { UserPrisma } from "@/contexts/shared/users/infrastructure/persistence/user-prisma";
 
 import { UserPutController } from "./api/user-put.controller";
 
 @Module({
-  imports: [],
+  imports: [AuthModule],
   controllers: [UserPutController],
   providers: [
-    UserPrisma,
-    {
-      provide: UserRepository,
-      useFactory(p: NestPrismaService) {
-        return new UserPrisma(p);
-      },
-      inject: [NestPrismaService],
-    },
     UserCreator,
     UserUpdater,
     CreateUserCommandHandler,
@@ -37,11 +25,6 @@ import { UserPutController } from "./api/user-put.controller";
     UserQuestioner,
     FindByEmailQueryHandler,
     ExistsByIdQueryHandler,
-    Bcrypt,
-    {
-      provide: Encode,
-      useExisting: Bcrypt,
-    },
     {
       provide: "UserCommandHandlers",
       useFactory: (
@@ -59,6 +42,6 @@ import { UserPutController } from "./api/user-put.controller";
       inject: [FindByEmailQueryHandler, ExistsByIdQueryHandler],
     },
   ],
-  exports: [UserRepository, Encode, "UserCommandHandlers", "UserQueryHandlers"],
+  exports: ["UserCommandHandlers", "UserQueryHandlers"],
 })
 export class UserModule {}
