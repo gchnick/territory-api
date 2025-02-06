@@ -1,16 +1,16 @@
+import { UserEmailMother } from "@/tests/unit/src/contexts/shared/users/domain/user-email-mother";
+import { UserIdMother } from "@/tests/unit/src/contexts/shared/users/domain/user-id-mother";
+import { UserPasswordMother } from "@/tests/unit/src/contexts/shared/users/domain/user-password-mother";
+
 import { CreateUserCommand } from "@/contexts/shared/users/application/create/create-user.command";
 import { Role } from "@/contexts/shared/users/domain/role/role-name";
 
-import { UserEmailMother } from "../../domain/user-email-mother";
-import { UserIdMother } from "../../domain/user-id-mother";
-import { UserPasswordMother } from "../../domain/user-password-mother";
-
-type Params = {
+interface Params {
   id: string;
   email: string;
   password: string;
   roles: string[];
-};
+}
 
 export const CreateUserCommandMother = {
   create(params?: Partial<Params>): CreateUserCommand {

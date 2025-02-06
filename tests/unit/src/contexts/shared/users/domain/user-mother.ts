@@ -30,6 +30,7 @@ export const UserMother = {
       id,
       email,
       password,
+      enabled: true,
       verified: false,
       roles: roles.map(r =>
         UserRoleMother.create({
