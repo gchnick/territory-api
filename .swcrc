@@ -15,8 +15,8 @@
     "paths": {
       "@/src/*": ["src/*"],
       "@/app/*": ["src/app/*"],
-      "@/core/*": ["src/core/*"],
       "@/contexts/*": ["src/contexts/*"],
+      "@/core/*": ["src/core/*"],
       "@/shared/*": ["src/contexts/shared/*"],
       "@/tests/*": ["tests/*"]
     },
