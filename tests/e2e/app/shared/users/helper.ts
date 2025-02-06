@@ -1,4 +1,5 @@
 import { ConfigService } from "@nestjs/config";
+import { NestFastifyApplication } from "@nestjs/platform-fastify";
 
 import { RolesMother } from "@/tests/unit/src/contexts/shared/users/domain/role/role-name-mother";
 import { UserMother } from "@/tests/unit/src/contexts/shared/users/domain/user-mother";
@@ -25,7 +26,8 @@ const saveInitialRoles = async (
   await Promise.all(roles.map(role => repo.saveRole(role)));
 };
 
-export const prepareRolesInDB = async (repo: UserRepository) => {
+export const prepareRolesInDB = async (app: NestFastifyApplication) => {
+  const repo = app.get(UserRepository);
   const roles = createAllRoles();
   await repo.deleteAllRoles();
   await saveInitialRoles(repo, roles);
@@ -75,14 +77,16 @@ const generateToken = async (
 };
 
 export const prepareUsersInDB = async (
-  repo: UserRepository,
-  configService: ConfigService<EnviromentVariables>,
-  jwt: Jwt,
+  app: NestFastifyApplication,
   roles: UserRole[],
   password?: string,
 ) => {
-  await repo.deleteAll();
+  const repo = app.get(UserRepository);
+  const configService = app.get(ConfigService);
+  const jwt = app.get(Jwt);
   const users = createUsers(roles, password);
+
+  await repo.deleteAll();
   await saveInitialUsers(repo, users);
   const token = await generateToken(users[0], configService, jwt);
   return { users, token };
