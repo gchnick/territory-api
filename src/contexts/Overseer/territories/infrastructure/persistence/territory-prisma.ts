@@ -12,7 +12,7 @@ import {
 } from "@/contexts/Overseer/territories/domain/territory-repository";
 import { Criteria } from "@/contexts/shared/domain/criteria/criteria";
 import { Nullable } from "@/contexts/shared/domain/nullable";
-import { EnviromentValueObject } from "@/contexts/shared/domain/value-object/enviroment-value-object";
+import { getNodeEnv } from "@/contexts/shared/domain/value-object/environment";
 import {
   BooleanCasting,
   CriteriaToPrismaConverter,
@@ -67,7 +67,7 @@ export class TerritoryPrisma implements TerritoryRepository {
     }
   }
 
-  async searchAll(): Promise<Array<Territory> | Territory> {
+  async searchAll(): Promise<Territory[] | Territory> {
     const result = await this._repository.territories.findMany();
 
     return result.map(t =>
@@ -88,7 +88,7 @@ export class TerritoryPrisma implements TerritoryRepository {
     );
   }
 
-  async matching(criteria: Criteria): Promise<Array<Territory> | Territory> {
+  async matching(criteria: Criteria): Promise<Territory[] | Territory> {
     const converter = new CriteriaToPrismaConverter();
     const prismaOptions = converter.convert(
       criteria,
@@ -225,10 +225,8 @@ export class TerritoryPrisma implements TerritoryRepository {
   }
 
   async deleteAll(): Promise<void> {
-    const nodeEnv = globalThis.process.env.NODE_ENV as string;
-    const enviroment = EnviromentValueObject.fromValue(nodeEnv);
-
-    if (!enviroment.isProduction()) {
+    const environment = getNodeEnv();
+    if (!environment.isProduction()) {
       await this._repository.territories.deleteMany({});
     }
   }

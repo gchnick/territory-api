@@ -1,5 +1,5 @@
 import { CongregationRepository } from "@/contexts/Overseer/congregations/domain/congregation-repository";
-import { EnviromentValueObject } from "@/contexts/shared/domain/value-object/enviroment-value-object";
+import { getNodeEnv } from "@/contexts/shared/domain/value-object/environment";
 import { NestPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/nest-prisma-service";
 
 import { CardinalPoint } from "../domain/cardinal-points";
@@ -39,10 +39,8 @@ export class CongregationPrisma implements CongregationRepository {
   }
 
   async deleteAll(): Promise<void> {
-    const nodeEnv = globalThis.process.env.NODE_ENV as string;
-    const enviroment = EnviromentValueObject.fromValue(nodeEnv);
-
-    if (!enviroment.isProduction()) {
+    const environment = getNodeEnv();
+    if (!environment.isProduction()) {
       await this._repository.congregations.deleteMany({});
     }
   }

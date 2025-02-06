@@ -1,5 +1,5 @@
 import { Nullable } from "@/contexts/shared/domain/nullable";
-import { EnviromentValueObject } from "@/contexts/shared/domain/value-object/enviroment-value-object";
+import { getNodeEnv } from "@/contexts/shared/domain/value-object/environment";
 import { NestPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/nest-prisma-service";
 import { RoleName } from "@/contexts/shared/users/domain/role/role-name";
 import { User } from "@/contexts/shared/users/domain/user";
@@ -20,6 +20,8 @@ export class UserPrisma implements UserRepository {
       email: username,
       password,
       roles,
+      enabled,
+      verified,
     } = user.toPrimitives();
 
     const connectOrCreate = roles.map(r => ({
@@ -36,6 +38,8 @@ export class UserPrisma implements UserRepository {
         user_id,
         username,
         password,
+        enabled,
+        verified,
         roles: {
           connectOrCreate,
         },
@@ -148,19 +152,15 @@ export class UserPrisma implements UserRepository {
   }
 
   async deleteAllRoles(): Promise<void> {
-    const nodeEnv = globalThis.process.env.NODE_ENV as string;
-    const enviroment = EnviromentValueObject.fromValue(nodeEnv);
-
-    if (!enviroment.isProduction()) {
+    const environment = getNodeEnv();
+    if (!environment.isProduction()) {
       await this._repository.roles.deleteMany({});
     }
   }
 
   async deleteAll(): Promise<void> {
-    const nodeEnv = globalThis.process.env.NODE_ENV as string;
-    const enviroment = EnviromentValueObject.fromValue(nodeEnv);
-
-    if (!enviroment.isProduction()) {
+    const environment = getNodeEnv();
+    if (!environment.isProduction()) {
       await this._repository.users.deleteMany({});
     }
   }
