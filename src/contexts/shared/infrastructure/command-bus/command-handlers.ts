@@ -3,7 +3,7 @@ import { CommandHandler } from "@/shared/domain/command-handler";
 import { CommandNotRegisteredError } from "@/shared/domain/command-not-registered-error";
 
 export class CommandHandlers extends Map<Command, CommandHandler<Command>> {
-  constructor(commandHandlers: Array<CommandHandler<Command>>) {
+  constructor(commandHandlers: CommandHandler<Command>[]) {
     super();
 
     for (const commandHandler of commandHandlers) {

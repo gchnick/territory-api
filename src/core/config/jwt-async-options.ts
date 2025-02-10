@@ -1,7 +1,7 @@
+import type { EnviromentVariables } from "./configuration";
+
 import { ConfigService } from "@nestjs/config";
 import { JwtModuleAsyncOptions } from "@nestjs/jwt";
-
-import { EnviromentVariables } from "./configuration";
 
 const jwtAsyncOptions = (): JwtModuleAsyncOptions => ({
   inject: [ConfigService],

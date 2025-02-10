@@ -4,7 +4,7 @@ import { QueryNotRegisteredError } from "@/shared/domain/query-not-registered-er
 import { Response } from "@/shared/domain/response";
 
 export class QueryHandlers extends Map<Query, QueryHandler<Query, Response>> {
-  constructor(queryHandlers: Array<QueryHandler<Query, Response>>) {
+  constructor(queryHandlers: QueryHandler<Query, Response>[]) {
     super();
     for (const queryHandler of queryHandlers) {
       this.set(queryHandler.subscribedTo(), queryHandler);

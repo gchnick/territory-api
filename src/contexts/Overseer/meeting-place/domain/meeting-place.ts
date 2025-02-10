@@ -28,7 +28,7 @@ export class MeetingPlace {
   readonly latitude: MeetingPlaceLatitude;
   readonly longitude: MeetingPlaceLongitude;
   readonly fieldService: MeetingPlaceFieldService;
-  readonly availability: Nullable<Array<MeetingPlaceAvailability>>;
+  readonly availability: Nullable<MeetingPlaceAvailability[]>;
 
   constructor(
     id: MeetingPlaceId,
@@ -37,7 +37,7 @@ export class MeetingPlace {
     latitude: MeetingPlaceLatitude,
     longitude: MeetingPlaceLongitude,
     fieldService: MeetingPlaceFieldService,
-    availability: Nullable<Array<MeetingPlaceAvailability>>,
+    availability: Nullable<MeetingPlaceAvailability[]>,
   ) {
     this.id = id;
     this.place = place;

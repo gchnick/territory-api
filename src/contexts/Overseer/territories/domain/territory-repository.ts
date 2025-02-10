@@ -1,9 +1,11 @@
+import type { TerritoryPrimitives } from "./territory";
+
 import { Criteria } from "@/shared/domain/criteria/criteria";
 import { Nullable } from "@/shared/domain/nullable";
 
 import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
 
-import { Territory, TerritoryPrimitives } from "./territory";
+import { Territory } from "./territory";
 import { TerritoryId } from "./territory-id";
 import { TerritoryNumber } from "./territory-number";
 
@@ -14,9 +16,9 @@ export type PartialTerritoryPrimitives = Partial<
 export abstract class TerritoryRepository {
   abstract save(territory: Territory): Promise<void>;
 
-  abstract searchAll(): Promise<Array<Territory> | Territory>;
+  abstract searchAll(): Promise<Territory[] | Territory>;
 
-  abstract matching(criteria: Criteria): Promise<Array<Territory> | Territory>;
+  abstract matching(criteria: Criteria): Promise<Territory[] | Territory>;
 
   abstract findByNumber(
     congregationId: CongregationId,

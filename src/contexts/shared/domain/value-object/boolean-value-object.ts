@@ -1,5 +1,7 @@
+import type { Primitives } from "./value-object";
+
 import { InvalidArgumentError } from "./invalid-argument-error";
-import { Primitives, ValueObject } from "./value-object";
+import { ValueObject } from "./value-object";
 
 export class BooleanValueObject extends ValueObject<boolean> {
   constructor(value: string) {

@@ -7,6 +7,6 @@ export class CommandHandlerDummy implements CommandHandler<DummyCommand> {
     return DummyCommand;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
   async handle(_command: DummyCommand): Promise<void> {}
 }

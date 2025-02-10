@@ -2,10 +2,9 @@ import { DataSource } from "typeorm";
 
 import { TypeOrmConfig } from "./type-orm-config";
 
-// eslint-disable-next-line unicorn/no-static-only-class
-export class TypeOrmClientFactory {
+export const TypeOrmClientFactory = {
   // eslint-disable-next-line @typescript-eslint/require-await
-  static async createClient(
+  async createClient(
     contextName: string,
     config: TypeOrmConfig,
   ): Promise<DataSource> {
@@ -26,5 +25,5 @@ export class TypeOrmClientFactory {
     });
 
     return dataSource;
-  }
-}
+  },
+};

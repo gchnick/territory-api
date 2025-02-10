@@ -1,3 +1,5 @@
+import type { EnviromentVariables } from "@/core/config/configuration";
+
 import { ConfigService } from "@nestjs/config";
 import { NestFastifyApplication } from "@nestjs/platform-fastify";
 
@@ -11,8 +13,6 @@ import { Role, RoleName } from "@/contexts/shared/users/domain/role/role-name";
 import { User } from "@/contexts/shared/users/domain/user";
 import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
 import { UserRole } from "@/contexts/shared/users/domain/user-role";
-
-import { EnviromentVariables } from "@/core/config/configuration";
 
 const createAllRoles = (): UserRole[] =>
   RolesMother.create().map((role, index) =>

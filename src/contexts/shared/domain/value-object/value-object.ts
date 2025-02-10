@@ -11,6 +11,7 @@ export abstract class ValueObject<T extends Primitives> {
   }
 
   private ensureValueIsDefined(value: T): void {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (value === null || value === undefined) {
       throw new InvalidArgumentError("Value must be defined");
     }

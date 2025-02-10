@@ -5,20 +5,18 @@ import { Criteria } from "@/contexts/shared/domain/criteria/criteria";
 import { Filter } from "@/contexts/shared/domain/criteria/filter";
 import { BooleanValueObject } from "@/contexts/shared/domain/value-object/boolean-value-object";
 
-type Mappings = { [key: string]: string };
-type Typecaster = {
-  [key: string]: (input: string) => string | number | boolean;
-};
+type Mappings = Record<string, string>;
+type Typecaster = Record<string, (input: string) => string | number | boolean>;
 
 export const BooleanCasting = (v: string) => BooleanValueObject.toBoolean(v);
 const NoCasting = (input: string) => input;
 
 type PrismaOptions = {
-  where?: { [key: string]: string };
+  where?: Record<string, string>;
   cursor?: any;
   take?: number;
   skip?: number;
-  orderBy?: { [key: string]: string };
+  orderBy?: Record<string, string>;
 };
 
 export class CriteriaToPrismaConverter {
@@ -27,7 +25,7 @@ export class CriteriaToPrismaConverter {
     mappings: Mappings = {},
     typecaster: Typecaster = {},
   ): PrismaOptions {
-    const fieldToCursor: string = "id";
+    const fieldToCursor = "id";
     const query: PrismaOptions = {};
 
     if (criteria.hasFilters()) {
@@ -65,6 +63,7 @@ export class CriteriaToPrismaConverter {
     typecaster: Typecaster = {},
   ) {
     const field = mappings[filter.field.value] || filter.field.value;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const typecasting = typecaster[filter.field.value] || NoCasting;
     const value = typecasting(filter.value.value);
 

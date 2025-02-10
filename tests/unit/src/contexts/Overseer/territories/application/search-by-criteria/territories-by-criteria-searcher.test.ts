@@ -24,7 +24,7 @@ describe("territories-by-criteria-searcher should", () => {
 
     repository.shouldMatch(criteria, territories);
 
-    void expect(await territoriesByCriteriaSearcher.search(criteria)).toEqual({
+    expect(await territoriesByCriteriaSearcher.search(criteria)).toEqual({
       data: expectedTerritories,
     });
   });

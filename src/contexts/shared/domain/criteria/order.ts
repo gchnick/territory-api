@@ -30,6 +30,7 @@ export class Order {
     return orderBy
       ? new Order(
           new OrderBy(orderBy),
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           new OrderType((orderType as OrderTypes) || OrderTypes.ASC),
         )
       : Order.none();

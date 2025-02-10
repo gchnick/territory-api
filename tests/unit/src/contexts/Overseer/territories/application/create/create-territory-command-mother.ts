@@ -10,7 +10,7 @@ import { TerritorySectorMother } from "@/tests/unit/src/contexts/Overseer/territ
 
 import { CreateTerritoryCommand } from "@/contexts/Overseer/territories/application/create/create-territory-command";
 
-interface Params {
+type Params = {
   id: string;
   congregationId: number;
   number: number;
@@ -20,7 +20,7 @@ interface Params {
   localityInPart?: string;
   quantityHouses: number;
   lastDateCompleted: Date;
-}
+};
 
 export const CreateTerritoryCommandMother = {
   create(params?: Partial<Params>): CreateTerritoryCommand {

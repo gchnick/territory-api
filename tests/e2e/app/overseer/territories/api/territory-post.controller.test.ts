@@ -53,7 +53,7 @@ describe("TerritoryPostController (e2e)", () => {
 
   describe("/v1/api/territories (POST)", () => {
     let congregation: Congregation;
-    let territories: Array<Territory>;
+    let territories: Territory[];
     beforeEach(async () => {
       const result = await prepareTerritoriesInDB(
         congregationRepo,
@@ -76,7 +76,7 @@ describe("TerritoryPostController (e2e)", () => {
       });
 
       expect(response.statusCode).toBe(201);
-      expect(response.headers["Location"]).not.toBeNull();
+      expect(response.headers.Location).not.toBeNull();
     });
 
     it("should send 400 status code when terriory number already registry in congragation", async () => {

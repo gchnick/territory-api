@@ -26,7 +26,7 @@ export const CongregationLimitsMother = {
       limit?: string;
     }[],
   ): CongregationLimits {
-    const limits: Map<CardinalPoint, string> = new Map();
+    const limits = new Map<CardinalPoint, string>();
     for (const { cardinalPoint, limit } of plainData)
       limits.set(
         new CardinalPoint(cardinalPoint),

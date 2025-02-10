@@ -1,3 +1,5 @@
+import type { EnviromentVariables } from "@/core/config/configuration";
+
 import {
   CanActivate,
   ExecutionContext,
@@ -10,9 +12,8 @@ import * as fastify from "fastify";
 import { Jwt } from "@/contexts/shared/auth/domain/jwt";
 import { JwtPayload } from "@/contexts/shared/auth/domain/jwt-payload";
 
-import { EnviromentVariables } from "@/core/config/configuration";
-
 declare module "fastify" {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface FastifyRequest {
     user?: JwtPayload;
   }

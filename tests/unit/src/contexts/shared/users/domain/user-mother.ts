@@ -1,7 +1,9 @@
+import type { UserPrimitives } from "@/contexts/shared/users/domain/user";
+
 import { CreateUserCommand } from "@/contexts/shared/users/application/create/create-user.command";
 import { FindByEmailQuery } from "@/contexts/shared/users/application/find-by-email/find-by-email-query";
 import { RoleName } from "@/contexts/shared/users/domain/role/role-name";
-import { User, UserPrimitives } from "@/contexts/shared/users/domain/user";
+import { User } from "@/contexts/shared/users/domain/user";
 
 import { UserEmailMother } from "./user-email-mother";
 import { UserEnabledMother } from "./user-enabled-mother";

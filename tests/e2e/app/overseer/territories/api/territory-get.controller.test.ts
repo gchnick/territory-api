@@ -53,7 +53,7 @@ describe("TerritoryGetController (e2e)", () => {
 
   describe("/v1/api/territories (GET)", () => {
     let congregation: Congregation;
-    let territories: Array<Territory>;
+    let territories: Territory[];
     beforeEach(async () => {
       const result = await prepareTerritoriesInDB(
         congregationRepo,

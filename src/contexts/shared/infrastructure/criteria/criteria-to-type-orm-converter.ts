@@ -11,11 +11,11 @@ import {
 import { Criteria } from "@/contexts/shared/domain/criteria/criteria";
 import { Filter } from "@/contexts/shared/domain/criteria/filter";
 
-type Mappings = { [key: string]: string };
+type Mappings = Record<string, string>;
 
 type TypeOrmOptions = {
-  order?: { [key: string]: string };
-  where?: { [key: string]: FindOperator<string> };
+  order?: Record<string, string>;
+  where?: Record<string, FindOperator<string>>;
 };
 
 export class CriteriaToTypeOrmConverter {

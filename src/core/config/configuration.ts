@@ -1,4 +1,4 @@
-export interface EnviromentVariables {
+export type EnviromentVariables = {
   NODE_ENV: string;
   PORT: number;
   DATABASE: {
@@ -10,7 +10,7 @@ export interface EnviromentVariables {
   };
   ENCRYPTION_SECRET: string;
   JWT_SECRET: string;
-}
+};
 
 const {
   NODE_ENV = "development",

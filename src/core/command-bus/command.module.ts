@@ -16,8 +16,8 @@ import { InMemoryCommandBus } from "@/shared/infrastructure/command-bus/in-memor
     {
       provide: CommandHandlers,
       useFactory: (
-        user: Array<CommandHandler<Command>>,
-        territory: Array<CommandHandler<Command>>,
+        user: CommandHandler<Command>[],
+        territory: CommandHandler<Command>[],
       ) => new CommandHandlers([...user, ...territory]),
       inject: ["UserCommandHandlers", "TerritoryCommandHandlers"],
     },

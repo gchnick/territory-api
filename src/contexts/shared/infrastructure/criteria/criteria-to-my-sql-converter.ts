@@ -1,7 +1,7 @@
 import { Criteria } from "@/contexts/shared/domain/criteria/criteria";
 import { Filter } from "@/contexts/shared/domain/criteria/filter";
 
-type Mappings = { [key: string]: string };
+type Mappings = Record<string, string>;
 
 export class CriteriaToMySqlConverter {
   convert(
@@ -11,7 +11,7 @@ export class CriteriaToMySqlConverter {
     mappings: Mappings = {},
   ): { query: string; params: (string | number)[] } {
     let query = `SELECT ${fieldsToSelect.join(", ")} FROM ${tableName}`;
-    const fieldToCursor: string = "id";
+    const fieldToCursor = "id";
     const params: (string | number)[] = [];
 
     if (criteria.hasFilters()) {

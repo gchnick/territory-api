@@ -15,7 +15,7 @@ export class Filters {
     );
   }
 
-  static fromValues(filters: Array<Map<string, string>>): Filters {
+  static fromValues(filters: Map<string, string>[]): Filters {
     return new Filters(filters.map(element => Filter.fromValues(element)));
   }
 

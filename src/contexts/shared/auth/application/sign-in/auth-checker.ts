@@ -1,3 +1,5 @@
+import type { EnviromentVariables } from "@/core/config/configuration";
+
 import { ConfigService } from "@nestjs/config";
 
 import Logger from "@/shared/domain/logger";
@@ -12,8 +14,6 @@ import { UserEmail } from "@/contexts/shared/users/domain/user-email";
 import { UserPassword } from "@/contexts/shared/users/domain/user-password";
 import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
 import { UserUnverified } from "@/contexts/shared/users/domain/user-unverified";
-
-import { EnviromentVariables } from "@/core/config/configuration";
 
 import { AuthResponse } from "./auth-response";
 

@@ -1,7 +1,9 @@
+import type { UserPrimitives } from "./user";
+
 import { Nullable } from "@/shared/domain/nullable";
 
 import { RoleName } from "./role/role-name";
-import { User, UserPrimitives } from "./user";
+import { User } from "./user";
 import { UserEmail } from "./user-email";
 import { UserId } from "./user-id";
 import { UserRole } from "./user-role";

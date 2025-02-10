@@ -25,9 +25,9 @@ export class MockTerritoryRepository implements TerritoryRepository {
     expect(this.mockSave).toHaveBeenCalledWith(territory.toPrimitives());
   }
 
-  async searchAll(): Promise<Array<Territory>> {
+  async searchAll(): Promise<Territory[]> {
     expect(this.mockSearchAll).toHaveBeenCalled();
-    return this.mockSearchAll() as Promise<Array<Territory>>;
+    return this.mockSearchAll() as Promise<Territory[]>;
   }
 
   async findByNumber(
@@ -60,17 +60,17 @@ export class MockTerritoryRepository implements TerritoryRepository {
     this.mockTruncate();
   }
 
-  async matching(criteria: Criteria): Promise<Array<Territory>> {
+  async matching(criteria: Criteria): Promise<Territory[]> {
     expect(this.mockMatching).toHaveBeenCalledWith(criteria);
 
-    return this.mockMatching() as Promise<Array<Territory>>;
+    return this.mockMatching() as Promise<Territory[]>;
   }
 
   shouldSave(territory: Territory): void {
     this.mockSave(territory.toPrimitives());
   }
 
-  shouldMatch(criteria: Criteria, territories: Array<Territory>): void {
+  shouldMatch(criteria: Criteria, territories: Territory[]): void {
     this.mockMatching(criteria);
     this.mockMatching.mockReturnValueOnce(territories);
   }
@@ -89,7 +89,7 @@ export class MockTerritoryRepository implements TerritoryRepository {
     this.mockFindByNumber.mockReturnValueOnce(nullableTerritory);
   }
 
-  shouldSearchAll(territories: Array<Territory>): void {
+  shouldSearchAll(territories: Territory[]): void {
     this.mockSearchAll();
     this.mockSearchAll.mockReturnValueOnce(territories);
   }

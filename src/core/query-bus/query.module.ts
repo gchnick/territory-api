@@ -18,9 +18,9 @@ import { QueryHandlers } from "@/shared/infrastructure/query-bus/query-handlers"
     {
       provide: QueryHandlers,
       useFactory: (
-        user: Array<QueryHandler<Query, Response>>,
-        auth: Array<QueryHandler<Query, Response>>,
-        territory: Array<QueryHandler<Query, Response>>,
+        user: QueryHandler<Query, Response>[],
+        auth: QueryHandler<Query, Response>[],
+        territory: QueryHandler<Query, Response>[],
       ) => new QueryHandlers([...user, ...auth, ...territory]),
       inject: [
         "UserQueryHandlers",

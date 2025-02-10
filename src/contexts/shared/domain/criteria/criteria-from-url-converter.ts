@@ -9,15 +9,14 @@ export class CriteriaFromUrlConverter {
 
   public toCriteriaFrom(searchParams: URLSearchParams) {
     const filters = this.parseFilters(searchParams);
+    const limit = searchParams.get("limit");
 
     return Criteria.fromPrimitives(
       filters,
       searchParams.get("orderBy"),
       searchParams.get("order"),
       searchParams.has("cursor") ? searchParams.get("cursor") : undefined,
-      searchParams.has("limit")
-        ? Number.parseInt(searchParams.get("limit") as string, 10)
-        : undefined,
+      limit ? Number.parseInt(limit, 10) : undefined,
     );
   }
 
@@ -36,6 +35,7 @@ export class CriteriaFromUrlConverter {
         const index = match[1];
         const property = match[2] as keyof FiltersPrimitives;
 
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
         if (!tempFilters[index]) {
           tempFilters[index] = {};
         }

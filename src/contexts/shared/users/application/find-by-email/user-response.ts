@@ -1,4 +1,6 @@
-import { User, UserPrimitives } from "@/contexts/shared/users/domain/user";
+import type { UserPrimitives } from "@/contexts/shared/users/domain/user";
+
+import { User } from "@/contexts/shared/users/domain/user";
 
 export class UserResponse {
   public readonly data: Omit<UserPrimitives, "password">;

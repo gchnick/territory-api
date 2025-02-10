@@ -1,11 +1,10 @@
+import type { TerritoryPrimitives } from "@/contexts/Overseer/territories/domain/territory";
+
 import { CongregationIdMother } from "@/tests/unit/src/contexts/Overseer/congregation/domain/congregation-id-mother";
 
 import { CreateTerritoryCommand } from "@/contexts/Overseer/territories/application/create/create-territory-command";
 import { FindByNumberQuery } from "@/contexts/Overseer/territories/application/find-by-number/find-by-number-query";
-import {
-  Territory,
-  TerritoryPrimitives,
-} from "@/contexts/Overseer/territories/domain/territory";
+import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 
 import { TerritoryCurrentAssignedMother } from "./territory-current-assigned-mother";
 import { TerritoryIdMother } from "./territory-id-mother";

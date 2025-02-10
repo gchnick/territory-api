@@ -5,12 +5,12 @@ import { UserPasswordMother } from "@/tests/unit/src/contexts/shared/users/domai
 import { CreateUserCommand } from "@/contexts/shared/users/application/create/create-user.command";
 import { Role } from "@/contexts/shared/users/domain/role/role-name";
 
-interface Params {
+type Params = {
   id: string;
   email: string;
   password: string;
   roles: string[];
-}
+};
 
 export const CreateUserCommandMother = {
   create(params?: Partial<Params>): CreateUserCommand {
