@@ -216,7 +216,7 @@ export class Territory extends AggregateRoot {
       map: this.map?.value,
       currentAssigned: this.currentAssigned.value,
       lastDateCompleted: this.lastDateCompleted.value,
-      meetingPlaces: this.meetingPlaces?.map(m => m.toPrimitives()),
+      meetingPlaces: this.meetingPlaces.map(m => m.toPrimitives()),
     };
   }
 }
