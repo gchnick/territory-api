@@ -21,6 +21,10 @@
     "unicorn/prefer-module": "off",
     "unicorn/prefer-top-level-await": "off",
     "unicorn/prevent-abbreviations": "off",
+    "@typescript-eslint/consistent-type-definitions": [
+      "error",
+      "type"
+    ],
     "no-console": "warn",
     "node/no-missing-import": "off",
     "node/no-unsupported-features/es-syntax": [
