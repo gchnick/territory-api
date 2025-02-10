@@ -139,8 +139,10 @@ model Publishers {
   privileges    String
   hope          String
   last_report   DateTime?
+  birthday      DateTime
+  baptism_date  DateTime?
   is_active     Boolean   @default(true)
-  is_aparted    Boolean   @default(false)
+  is_removed   Boolean   @default(false)
   email         String?   @unique
 
   conductors        Conductors[]
@@ -162,7 +164,7 @@ model Publishers {
 }
 
 model EmergencyContacts {
-  id        Int    @id @default(autoincrement())
+  emergency_contact_id        Int    @id @default(autoincrement())
   full_name String
   phone     String @unique
 
@@ -171,28 +173,28 @@ model EmergencyContacts {
 }
 
 model Elders {
-  id Int @id @default(autoincrement())
+  elder_id Int @id @default(autoincrement())
 
   publisher    Publishers @relation(fields: [publisher_id], references: [publisher_id])
   publisher_id String     @unique
 }
 
 model MinisterialServants {
-  id Int @id @default(autoincrement())
+  ministerial_servant_id Int @id @default(autoincrement())
 
   publisher    Publishers @relation(fields: [publisher_id], references: [publisher_id])
   publisher_id String     @unique
 }
 
 model Pioneers {
-  id Int @id @default(autoincrement())
+  pioneer_id Int @id @default(autoincrement())
 
   publisher    Publishers @relation(fields: [publisher_id], references: [publisher_id])
   publisher_id String     @unique
 }
 
 model Missionaries {
-  id Int @id @default(autoincrement())
+  missionary_id Int @id @default(autoincrement())
 
   publisher    Publishers @relation(fields: [publisher_id], references: [publisher_id])
   publisher_id String     @unique
