@@ -33,6 +33,14 @@ async function bootstrap() {
     .setTitle("Service Overseer Backend")
     .setDescription("API to application of Service Overseer")
     .setVersion("2.0")
+    .addBearerAuth({
+      description: "JWT Authorization",
+      type: "http",
+      in: "header",
+      name: "Authorization",
+      scheme: "bearer",
+      bearerFormat: "JWT",
+    })
     .build();
 
   const options: SwaggerCustomOptions = {
@@ -40,7 +48,7 @@ async function bootstrap() {
   };
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup("api", app, document, options);
+  SwaggerModule.setup("doc", app, document, options);
 
   const configService = app.get(ConfigService);
   const port = configService.get<string>("PORT", "3000");
