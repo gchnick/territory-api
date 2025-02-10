@@ -7,9 +7,20 @@ import {
   InternalServerErrorException,
   Post,
   Req,
+  Res,
   UnauthorizedException,
 } from "@nestjs/common";
-import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from "@nestjs/swagger";
+import * as fastify from "fastify";
 
 import { CommandBus } from "@/shared/domain/command-bus";
 import Logger from "@/shared/domain/logger";
@@ -33,50 +44,76 @@ export class AuthPostController {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @HttpCode(HttpStatus.OK)
-  @Post("/login")
-  @ApiResponse({
-    status: 200,
+  @ApiOperation({
+    summary: "Obtain JWT for authentication in API",
+    description:
+      "The endpoint is public but you must hava the correct credentials to get a token",
+  })
+  @ApiBody({
+    description: "Credentials to log in and get a token",
+    type: SignInRequest,
+  })
+  @ApiOkResponse({
     description: "Token was generated",
     type: AuthResponse,
   })
-  @ApiResponse({ status: 400, description: "Bad request" })
-  @ApiResponse({ status: 403, description: "Forbidden. Credentials invalid" })
+  @ApiBadRequestResponse({ description: "Bad request" })
+  @ApiForbiddenResponse({ description: "Forbidden. Credentials invalid" })
+  @ApiInternalServerErrorResponse({
+    description: "Contact your administrator ",
+  })
+  @Post("/login")
+  @HttpCode(HttpStatus.OK)
   async signIn(@Body() body: SignInRequest) {
     try {
       const { email, password } = body;
       const query = new SignInQuery(email, password);
-      return await this.queryBus.ask<AuthResponse>(query);
+      return this.queryBus.ask<AuthResponse>(query);
     } catch (error) {
       this.#handlerError(error);
     }
   }
 
-  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({
+    summary: "Create credentials to log in and obtain tokes for authentication",
+    description:
+      "The endpoint is public but futher verification is required to be able to use the credentials",
+  })
+  @ApiBody({ description: "User email and password", type: SignUpRequest })
+  @ApiCreatedResponse({
+    description:
+      "User created successfully. The URL of the resource is located in the 'Location' header.",
+    headers: {
+      Location: {
+        description: "URL of the created resource",
+        schema: { type: "string" },
+      },
+    },
+  })
+  @ApiBadRequestResponse({ description: "Bad request" })
+  @ApiInternalServerErrorResponse({
+    description: "Contact your administrator ",
+  })
   @Post("/signup")
-  @ApiResponse({ status: 201, description: "User was created" })
-  @ApiResponse({ status: 400, description: "Bad request" })
-  @ApiResponse({ status: 403, description: "Forbidden. Credentials invalid" })
-  async signUp(@Body() body: SignUpRequest, @Req() request: Request) {
-    const { email, password, roles } = body;
+  @HttpCode(HttpStatus.CREATED)
+  async signUp(
+    @Req() request: Request,
+    @Res({ passthrough: true }) reply: fastify.FastifyReply,
+    @Body() body: SignUpRequest,
+  ) {
+    const { email, password } = body;
 
     try {
       const command = new CreateUserCommand({
         id: Uuid.random().value,
         email,
         password,
-        roles,
+        roles: [],
       });
 
       await this.commandBus.dispatch(command);
 
-      return Response.json(
-        {},
-        {
-          status: HttpStatus.CREATED,
-          headers: { location: `${request.url}/${command.id}` },
-        },
-      );
+      return reply.header("location", `${request.url}/${command.id}`).send();
     } catch (error) {
       this.#handlerError(error);
     }
