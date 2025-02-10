@@ -1,15 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsArray, IsEmail, IsNotEmpty, IsString } from "class-validator";
-
-import { Role } from "@/contexts/shared/users/domain/role/role-name";
+import { IsEmail, IsNotEmpty, IsString } from "class-validator";
 
 export class SignUpRequest {
   @IsEmail()
   @IsNotEmpty()
   @ApiProperty({
     description: "Email user to auth",
+    required: true,
     uniqueItems: true,
-    nullable: false,
   })
   email!: string;
 
@@ -17,18 +15,8 @@ export class SignUpRequest {
   @IsNotEmpty()
   @ApiProperty({
     description: "Password user to auth",
-    nullable: false,
+    required: true,
     minLength: 8,
   })
   password!: string;
-
-  @IsArray()
-  @ApiProperty({
-    description: "Roles user",
-    nullable: false,
-    isArray: true,
-    enum: Role,
-    example: Object.keys(Role),
-  })
-  roles!: string[];
 }

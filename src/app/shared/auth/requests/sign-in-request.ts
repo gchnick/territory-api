@@ -7,7 +7,8 @@ export class SignInRequest {
   @ApiProperty({
     description: "Email user to auth",
     uniqueItems: true,
-    nullable: false,
+    required: true,
+    example: "jhon@doe.com",
   })
   email!: string;
 
@@ -15,7 +16,7 @@ export class SignInRequest {
   @IsNotEmpty()
   @ApiProperty({
     description: "Password user to auth",
-    nullable: false,
+    required: true,
     minLength: 8,
   })
   password!: string;
