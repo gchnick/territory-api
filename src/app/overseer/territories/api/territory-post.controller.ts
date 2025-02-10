@@ -8,10 +8,25 @@ import {
   Post,
   Req,
   Response,
+  UseGuards,
   ValidationPipe,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiBody,
+  ApiCreatedResponse,
+  ApiForbiddenResponse,
+  ApiInternalServerErrorResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from "@nestjs/swagger";
 import * as fastify from "fastify";
+
+import { Roles } from "@/app/shared/auth/decorators/roles.decorator";
+import { AuthGuard } from "@/app/shared/auth/guards/auth.guard";
+import { RolesGuard } from "@/app/shared/auth/guards/roles.guard";
 
 import { CommandBus } from "@/shared/domain/command-bus";
 import Logger from "@/shared/domain/logger";
@@ -19,6 +34,7 @@ import { InvalidArgumentError } from "@/shared/domain/value-object/invalid-argum
 import { Uuid } from "@/shared/domain/value-object/uuid";
 
 import { CreateTerritoryCommand } from "@/contexts/Overseer/territories/application/create/create-territory-command";
+import { Role } from "@/contexts/shared/users/domain/role/role-name";
 
 import { TerritoryPostRequest } from "../requests/territory-post-request";
 
@@ -30,8 +46,36 @@ export class TerritoryPostController {
     private readonly commandBus: CommandBus,
   ) {}
 
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @Roles(Role.SERVICE_OVERSEER)
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: "Create new territory. (Only for elders and territory servants)",
+    description:
+      "This endpoint only has access for the rol SERVICE_OVERSEER and TERRITORY_SERVANT",
+  })
+  @ApiBody({
+    description: "Information for creating a new territory",
+    type: TerritoryPostRequest,
+  })
+  @ApiCreatedResponse({
+    description:
+      "Territory created successfully. The URL of the resource is located in the 'Location' header.",
+    headers: {
+      Location: {
+        description: "URL of the created resource",
+        schema: { type: "string" },
+      },
+    },
+  })
+  @ApiBadRequestResponse({ description: "Bad request" })
+  @ApiForbiddenResponse({
+    description: "Forbidden. Restricted access",
+  })
+  @ApiUnauthorizedResponse({ description: "Unauthorized. Credentials invalid" })
+  @ApiInternalServerErrorResponse({
+    description: "Contact your administrator",
+  })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.SERVICE_OVERSEER)
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async create(
