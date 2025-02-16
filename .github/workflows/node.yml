@@ -4,8 +4,6 @@ on:
   push:
 
 jobs:
-  env:
-    SQLITE_DATABASE: ${{ secrets.SQLITE_DATABASE }}
   run:
     runs-on: ubuntu-latest
     steps:
