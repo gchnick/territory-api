@@ -8,20 +8,20 @@ describe("TerritoryLabel should", () => {
   it("throw error when label is empty", () => {
     const labelEmpty = "      ";
 
-    const labelInstace = () => {
+    const labelInstance = () => {
       new TerritoryLabel(labelEmpty);
     };
 
-    expect(labelInstace).toThrow(TerritoryLabelIsEmpty);
+    expect(labelInstance).toThrow(TerritoryLabelIsEmpty);
   });
 
-  it("throw error when label lenght exceeded the maximum characters", () => {
+  it("throw error when label length exceeded the maximum characters", () => {
     const invalidLabel = TerritoryLabelMother.invalid();
 
-    const invalidLabelInstace = () => {
+    const invalidLabelInstance = () => {
       new TerritoryLabel(invalidLabel);
     };
 
-    expect(invalidLabelInstace).toThrow(TerritoryLabelLengthExceeded);
+    expect(invalidLabelInstance).toThrow(TerritoryLabelLengthExceeded);
   });
 });

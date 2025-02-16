@@ -16,7 +16,7 @@ Content-Type: application/json
 
 {
   "number": 10,
-  "label": "Place beatiful",
+  "label": "Place beautiful",
   "sector": "Carolina",
   "locality": "New City, Century Park",
   "localityInPart": "Center Square",

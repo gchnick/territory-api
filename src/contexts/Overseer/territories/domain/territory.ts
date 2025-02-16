@@ -7,6 +7,7 @@ import {
   MeetingPlacePrimitives,
 } from "@/contexts/Overseer/meeting-place/domain/meeting-place";
 
+import { TerritoryCreatedDomainEvent } from "./territory-created-domain-event";
 import { TerritoryCurrentAssigned } from "./territory-current-assigned";
 import { TerritoryId } from "./territory-id";
 import { TerritoryLabel } from "./territory-label";
@@ -17,7 +18,6 @@ import { TerritoryMap } from "./territory-map";
 import { TerritoryNumber } from "./territory-number";
 import { TerritoryQuantityHouse } from "./territory-quantity-house";
 import { TerritorySector } from "./territory-sector";
-import { TerritoryCreatedDomainEvent } from "./territoy-created-domain-event";
 
 export type TerritoryPrimitives = {
   congregationId: number;

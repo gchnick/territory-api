@@ -866,7 +866,7 @@
         "id": "db525792-c5a2-4418-bfdf-47385fc03e59",
         "tableId": "a437bbf8-f964-403f-ae3e-f9cfd2b23a6f",
         "name": "mobile_phone",
-        "comment": "Data encripted",
+        "comment": "Data encrypted",
         "dataType": "varchar(12)",
         "default": "",
         "options": 8,

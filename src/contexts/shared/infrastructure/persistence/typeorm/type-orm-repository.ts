@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { EnviromentVariables } from "@/core/config/configuration";
+import type { EnvironmentVariables } from "@/core/config/configuration";
 
 import { ConfigService } from "@nestjs/config";
 import { DataSource, EntitySchema, Repository } from "typeorm";
@@ -11,7 +11,7 @@ import { Environment } from "@/contexts/shared/domain/value-object/environment";
 export abstract class TypeOrmRepository<T extends AggregateRoot> {
   constructor(
     private readonly _dataSource: DataSource,
-    private readonly _configService: ConfigService<EnviromentVariables>,
+    private readonly _configService: ConfigService<EnvironmentVariables>,
   ) {}
 
   protected abstract entitySchema(): EntitySchema<T>;

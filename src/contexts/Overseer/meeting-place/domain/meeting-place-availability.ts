@@ -1,5 +1,5 @@
+import { AvailabilityId } from "./availability/availability-id";
 import { Available, AvailablePrimitives } from "./availability/available";
-import { AvailabilityId } from "./availability/availibility-id";
 
 export type AvailabilityPrimitives = {
   id: string;

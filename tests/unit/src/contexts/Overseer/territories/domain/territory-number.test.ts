@@ -7,20 +7,20 @@ describe("TerritoryNumber should", () => {
   it("throw error when value is a negative number", () => {
     const negative = -1;
 
-    const negativeInstace = () => {
+    const negativeInstance = () => {
       TerritoryNumberMother.create(negative);
     };
 
-    expect(negativeInstace).toThrow(TerritoryNumberIsNegative);
+    expect(negativeInstance).toThrow(TerritoryNumberIsNegative);
   });
 
   it("throw error when value greater that one hundred", () => {
     const greaterThatOneHundred = 123;
 
-    const greaterInstace = () => {
+    const greaterInstance = () => {
       TerritoryNumberMother.create(greaterThatOneHundred);
     };
 
-    expect(greaterInstace).toThrow(TerritoryNumberExceeded);
+    expect(greaterInstance).toThrow(TerritoryNumberExceeded);
   });
 });

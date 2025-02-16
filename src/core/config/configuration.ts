@@ -1,4 +1,4 @@
-export type EnviromentVariables = {
+export type EnvironmentVariables = {
   NODE_ENV: string;
   PORT: number;
   DATABASE: {
@@ -24,7 +24,7 @@ const {
   JWT_SECRET = "jwtsecret",
 } = process.env;
 
-const configuration = (): EnviromentVariables => ({
+const configuration = (): EnvironmentVariables => ({
   NODE_ENV,
   PORT: Number.parseInt(PORT, 10),
   DATABASE: {

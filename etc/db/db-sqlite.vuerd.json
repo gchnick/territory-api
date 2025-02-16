@@ -877,7 +877,7 @@
         "id": "db525792-c5a2-4418-bfdf-47385fc03e59",
         "tableId": "a437bbf8-f964-403f-ae3e-f9cfd2b23a6f",
         "name": "last_date_assigned",
-        "comment": "Data encripted",
+        "comment": "Data encrypted",
         "dataType": "NUMERIC",
         "default": "",
         "options": 0,
@@ -1916,7 +1916,7 @@
       "ltru6D2fRORVi60UdTFBH": {
         "id": "ltru6D2fRORVi60UdTFBH",
         "tableId": "e728eb04-e508-44b8-a5ec-0b94c3ad1872",
-        "name": "frecuency",
+        "name": "frequency",
         "comment": "",
         "dataType": "TEXT",
         "default": "",
@@ -1956,7 +1956,7 @@
       "jAuajuxEge04CazwSHWIt": {
         "id": "jAuajuxEge04CazwSHWIt",
         "tableId": "acfa09c9-df42-4ba2-88ae-fbb40425cdce",
-        "name": "frecuency",
+        "name": "frequency",
         "comment": "",
         "dataType": "TEXT",
         "default": "",

@@ -1,7 +1,7 @@
 import { Nullable } from "../nullable";
 import { FiltersPrimitives } from "./filter";
 import { Filters } from "./filters";
-import { InvalidCriteria } from "./invalid-critera";
+import { InvalidCriteria } from "./invalid-criteria";
 import { Order } from "./order";
 
 export type CriteriaPrimitives = {

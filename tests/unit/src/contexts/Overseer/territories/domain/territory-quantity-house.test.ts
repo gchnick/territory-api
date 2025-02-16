@@ -1,28 +1,28 @@
 import { TerritoryQuantityHouse } from "@/contexts/Overseer/territories/domain/territory-quantity-house";
-import { TerritoryQuantityHouseIsInvalid } from "@/contexts/Overseer/territories/domain/territoty-quantity-house-is-invalid";
+import { TerritoryQuantityHouseIsInvalid } from "@/src/contexts/Overseer/territories/domain/territory-quantity-house-is-invalid";
 
 import { TerritoryQuantityHouseMother } from "./territory-quantity-house-mother";
 
 describe("TerritoryQuantityHouse should", () => {
   it("throw error when value less that minimum houses per territory", () => {
-    const lessThatMimimum =
+    const lessThatMinimum =
       TerritoryQuantityHouse.MINIMUM_HOUSE_PER_TERRITORY - 1;
 
-    const lessInstace = () => {
-      TerritoryQuantityHouseMother.create(lessThatMimimum);
+    const lessInstance = () => {
+      TerritoryQuantityHouseMother.create(lessThatMinimum);
     };
 
-    expect(lessInstace).toThrow(TerritoryQuantityHouseIsInvalid);
+    expect(lessInstance).toThrow(TerritoryQuantityHouseIsInvalid);
   });
 
   it("throw error when value greater that maximum houses per territory", () => {
     const greaterThateventyMaximum =
       TerritoryQuantityHouse.MAXIMUM_HOUSE_PER_TERRITORY + 1;
 
-    const greaterInstace = () => {
+    const greaterInstance = () => {
       TerritoryQuantityHouseMother.create(greaterThateventyMaximum);
     };
 
-    expect(greaterInstace).toThrow(TerritoryQuantityHouseIsInvalid);
+    expect(greaterInstance).toThrow(TerritoryQuantityHouseIsInvalid);
   });
 });

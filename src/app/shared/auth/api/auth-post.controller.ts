@@ -1,24 +1,24 @@
 import {
-  BadRequestException,
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  InternalServerErrorException,
-  Post,
-  Req,
-  Res,
-  UnauthorizedException,
+    BadRequestException,
+    Body,
+    Controller,
+    HttpCode,
+    HttpStatus,
+    InternalServerErrorException,
+    Post,
+    Req,
+    Res,
+    UnauthorizedException,
 } from "@nestjs/common";
 import {
-  ApiBadRequestResponse,
-  ApiBody,
-  ApiCreatedResponse,
-  ApiForbiddenResponse,
-  ApiInternalServerErrorResponse,
-  ApiOkResponse,
-  ApiOperation,
-  ApiTags,
+    ApiBadRequestResponse,
+    ApiBody,
+    ApiCreatedResponse,
+    ApiForbiddenResponse,
+    ApiInternalServerErrorResponse,
+    ApiOkResponse,
+    ApiOperation,
+    ApiTags,
 } from "@nestjs/swagger";
 import * as fastify from "fastify";
 
@@ -47,7 +47,7 @@ export class AuthPostController {
   @ApiOperation({
     summary: "Obtain JWT for authentication in API",
     description:
-      "The endpoint is public but you must hava the correct credentials to get a token",
+      "The endpoint is public but you must have the correct credentials to get a token",
   })
   @ApiBody({
     description: "Credentials to log in and get a token",
@@ -77,7 +77,7 @@ export class AuthPostController {
   @ApiOperation({
     summary: "Create credentials to log in and obtain tokes for authentication",
     description:
-      "The endpoint is public but futher verification is required to be able to use the credentials",
+      "The endpoint is public but further verification is required to be able to use the credentials",
   })
   @ApiBody({ description: "User email and password", type: SignUpRequest })
   @ApiCreatedResponse({

@@ -109,7 +109,7 @@ CREATE TABLE "Publishers" (
     "publisher_id" TEXT NOT NULL PRIMARY KEY,
     "householder" BOOLEAN NOT NULL DEFAULT false,
     "sort_name" TEXT NOT NULL,
-    "firts_name" TEXT NOT NULL,
+    "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
     "address" TEXT,
     "mobile_phone" TEXT,
@@ -197,10 +197,10 @@ CREATE TABLE "Assignaments" (
     "date" DATETIME NOT NULL,
     "covered" BOOLEAN NOT NULL DEFAULT false,
     "meeting_place_id" TEXT NOT NULL,
-    "coductor_id" TEXT NOT NULL,
+    "conductor_id" TEXT NOT NULL,
     "program_id" TEXT NOT NULL,
     CONSTRAINT "Assignaments_meeting_place_id_fkey" FOREIGN KEY ("meeting_place_id") REFERENCES "MeetingPlaces" ("meeting_place_id") ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT "Assignaments_coductor_id_fkey" FOREIGN KEY ("coductor_id") REFERENCES "Conductors" ("conductor_id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "Assignaments_conductor_id_fkey" FOREIGN KEY ("conductor_id") REFERENCES "Conductors" ("conductor_id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "Assignaments_program_id_fkey" FOREIGN KEY ("program_id") REFERENCES "Programs" ("program_id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -314,7 +314,7 @@ CREATE UNIQUE INDEX "Publishers_mobile_phone_key" ON "Publishers"("mobile_phone"
 CREATE UNIQUE INDEX "Publishers_email_key" ON "Publishers"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Publishers_firts_name_last_name_key" ON "Publishers"("firts_name", "last_name");
+CREATE UNIQUE INDEX "Publishers_first_name_last_name_key" ON "Publishers"("first_name", "last_name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "EmergencyContacts_phone_key" ON "EmergencyContacts"("phone");

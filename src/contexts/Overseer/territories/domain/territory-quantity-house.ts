@@ -1,6 +1,6 @@
 import { NumberValueObject } from "@/shared/domain/value-object/number-value-object";
 
-import { TerritoryQuantityHouseIsInvalid } from "./territoty-quantity-house-is-invalid";
+import { TerritoryQuantityHouseIsInvalid } from "./territory-quantity-house-is-invalid";
 
 export class TerritoryQuantityHouse extends NumberValueObject {
   static MINIMUM_HOUSE_PER_TERRITORY = 50;

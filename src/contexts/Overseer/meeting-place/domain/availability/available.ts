@@ -1,5 +1,5 @@
 import { AvailableDay, Days } from "./available-days";
-import { AvailableFrecuency } from "./available-frecuency";
+import { AvailableFrequency } from "./available-frequency";
 import { AvailableMoment, Moments } from "./available-moments";
 
 export type AvailablePrimitives = {
@@ -10,12 +10,12 @@ export type AvailablePrimitives = {
 
 export class Available {
   readonly day: AvailableDay;
-  readonly frequency: AvailableFrecuency;
+  readonly frequency: AvailableFrequency;
   readonly moment: AvailableMoment;
 
   constructor(
     day: AvailableDay,
-    frequency: AvailableFrecuency,
+    frequency: AvailableFrequency,
     moment: AvailableMoment,
   ) {
     this.day = day;
@@ -26,7 +26,7 @@ export class Available {
   static fromPrimitive(plainData: AvailablePrimitives): Available {
     return new Available(
       new AvailableDay(plainData.day),
-      new AvailableFrecuency(plainData.frequency),
+      new AvailableFrequency(plainData.frequency),
       AvailableMoment.fromValue(plainData.moment),
     );
   }

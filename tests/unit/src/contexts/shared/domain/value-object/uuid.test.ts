@@ -5,20 +5,20 @@ describe("Uuid should", () => {
   it("throw error when id is string empty", () => {
     const uuidEmpty = "      ";
 
-    const uuidInstace = () => {
+    const uuidInstance = () => {
       new Uuid(uuidEmpty);
     };
 
-    expect(uuidInstace).toThrow(InvalidArgumentError);
+    expect(uuidInstance).toThrow(InvalidArgumentError);
   });
 
   it("throw error when id object", () => {
     const idObject = Uuid.random() as unknown as string;
 
-    const uuidInstace = () => {
+    const uuidInstance = () => {
       new Uuid(idObject);
     };
 
-    expect(uuidInstace).toThrow(InvalidArgumentError);
+    expect(uuidInstance).toThrow(InvalidArgumentError);
   });
 });

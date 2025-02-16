@@ -2,7 +2,7 @@ import { EnumValueObject } from "./enum-value-object";
 import { InvalidArgumentError } from "./invalid-argument-error";
 
 export enum Environments {
-  DEVELOPENT = "development",
+  DEVELOPMENT = "development",
   PRODUCTION = "production",
   TEST = "test",
   STAGE = "stage",
@@ -38,11 +38,11 @@ export class Environment extends EnumValueObject<Environments> {
   }
 
   static development() {
-    return new Environment(Environments.DEVELOPENT);
+    return new Environment(Environments.DEVELOPMENT);
   }
 
   isDevelopment() {
-    return this.value === Environments.DEVELOPENT;
+    return this.value === Environments.DEVELOPMENT;
   }
 
   isTest() {

@@ -1,4 +1,4 @@
-import type { EnviromentVariables } from "@/core/config/configuration";
+import type { EnvironmentVariables } from "@/core/config/configuration";
 
 import {
   CanActivate,
@@ -23,7 +23,7 @@ declare module "fastify" {
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly _jwtService: Jwt,
-    private readonly _configService: ConfigService<EnviromentVariables>,
+    private readonly _configService: ConfigService<EnvironmentVariables>,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

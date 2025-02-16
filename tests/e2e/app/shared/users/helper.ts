@@ -1,4 +1,4 @@
-import type { EnviromentVariables } from "@/core/config/configuration";
+import type { EnvironmentVariables } from "@/core/config/configuration";
 
 import { ConfigService } from "@nestjs/config";
 import { NestFastifyApplication } from "@nestjs/platform-fastify";
@@ -64,7 +64,7 @@ const saveInitialUsers = async (
 
 const generateToken = async (
   user: User,
-  configService: ConfigService<EnviromentVariables>,
+  configService: ConfigService<EnvironmentVariables>,
   jwt: Jwt,
 ) => {
   const payload: JwtPayload = {

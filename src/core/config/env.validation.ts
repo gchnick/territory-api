@@ -1,13 +1,13 @@
 import { plainToInstance } from "class-transformer";
 import {
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  Max,
-  Min,
-  ValidateNested,
-  validateSync,
+    IsEnum,
+    IsNotEmpty,
+    IsNumber,
+    IsString,
+    Max,
+    Min,
+    ValidateNested,
+    validateSync,
 } from "class-validator";
 
 import { Environments } from "@/contexts/shared/domain/value-object/environment";
@@ -35,7 +35,7 @@ class DatabaseEnv {
   PASSWORD!: string;
 }
 
-class EnviromentVariables {
+class EnvironmentVariables {
   @IsEnum(Environments)
   NODE_ENV!: Environments;
 
@@ -56,8 +56,8 @@ class EnviromentVariables {
   JWT_SECRET!: string;
 }
 
-export function validate(config: Record<string, unknown>): EnviromentVariables {
-  const validatedConfig = plainToInstance(EnviromentVariables, config, {
+export function validate(config: Record<string, unknown>): EnvironmentVariables {
+  const validatedConfig = plainToInstance(EnvironmentVariables, config, {
     enableImplicitConversion: true,
   });
 

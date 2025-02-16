@@ -1,6 +1,6 @@
 import {
-  FastifyAdapter,
-  NestFastifyApplication,
+    FastifyAdapter,
+    NestFastifyApplication,
 } from "@nestjs/platform-fastify";
 import { Test, TestingModule } from "@nestjs/testing";
 import * as nock from "nock";
@@ -79,7 +79,7 @@ describe("TerritoryPostController (e2e)", () => {
       expect(response.headers.Location).not.toBeNull();
     });
 
-    it("should send 400 status code when terriory number already registry in congragation", async () => {
+    it("should send 400 status code when territory number already registry in congregation", async () => {
       const requestTerritory = TerritoryPostRequestMother.create({
         number: territories[1].number.value,
         congregationId: congregation.number.value,

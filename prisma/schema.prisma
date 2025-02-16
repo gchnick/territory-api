@@ -130,7 +130,7 @@ model Publishers {
   publisher_id  String    @id @default(uuid())
   householder   Boolean   @default(false)
   sort_name     String    @unique
-  firts_name    String
+  first_name    String
   last_name     String
   address       String?
   mobile_phone  String?   @unique
@@ -160,7 +160,7 @@ model Publishers {
   family_group    FamilyGroups? @relation(fields: [family_group_id], references: [family_group_id], onDelete: Cascade)
   family_group_id Int
 
-  @@unique([firts_name, last_name])
+  @@unique([first_name, last_name])
 }
 
 model EmergencyContacts {
@@ -241,8 +241,8 @@ model Assignaments {
 
   meeting_places   MeetingPlaces @relation(fields: [meeting_place_id], references: [meeting_place_id], onDelete: Cascade)
   meeting_place_id String
-  conductor        Conductors    @relation(fields: [coductor_id], references: [conductor_id], onDelete: Cascade)
-  coductor_id      String
+  conductor        Conductors    @relation(fields: [conductor_id], references: [conductor_id], onDelete: Cascade)
+  conductor_id      String
   programs         Programs      @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
   program_id       String
 }

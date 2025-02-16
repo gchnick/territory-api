@@ -4,7 +4,7 @@ import {
 } from "@/contexts/Overseer/congregations/domain/cardinal-points";
 import { InvalidArgumentError } from "@/contexts/shared/domain/value-object/invalid-argument-error";
 
-describe("CardinalPiont should", () => {
+describe("CardinalPoint should", () => {
   it("to be defined", () => {
     const north = CardinalPoints.NORTH;
     const cardinalPoint = new CardinalPoint(north);

@@ -1,4 +1,4 @@
-import type { EnviromentVariables } from "@/core/config/configuration";
+import type { EnvironmentVariables } from "@/core/config/configuration";
 
 import { ConfigService } from "@nestjs/config";
 
@@ -24,7 +24,7 @@ export class AuthChecker {
     private readonly userRepository: UserRepository,
     private readonly encode: Encode,
     private readonly jwt: Jwt,
-    private readonly configService: ConfigService<EnviromentVariables>,
+    private readonly configService: ConfigService<EnvironmentVariables>,
   ) {}
 
   async check(email: UserEmail, password: UserPassword) {
@@ -36,7 +36,7 @@ export class AuthChecker {
     }
 
     this.logger.log(
-      `Cheking authentication user <${user.email.value}>`,
+      `Checking authentication user <${user.email.value}>`,
       "User",
     );
     const isMatch = await user.comparePassword(this.encode, password);

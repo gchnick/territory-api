@@ -2,7 +2,7 @@
 
 This is a backend that serves as the basis for developing an application for territory servant records.
 
-## Comming soon
+## Coming soon
 
 - Add Swagger documentation Api
 - Add end to end test per endpoint
@@ -74,4 +74,4 @@ If there have been updates to the database you can apply them one by one by writ
 npx prisma migrate resolve --applied <MIGRATION_NAME>
 ```
 
-Change `<MIGRATION_NAME>` for the filename of migration repective.
+Change `<MIGRATION_NAME>` for the filename of migration respective.

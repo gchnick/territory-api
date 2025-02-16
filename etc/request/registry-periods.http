@@ -24,7 +24,7 @@ PATCH http://localhost:7070/api/v1/registries/periods/f07abbd9-157a-4ac6-987d-b7
 Content-Type: application/json
 
 {
-  "description": "Special campain",
+  "description": "Special campaign",
   "finishDate": "2023-09-23"
 }
 

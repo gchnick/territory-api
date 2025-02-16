@@ -10,7 +10,7 @@ import { UserEnabledMother } from "./user-enabled-mother";
 import { UserIdMother } from "./user-id-mother";
 import { UserPasswordMother } from "./user-password-mother";
 import { UserRoleMother } from "./user-role-mother";
-import { UserVerifedMother } from "./user-verified-mother";
+import { UserVerifiedMother } from "./user-verified-mother";
 
 export const UserMother = {
   create(params?: Partial<UserPrimitives>): User {
@@ -18,7 +18,7 @@ export const UserMother = {
       id: UserIdMother.create().value,
       email: UserEmailMother.create().value,
       password: UserPasswordMother.create().value,
-      verified: UserVerifedMother.create().value,
+      verified: UserVerifiedMother.create().value,
       enabled: UserEnabledMother.create().value,
       roles: [UserRoleMother.create().toPrimitives()],
       ...params,

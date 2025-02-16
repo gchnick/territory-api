@@ -16,13 +16,13 @@ export const prepareTerritoriesInDB = async (
   congregationRepo: CongregationRepository,
   territoryRepo: TerritoryRepository,
 ) => {
-  const LENGHT_INITIAL_TERRITORY = 3;
+  const LENGTH_INITIAL_TERRITORY = 3;
 
   await territoryRepo.deleteAll();
   await congregationRepo.deleteAll();
   const congregation = CongregationMother.create();
   const territories = TerritoryMother.createSuccession(
-    LENGHT_INITIAL_TERRITORY,
+    LENGTH_INITIAL_TERRITORY,
     congregation.number.value,
   );
   await congregationRepo.save(congregation);
