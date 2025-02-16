@@ -19,7 +19,7 @@ model Congregations {
   east_limit            String
   west_limit            String
 
-  territory    Territories[]
+  territory Territories[]
 }
 
 model Territories {
@@ -108,8 +108,8 @@ model Phones {
 }
 
 model Roles {
-  role_id     Int          @id @default(autoincrement())
-  role        String       @unique
+  role_id     Int     @id @default(autoincrement())
+  role        String  @unique
   description String?
   users       Users[] @relation("RoleOfUser")
 }
@@ -120,7 +120,7 @@ model Users {
   password String
   enabled  Boolean @default(true)
   verified Boolean @default(false)
-  roles Roles[] @relation("RoleOfUser")
+  roles    Roles[] @relation("RoleOfUser")
 
   publisher    Publishers? @relation(fields: [publisher_id], references: [publisher_id])
   publisher_id String?     @unique
@@ -142,12 +142,12 @@ model Publishers {
   birthday      DateTime
   baptism_date  DateTime?
   is_active     Boolean   @default(true)
-  is_removed   Boolean   @default(false)
+  is_removed    Boolean   @default(false)
   email         String?   @unique
 
   conductors        Conductors[]
   user              Users?
-  phones            Phones[] @relation("PhoneOfPublisher")
+  phones            Phones[]             @relation("PhoneOfPublisher")
   reports           ReportsCurrentFile[]
   backup_reports    DeadFile[]
   emergency_contact EmergencyContacts?
@@ -164,9 +164,9 @@ model Publishers {
 }
 
 model EmergencyContacts {
-  emergency_contact_id        Int    @id @default(autoincrement())
-  full_name String
-  phone     String @unique
+  emergency_contact_id Int    @id @default(autoincrement())
+  full_name            String
+  phone                String @unique
 
   publisher    Publishers? @relation(fields: [publisher_id], references: [publisher_id])
   publisher_id String      @unique
@@ -242,7 +242,7 @@ model Assignaments {
   meeting_places   MeetingPlaces @relation(fields: [meeting_place_id], references: [meeting_place_id], onDelete: Cascade)
   meeting_place_id String
   conductor        Conductors    @relation(fields: [conductor_id], references: [conductor_id], onDelete: Cascade)
-  conductor_id      String
+  conductor_id     String
   programs         Programs      @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
   program_id       String
 }
@@ -264,7 +264,7 @@ model ReportsCurrentFile {
   hours                      Decimal?
   bible_courses              Int?
   is_pioneer                 Boolean  @default(false)
-  is_auxiliar_pioneer        Boolean  @default(false)
+  is_auxiliary_pioneer       Boolean  @default(false)
   comment                    String?
 
   month                  MonthsYearService @relation(fields: [months_year_service_id], references: [month_id])
@@ -279,7 +279,7 @@ model DeadFile {
   hours                      Decimal?
   bible_courses              Int?
   is_pioneer                 Boolean  @default(false)
-  is_auxiliar_pioneer        Boolean  @default(false)
+  is_auxiliary_pioneer       Boolean  @default(false)
   comment                    String?
 
   month                  MonthsYearService @relation(fields: [months_year_service_id], references: [month_id])
