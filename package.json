@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "API Rest to assigning of territories registry",
   "author": "gnick.alan@gmail.com",
-  "license": "MIT",
+  "license": "GPL-3.0",
   "type": "module",
   "bugs": {
     "url": "https://github.com/gchnick/territory-api/issues"
@@ -14,14 +14,18 @@
     "url": "git+https://github.com/gchnick/territory-api.git"
   },
   "keywords": [
-    "typescript",
-    "nestjs",
-    "template"
+    "registries",
+    "congregation",
+    "jw",
+    "form",
+    "pubishers",
+    "assignaments"
   ],
   "engines": {
     "node": ">=18.x",
     "npm": ">=9.x"
   },
+  "packageManager": "pnpm@9.14.2",
   "main": "dist/main.js",
   "scripts": {
     "build": "node --run build:clean && nest build --path tsconfig.prod.json",
