@@ -28,7 +28,7 @@
   "packageManager": "pnpm@9.14.2",
   "main": "dist/main.js",
   "scripts": {
-    "build": "node --run build:clean && nest build --path tsconfig.prod.json",
+    "build": "node --run build:clean && node --run prisma:deploy && nest build --path tsconfig.prod.json",
     "start": "node dist/main.js",
     "dev": "nest start --watch --debug=0.0.0.0:9229",
     "test": "rimraf coverage .nyc_output && concurrently 'node --run test:unit' 'node --run test:e2e' && node --run calculate-global-test-coverage",
@@ -44,7 +44,8 @@
     "lint:file": "eslint --ignore-path .gitignore",
     "lint:yaml": "chmod +x scripts/lint_yaml.sh && ./scripts/lint_yaml.sh",
     "build:clean": "rimraf dist; exit 0",
-    "typos": "chmod +x scripts/check_typos.sh && ./scripts/check_typos.sh"
+    "typos": "chmod +x scripts/check_typos.sh && ./scripts/check_typos.sh",
+    "prisma:deploy": "npx prisma migrate deploy && npx prisma generate --sql"
   },
   "dependencies": {
     "@fastify/static": "^7.0.4",
