@@ -1,5 +1,5 @@
 {
-  "name": "ServiceOverseer",
+  "name": "service-overseer",
   "version": "1.0.0",
   "description": "API Rest to assigning of territories registry",
   "author": "gnick.alan@gmail.com",
@@ -18,7 +18,7 @@
     "congregation",
     "jw",
     "form",
-    "pubishers",
+    "publishers",
     "assignaments"
   ],
   "engines": {
