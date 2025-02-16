@@ -12,6 +12,8 @@ jobs:
       - name: Setup Node ⚙️
         uses: ./.github/actions/setup-node
       - name: Build typescript 📦
+        env:
+          SQLITE_DATABASE: ${{ secrets.SQLITE_DATABASE }}
         run: node --run build && find dist/main.js
       - name: Lint code 💅
         run: node --run lint
