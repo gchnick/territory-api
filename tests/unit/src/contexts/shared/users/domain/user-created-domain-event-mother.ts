@@ -1,3 +1,5 @@
+import { Temporal } from "temporal-polyfill";
+
 import { Role } from "@/contexts/shared/users/domain/role/role-name";
 import { User } from "@/contexts/shared/users/domain/user";
 import { UserCreatedDomainEvent } from "@/contexts/shared/users/domain/user-created-domain-event";
@@ -14,7 +16,7 @@ export const UserCreatedDomainEventMother = {
     eventId?: string;
     email: string;
     roles: Role[];
-    occurredOn?: Date;
+    occurredOn?: Temporal.Instant;
   }): UserCreatedDomainEvent {
     return new UserCreatedDomainEvent({
       aggregateId,
