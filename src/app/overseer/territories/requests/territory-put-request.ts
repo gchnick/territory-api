@@ -41,10 +41,11 @@ export class TerritoryPutRequest {
   label?: string;
 
   @ApiProperty({
-    description: "Date od last completion",
+    description:
+      "Date old last completion. Value as Temporal Plain Date format.",
     required: false,
-    type: Date,
-    example: "2023-03-01T00:00:00.000Z",
+    type: String,
+    example: "2023-03-01",
   })
   @IsDateString()
   lastDateCompleted?: string;

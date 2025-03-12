@@ -7,7 +7,6 @@ import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id
 import { TerritoryLabel } from "@/contexts/Overseer/territories/domain/territory-label";
 import { TerritoryLastDateCompleted } from "@/contexts/Overseer/territories/domain/territory-last-date-completed";
 import { TerritoryLocality } from "@/contexts/Overseer/territories/domain/territory-locality";
-import { TerritoryLocalityInPart } from "@/contexts/Overseer/territories/domain/territory-locality-in-part";
 import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
 import { TerritoryQuantityHouse } from "@/contexts/Overseer/territories/domain/territory-quantity-house";
 import { TerritorySector } from "@/contexts/Overseer/territories/domain/territory-sector";
@@ -35,7 +34,7 @@ export class CreateTerritoryCommandHandler
       : undefined;
     const locality = new TerritoryLocality(command.locality);
     const localityInPart = command.localityInPart
-      ? new TerritoryLocalityInPart(command.localityInPart)
+      ? new TerritoryLocality(command.localityInPart)
       : undefined;
     const quantityHouses = new TerritoryQuantityHouse(command.quantityHouses);
     const lastDateCompleted = new TerritoryLastDateCompleted(

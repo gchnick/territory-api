@@ -15,7 +15,7 @@ export class TerritoryResponse {
       label: { type: "string", example: "New York" },
       lastDateCompleted: {
         type: "date",
-        example: "2023-03-01T00:00:00.000Z",
+        example: "2023-03-01",
       },
       locality: { type: "string", example: "Street 3, Street 4" },
       localityInPart: {

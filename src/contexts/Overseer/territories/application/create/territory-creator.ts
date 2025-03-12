@@ -4,14 +4,13 @@ import { Nullable } from "@/shared/domain/nullable";
 import { Injectable } from "@/shared/infrastructure/dependency-injection/injectable";
 
 import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
-import { MeetingPlace } from "@/contexts/Overseer/meeting-place/domain/meeting-place";
+import { MeetingPlace } from "@/contexts/Overseer/territories/domain/meeting-place";
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 import { TerritoryCurrentAssigned } from "@/contexts/Overseer/territories/domain/territory-current-assigned";
 import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
 import { TerritoryLabel } from "@/contexts/Overseer/territories/domain/territory-label";
 import { TerritoryLastDateCompleted } from "@/contexts/Overseer/territories/domain/territory-last-date-completed";
 import { TerritoryLocality } from "@/contexts/Overseer/territories/domain/territory-locality";
-import { TerritoryLocalityInPart } from "@/contexts/Overseer/territories/domain/territory-locality-in-part";
 import { TerritoryMap } from "@/contexts/Overseer/territories/domain/territory-map";
 import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
 import { TerritoryNumberAlreadyRegistry } from "@/contexts/Overseer/territories/domain/territory-number-already-registry";
@@ -34,7 +33,7 @@ export class TerritoryCreator {
     label: TerritoryLabel;
     sector: Nullable<TerritorySector>;
     locality: TerritoryLocality;
-    localityInPart: Nullable<TerritoryLocalityInPart>;
+    localityInPart: Nullable<TerritoryLocality>;
     quantityHouses: TerritoryQuantityHouse;
     lastDateCompleted: TerritoryLastDateCompleted;
   }): Promise<void> {
@@ -42,18 +41,18 @@ export class TerritoryCreator {
     const currentAssigned = new TerritoryCurrentAssigned(false);
     const meetingPlaces: MeetingPlace[] = [];
     const territory = Territory.create(
-      params.id,
       params.congregationId,
-      params.number,
+      currentAssigned,
+      params.id,
       params.label,
-      params.sector,
+      params.lastDateCompleted,
       params.locality,
       params.localityInPart,
-      params.quantityHouses,
       map,
-      currentAssigned,
-      params.lastDateCompleted,
       meetingPlaces,
+      params.number,
+      params.quantityHouses,
+      params.sector,
     );
     this.logger.log(
       `Saving new territory <${territory.label.value}>`,

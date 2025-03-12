@@ -8,6 +8,9 @@ import {
   IsString,
 } from "class-validator";
 
+import { TerritoryLabel } from "@/contexts/Overseer/territories/domain/territory-label";
+import { TerritoryLocality } from "@/contexts/Overseer/territories/domain/territory-locality";
+
 export class TerritoryPostRequest {
   @ApiProperty({
     description: "Congregation number",
@@ -33,7 +36,7 @@ export class TerritoryPostRequest {
     required: true,
     type: String,
     minLength: 1,
-    maxLength: 50,
+    maxLength: TerritoryLabel.MAXIMUM_CHARACTERS,
     example: "New Ocean",
   })
   @IsString()
@@ -41,10 +44,11 @@ export class TerritoryPostRequest {
   label!: string;
 
   @ApiProperty({
-    description: "Date od last completion",
+    description:
+      "Date old last completion. Value as Temporal Plain Date format.",
     required: true,
-    type: Date,
-    example: "2023-03-01T00:00:00.000Z",
+    type: String,
+    example: "2023-03-01",
   })
   @IsDateString()
   lastDateCompleted!: string;
@@ -54,6 +58,7 @@ export class TerritoryPostRequest {
     required: true,
     type: String,
     minLength: 1,
+    maxLength: TerritoryLocality.MAXIMUM_CHARACTERS,
     example: "Street 3, Street 4",
   })
   @IsString()

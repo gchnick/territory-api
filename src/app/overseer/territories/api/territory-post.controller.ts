@@ -34,6 +34,7 @@ import { InvalidArgumentError } from "@/shared/domain/value-object/invalid-argum
 import { Uuid } from "@/shared/domain/value-object/uuid";
 
 import { CreateTerritoryCommand } from "@/contexts/Overseer/territories/application/create/create-territory-command";
+import { PlainDateValueObject } from "@/contexts/shared/domain/value-object/pain-date-value-object";
 import { Role } from "@/contexts/shared/users/domain/role/role-name";
 
 import { TerritoryPostRequest } from "../requests/territory-post-request";
@@ -104,7 +105,7 @@ export class TerritoryPostController {
         locality,
         localityInPart,
         quantityHouses,
-        lastDateCompleted: new Date(lastDateCompleted),
+        lastDateCompleted: PlainDateValueObject.toTemporal(lastDateCompleted),
       });
 
       await this.commandBus.dispatch(command);

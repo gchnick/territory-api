@@ -7,7 +7,6 @@ import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id
 import { TerritoryLabel } from "@/contexts/Overseer/territories/domain/territory-label";
 import { TerritoryLastDateCompleted } from "@/contexts/Overseer/territories/domain/territory-last-date-completed";
 import { TerritoryLocality } from "@/contexts/Overseer/territories/domain/territory-locality";
-import { TerritoryLocalityInPart } from "@/contexts/Overseer/territories/domain/territory-locality-in-part";
 import { TerritoryMap } from "@/contexts/Overseer/territories/domain/territory-map";
 import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
 import { TerritoryNumberAlreadyRegistry } from "@/contexts/Overseer/territories/domain/territory-number-already-registry";
@@ -33,7 +32,7 @@ export class TerritoryUpdater {
       label?: TerritoryLabel;
       lastDateCompleted?: TerritoryLastDateCompleted;
       locality?: TerritoryLocality;
-      localityInPart?: TerritoryLocalityInPart;
+      localityInPart?: TerritoryLocality;
       map?: TerritoryMap;
       number?: TerritoryNumber;
       quantityHouses?: TerritoryQuantityHouse;

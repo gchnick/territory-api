@@ -1,3 +1,5 @@
+import { Temporal } from "temporal-polyfill";
+
 import { Command } from "@/shared/domain/command";
 
 type Params = {
@@ -6,7 +8,7 @@ type Params = {
   id: string;
   number?: number;
   label?: string;
-  lastDateCompleted?: Date;
+  lastDateCompleted?: Temporal.PlainDate;
   locality?: string;
   localityInPart?: string;
   map?: string;
@@ -19,7 +21,7 @@ export class UpdateTerritoryCommand extends Command {
   currentAssigned?: boolean;
   id: string;
   label?: string;
-  lastDateCompleted?: Date;
+  lastDateCompleted?: Temporal.PlainDate;
   locality?: string;
   localityInPart?: string;
   map?: string;
