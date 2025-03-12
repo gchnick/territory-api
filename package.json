@@ -25,7 +25,7 @@
     "node": ">=18.x",
     "npm": ">=9.x"
   },
-  "packageManager": "pnpm@9.14.2",
+  "packageManager": "pnpm@10.6.2",
   "main": "dist/main.js",
   "scripts": {
     "build": "node --run build:clean && node --run prisma:deploy && nest build --path tsconfig.prod.json",
@@ -45,10 +45,22 @@
     "lint:yaml": "chmod +x scripts/lint_yaml.sh && ./scripts/lint_yaml.sh",
     "build:clean": "rimraf dist; exit 0",
     "typos": "chmod +x scripts/check_typos.sh && ./scripts/check_typos.sh",
-    "prisma:deploy": "npx prisma migrate deploy && npx prisma generate --sql"
+    "prisma:clean:local": "rimraf prisma/local/migrations && rimraf prisma/local/db",
+    "prisma:clean:auth": "rimraf prisma/auth/migrations && rimraf prisma/auth/db",
+    "prisma:clean:external": "rimraf prisma/external/migrations && rimraf prisma/external/db",
+    "prisma:clean": "node --run prisma:clean:local && node --run prisma:clean:auth && node --run prisma:clean:external",
+    "prisma:generate": "npx prisma generate --schema prisma/external/schema.prisma --sql",
+    "prisma:dev:local": "npx prisma migrate dev --schema prisma/local/schema.prisma --name init",
+    "prisma:dev:auth": "npx prisma migrate reset --schema prisma/auth/schema.prisma && npx prisma migrate dev --schema prisma/auth/schema.prisma --name init",
+    "prisma:dev:external": "npx prisma migrate dev --schema prisma/external/schema.prisma --name init && node --run prisma:generate",
+    "prisma:dev": "node --run prisma:clean && node --run prisma:dev:local && node --run prisma:dev:auth && node --run prisma:dev:external",
+    "prisma:deploy:local": "npx prisma migrate deploy --schema prisma/local/schema.prisma",
+    "prisma:deploy:external": "node --run prisma:generate",
+    "prisma:deploy": "node --run prisma:deploy:local && node --run prisma:deploy:external"
   },
   "dependencies": {
     "@fastify/static": "^7.0.4",
+    "@libsql/client": "^0.14.0",
     "@nestjs/cli": "^10.4.5",
     "@nestjs/common": "^10.4.1",
     "@nestjs/config": "^3.2.3",
@@ -58,7 +70,8 @@
     "@nestjs/platform-fastify": "^10.4.6",
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/typeorm": "^10.0.2",
-    "@prisma/client": "6.3.0",
+    "@prisma/adapter-libsql": "^6.4.1",
+    "@prisma/client": "6.5.0",
     "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
@@ -66,6 +79,7 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "sqlite3": "^5.1.7",
+    "temporal-polyfill": "^0.2.5",
     "typeorm": "^0.3.20",
     "uuid": "^10.0.0"
   },
@@ -100,7 +114,7 @@
     "nock": "^13.5.5",
     "nyc": "^17.1.0",
     "prettier": "^3.3.3",
-    "prisma": "^6.3.0",
+    "prisma": "^6.5.0",
     "rimraf": "^6.0.1",
     "source-map-support": "^0.5.21",
     "supertest": "^7.0.0",
@@ -119,5 +133,21 @@
     "@swc/core-linux-arm64-musl": "^1.7.42",
     "@swc/core-linux-x64-gnu": "^1.7.42",
     "@swc/core-linux-x64-musl": "^1.7.42"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@nestjs/core",
+      "@prisma/client",
+      "@prisma/engines",
+      "@swc/core",
+      "bcrypt",
+      "esbuild",
+      "nice-napi",
+      "prisma",
+      "sqlite3"
+    ],
+    "ignoredBuiltDependencies": [
+      "sqlite3"
+    ]
   }
 }
