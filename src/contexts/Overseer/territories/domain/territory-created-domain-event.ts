@@ -1,3 +1,5 @@
+import { Temporal } from "temporal-polyfill";
+
 import { DomainEvent } from "@/shared/domain/domain-event";
 
 type CreateTerritoryDomainEventAttributes = {
@@ -26,7 +28,7 @@ export class TerritoryCreatedDomainEvent extends DomainEvent {
     congregationId: number;
     number: number;
     label: string;
-    occurredOn?: Date;
+    occurredOn?: Temporal.Instant;
   }) {
     super({
       eventName: TerritoryCreatedDomainEvent.EVENT_NAME,
@@ -52,7 +54,7 @@ export class TerritoryCreatedDomainEvent extends DomainEvent {
     aggregateId: string;
     attributes: CreateTerritoryDomainEventAttributes;
     eventId: string;
-    occurredOn: Date;
+    occurredOn: Temporal.Instant;
   }): DomainEvent {
     const { aggregateId, attributes, occurredOn, eventId } = params;
     return new TerritoryCreatedDomainEvent({

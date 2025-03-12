@@ -4,7 +4,7 @@ import { TerritoryLabelIsEmpty } from "./territory-label-is-empty";
 import { TerritoryLabelLengthExceeded } from "./territory-label-length-exceeded";
 
 export class TerritoryLabel extends StringValueObject {
-  static MAXIMUM_CHARACTERS = 50;
+  static MAXIMUM_CHARACTERS = 100;
 
   constructor(value: string) {
     super(value);

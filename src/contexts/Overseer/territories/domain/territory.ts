@@ -5,7 +5,7 @@ import { CongregationId } from "@/contexts/Overseer/congregations/domain/congreg
 import {
   MeetingPlace,
   MeetingPlacePrimitives,
-} from "@/contexts/Overseer/meeting-place/domain/meeting-place";
+} from "@/contexts/Overseer/territories/domain/meeting-place";
 
 import { TerritoryCreatedDomainEvent } from "./territory-created-domain-event";
 import { TerritoryCurrentAssigned } from "./territory-current-assigned";
@@ -13,7 +13,6 @@ import { TerritoryId } from "./territory-id";
 import { TerritoryLabel } from "./territory-label";
 import { TerritoryLastDateCompleted } from "./territory-last-date-completed";
 import { TerritoryLocality } from "./territory-locality";
-import { TerritoryLocalityInPart } from "./territory-locality-in-part";
 import { TerritoryMap } from "./territory-map";
 import { TerritoryNumber } from "./territory-number";
 import { TerritoryQuantityHouse } from "./territory-quantity-house";
@@ -24,7 +23,7 @@ export type TerritoryPrimitives = {
   currentAssigned: boolean;
   id: string;
   label: string;
-  lastDateCompleted: Date;
+  lastDateCompleted: string;
   locality: string;
   localityInPart?: string;
   map?: string;
@@ -35,109 +34,109 @@ export type TerritoryPrimitives = {
 };
 
 export class Territory extends AggregateRoot {
-  readonly id: TerritoryId;
   readonly congregation: CongregationId;
-  readonly number: TerritoryNumber;
-  readonly label: TerritoryLabel;
-  readonly sector: Nullable<TerritorySector>;
-  readonly locality: TerritoryLocality;
-  readonly localityInPart: Nullable<TerritoryLocalityInPart>;
-  readonly quantityHouses: TerritoryQuantityHouse;
-  readonly map: Nullable<TerritoryMap>;
   readonly currentAssigned: TerritoryCurrentAssigned;
+  readonly id: TerritoryId;
+  readonly label: TerritoryLabel;
   readonly lastDateCompleted: TerritoryLastDateCompleted;
+  readonly locality: TerritoryLocality;
+  readonly localityInPart: Nullable<TerritoryLocality>;
+  readonly map: Nullable<TerritoryMap>;
   readonly meetingPlaces: MeetingPlace[];
+  readonly number: TerritoryNumber;
+  readonly quantityHouses: TerritoryQuantityHouse;
+  readonly sector: Nullable<TerritorySector>;
 
   constructor(
-    id: TerritoryId,
     congregation: CongregationId,
-    number: TerritoryNumber,
-    label: TerritoryLabel,
-    sector: Nullable<TerritorySector>,
-    locality: TerritoryLocality,
-    localityInPart: Nullable<TerritoryLocalityInPart>,
-    quantityHouses: TerritoryQuantityHouse,
-    map: Nullable<TerritoryMap>,
     currentAssigned: TerritoryCurrentAssigned,
+    id: TerritoryId,
+    label: TerritoryLabel,
     lastDateCompleted: TerritoryLastDateCompleted,
+    locality: TerritoryLocality,
+    localityInPart: Nullable<TerritoryLocality>,
+    map: Nullable<TerritoryMap>,
     meetingPlaces: MeetingPlace[],
+    number: TerritoryNumber,
+    quantityHouses: TerritoryQuantityHouse,
+    sector: Nullable<TerritorySector>,
   ) {
     super();
-    this.id = id;
     this.congregation = congregation;
-    this.number = number;
+    this.currentAssigned = currentAssigned;
+    this.id = id;
     this.label = label;
-    this.sector = sector;
+    this.lastDateCompleted = lastDateCompleted;
     this.locality = locality;
     this.localityInPart = localityInPart;
-    this.quantityHouses = quantityHouses;
     this.map = map;
-    this.currentAssigned = currentAssigned;
-    this.lastDateCompleted = lastDateCompleted;
     this.meetingPlaces = meetingPlaces;
+    this.number = number;
+    this.quantityHouses = quantityHouses;
+    this.sector = sector;
   }
 
   public assigned() {
     return new Territory(
-      this.id,
       this.congregation,
-      this.number,
+      new TerritoryCurrentAssigned(true),
+      this.id,
       this.label,
-      this.sector,
+      this.lastDateCompleted,
       this.locality,
       this.localityInPart,
-      this.quantityHouses,
       this.map,
-      new TerritoryCurrentAssigned(true),
-      this.lastDateCompleted,
       this.meetingPlaces,
+      this.number,
+      this.quantityHouses,
+      this.sector,
     );
   }
 
-  public unassigned(dateClosed: Date) {
+  public unassigned(dateClosed: TerritoryLastDateCompleted) {
     return new Territory(
-      this.id,
       this.congregation,
-      this.number,
+      new TerritoryCurrentAssigned(false),
+      this.id,
       this.label,
-      this.sector,
+      dateClosed,
       this.locality,
       this.localityInPart,
-      this.quantityHouses,
       this.map,
-      new TerritoryCurrentAssigned(false),
-      new TerritoryLastDateCompleted(dateClosed),
       this.meetingPlaces,
+      this.number,
+      this.quantityHouses,
+      this.sector,
     );
   }
 
   static create(
-    id: TerritoryId,
     congregation: CongregationId,
-    number: TerritoryNumber,
-    label: TerritoryLabel,
-    sector: Nullable<TerritorySector>,
-    locality: TerritoryLocality,
-    localityInPart: Nullable<TerritoryLocalityInPart>,
-    quantityHouses: TerritoryQuantityHouse,
-    map: Nullable<TerritoryMap>,
     currentAssigned: TerritoryCurrentAssigned,
+    id: TerritoryId,
+    label: TerritoryLabel,
     lastDateCompleted: TerritoryLastDateCompleted,
+    locality: TerritoryLocality,
+    localityInPart: Nullable<TerritoryLocality>,
+    map: Nullable<TerritoryMap>,
     meetingPlaces: MeetingPlace[],
+    number: TerritoryNumber,
+    quantityHouses: TerritoryQuantityHouse,
+    sector: Nullable<TerritorySector>,
   ): Territory {
     const territory = new Territory(
-      id,
       congregation,
-      number,
+      currentAssigned,
+      id,
       label,
-      sector,
+      lastDateCompleted,
       locality,
       localityInPart,
-      quantityHouses,
       map,
-      currentAssigned,
-      lastDateCompleted,
       meetingPlaces,
+      number,
+      quantityHouses,
+      sector,
     );
 
     territory.record(
@@ -153,70 +152,58 @@ export class Territory extends AggregateRoot {
   }
 
   static fromPrimitives(plainData: {
-    id: string;
     congregationId: number;
-    number: number;
+    currentAssigned: boolean;
+    id: string;
     label: string;
-    sector?: string;
+    lastDateCompleted: string;
     locality: string;
     localityInPart?: string;
-    quantityHouses: number;
     map?: string;
-    currentAssigned: boolean;
-    lastDateCompleted: Date;
     meetingPlaces: MeetingPlacePrimitives[];
+    number: number;
+    quantityHouses: number;
+    sector?: string;
   }): Territory {
     return new Territory(
-      new TerritoryId(plainData.id),
       new CongregationId(plainData.congregationId),
-      new TerritoryNumber(plainData.number),
+      new TerritoryCurrentAssigned(plainData.currentAssigned),
+      new TerritoryId(plainData.id),
       new TerritoryLabel(plainData.label),
-      plainData.sector ? new TerritorySector(plainData.sector) : undefined,
+      TerritoryLastDateCompleted.fromPrimitive(plainData.lastDateCompleted),
       new TerritoryLocality(plainData.locality),
       plainData.localityInPart
-        ? new TerritoryLocalityInPart(plainData.localityInPart)
+        ? new TerritoryLocality(plainData.localityInPart)
         : undefined,
-      new TerritoryQuantityHouse(plainData.quantityHouses),
       plainData.map ? new TerritoryMap(plainData.map) : undefined,
-      new TerritoryCurrentAssigned(plainData.currentAssigned),
-      new TerritoryLastDateCompleted(plainData.lastDateCompleted),
-      plainData.meetingPlaces.map(
-        ({
+      plainData.meetingPlaces.map(({ id, address, latitude, longitude }) =>
+        MeetingPlace.fromPrimitives({
           id,
-          place,
-          phone,
+          address,
           latitude,
           longitude,
-          fieldService,
-          availability,
-        }) =>
-          MeetingPlace.fromPrimitives({
-            id,
-            place,
-            phone,
-            latitude,
-            longitude,
-            fieldService,
-            availability,
-          }),
+        }),
       ),
+      new TerritoryNumber(plainData.number),
+      new TerritoryQuantityHouse(plainData.quantityHouses),
+      plainData.sector ? new TerritorySector(plainData.sector) : undefined,
     );
   }
 
   toPrimitives(): TerritoryPrimitives {
     return {
-      id: this.id.value,
       congregationId: this.congregation.value,
-      number: this.number.value,
+      currentAssigned: this.currentAssigned.value,
+      id: this.id.value,
       label: this.label.value,
-      sector: this.sector?.value,
+      lastDateCompleted: this.lastDateCompleted.value,
       locality: this.locality.value,
       localityInPart: this.localityInPart?.value,
-      quantityHouses: this.quantityHouses.value,
       map: this.map?.value,
-      currentAssigned: this.currentAssigned.value,
-      lastDateCompleted: this.lastDateCompleted.value,
       meetingPlaces: this.meetingPlaces.map(m => m.toPrimitives()),
+      number: this.number.value,
+      quantityHouses: this.quantityHouses.value,
+      sector: this.sector?.value,
     };
   }
 }

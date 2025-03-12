@@ -1,5 +1,6 @@
-import { Prisma } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+
+import { Prisma } from "@/db/client/external";
 
 import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
@@ -12,51 +13,26 @@ import {
 } from "@/contexts/Overseer/territories/domain/territory-repository";
 import { Criteria } from "@/contexts/shared/domain/criteria/criteria";
 import { Nullable } from "@/contexts/shared/domain/nullable";
-import { getNodeEnv } from "@/contexts/shared/domain/value-object/environment";
 import {
   BooleanCasting,
   CriteriaToPrismaConverter,
 } from "@/contexts/shared/infrastructure/criteria/criteria-to-prisma-converter";
-import { NestPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/nest-prisma-service";
+import { ExternalPrismaRepository } from "@/contexts/shared/infrastructure/persistence/prisma/repositories/external-prisma-repository";
 
-export class TerritoryPrisma implements TerritoryRepository {
-  constructor(private readonly _repository: NestPrismaService) {}
+import { TerritoryMapper } from "./territory-mapper";
 
+type TerritoryWithMeetingPlaces = Prisma.TerritoriesGetPayload<{
+  include: { meeting_place: true };
+}>;
+
+export class TerritoryPrisma
+  extends ExternalPrismaRepository<Territory, "territories">
+  implements TerritoryRepository
+{
   async save(territory: Territory): Promise<void> {
-    const {
-      id: territory_id,
-      congregationId: congregation_id,
-      number,
-      label,
-      locality,
-      localityInPart: locality_in_part,
-      quantityHouses: quantity_houses,
-      sector,
-      lastDateCompleted: last_date_completed,
-      currentAssigned: current_assigned,
-      map: map_image_url,
-    } = territory.toPrimitives();
-
+    const territoryMapper = new TerritoryMapper();
     try {
-      await this._repository.territories.create({
-        data: {
-          congregation: {
-            connect: {
-              congregation_id,
-            },
-          },
-          territory_id,
-          label,
-          last_date_completed,
-          locality,
-          locality_in_part,
-          number,
-          current_assigned,
-          map_image_url,
-          quantity_houses,
-          sector,
-        },
-      });
+      await this.persist(territory, territoryMapper);
     } catch (error) {
       if (
         error instanceof PrismaClientKnownRequestError &&
@@ -68,24 +44,10 @@ export class TerritoryPrisma implements TerritoryRepository {
   }
 
   async searchAll(): Promise<Territory[] | Territory> {
-    const result = await this._repository.territories.findMany();
-
-    return result.map(t =>
-      Territory.fromPrimitives({
-        id: t.territory_id,
-        congregationId: t.congregation_id,
-        currentAssigned: t.current_assigned,
-        label: t.label,
-        lastDateCompleted: t.last_date_completed,
-        locality: t.locality,
-        number: t.number,
-        quantityHouses: t.quantity_houses,
-        localityInPart: t.locality_in_part ?? undefined,
-        map: t.map_image_url ?? undefined,
-        sector: t.sector ?? undefined,
-        meetingPlaces: [],
-      }),
-    );
+    const result = await this.repository().findMany({
+      include: { meeting_place: true },
+    });
+    return result.map(t => this.#toDomain(t));
   }
 
   async matching(criteria: Criteria): Promise<Territory[] | Territory> {
@@ -101,26 +63,12 @@ export class TerritoryPrisma implements TerritoryRepository {
       { congregation: Number, isAssigned: BooleanCasting },
     );
 
-    const result = await this._repository.territories.findMany({
+    const result = await this.repository().findMany({
       ...prismaOptions,
+      include: { meeting_place: true },
     });
 
-    return result.map(t =>
-      Territory.fromPrimitives({
-        id: t.territory_id,
-        congregationId: t.congregation_id,
-        currentAssigned: t.current_assigned,
-        label: t.label,
-        lastDateCompleted: t.last_date_completed,
-        locality: t.locality,
-        number: t.number,
-        quantityHouses: t.quantity_houses,
-        localityInPart: t.locality_in_part ?? undefined,
-        map: t.map_image_url ?? undefined,
-        sector: t.sector ?? undefined,
-        meetingPlaces: [],
-      }),
-    );
+    return result.map(t => this.#toDomain(t));
   }
 
   async findByNumber(
@@ -129,50 +77,26 @@ export class TerritoryPrisma implements TerritoryRepository {
   ): Promise<Nullable<Territory>> {
     const congregation_id = congregationId.value;
     const number = territoryNumber.value;
-    const result = await this._repository.territories.findUnique({
+    const result = await this.repository().findUnique({
       where: { congregation_id_number: { congregation_id, number } },
+      include: { meeting_place: true },
     });
 
     if (result === null) return;
 
-    return Territory.fromPrimitives({
-      id: result.territory_id,
-      congregationId: result.congregation_id,
-      currentAssigned: result.current_assigned,
-      label: result.label,
-      lastDateCompleted: result.last_date_completed,
-      locality: result.locality,
-      number: result.number,
-      quantityHouses: result.quantity_houses,
-      localityInPart: result.locality_in_part ?? undefined,
-      map: result.map_image_url ?? undefined,
-      sector: result.sector ?? undefined,
-      meetingPlaces: [],
-    });
+    return this.#toDomain(result);
   }
 
   async findById(id: TerritoryId): Promise<Nullable<Territory>> {
     const territory_id = id.value;
-    const result = await this._repository.territories.findUnique({
+    const result = await this.repository().findUnique({
       where: { territory_id },
+      include: { meeting_place: true },
     });
 
     if (result === null) return;
 
-    return Territory.fromPrimitives({
-      id: result.territory_id,
-      congregationId: result.congregation_id,
-      currentAssigned: result.current_assigned,
-      label: result.label,
-      lastDateCompleted: result.last_date_completed,
-      locality: result.locality,
-      number: result.number,
-      quantityHouses: result.quantity_houses,
-      localityInPart: result.locality_in_part ?? undefined,
-      map: result.map_image_url ?? undefined,
-      sector: result.sector ?? undefined,
-      meetingPlaces: [],
-    });
+    return this.#toDomain(result);
   }
 
   async update(
@@ -211,7 +135,7 @@ export class TerritoryPrisma implements TerritoryRepository {
       sector,
     };
 
-    await this._repository.territories.update({
+    await this.repository().update({
       where: { territory_id },
       data,
     });
@@ -219,15 +143,37 @@ export class TerritoryPrisma implements TerritoryRepository {
 
   async delete(id: TerritoryId): Promise<void> {
     const territory_id = id.value;
-    await this._repository.territories.delete({
+    await this.repository().delete({
       where: { territory_id },
     });
   }
 
   async deleteAll(): Promise<void> {
-    const environment = getNodeEnv();
-    if (!environment.isProduction()) {
-      await this._repository.territories.deleteMany({});
-    }
+    await this.truncate();
+  }
+
+  #toDomain(territory: TerritoryWithMeetingPlaces): Territory {
+    return Territory.fromPrimitives({
+      congregationId: territory.congregation_id,
+      currentAssigned: territory.current_assigned,
+      id: territory.territory_id,
+      label: territory.label,
+      lastDateCompleted: territory.last_date_completed
+        .toISOString()
+        .split("T")[0],
+      locality: territory.locality,
+      localityInPart: territory.locality_in_part ?? undefined,
+      map: territory.map_image_url ?? undefined,
+      meetingPlaces: territory.meeting_place.map(mp => ({
+        id: mp.meeting_place_id,
+        address: mp.address,
+        latitude: mp.latitude ?? undefined,
+        longitude: mp.longitude ?? undefined,
+        publisherLiving: mp.meeting_place_id,
+      })),
+      number: territory.number,
+      quantityHouses: territory.quantity_houses,
+      sector: territory.sector ?? undefined,
+    });
   }
 }
