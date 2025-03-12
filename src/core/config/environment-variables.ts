@@ -3,7 +3,7 @@ import {
   getNodeEnv,
 } from "@/contexts/shared/domain/value-object/environment";
 
-export const envFilePath = (): string => {
+export const environmentVariables = () => {
   const environment = getNodeEnv();
   const production = Environment.production();
   const stage = Environment.stage();
@@ -19,6 +19,6 @@ export const envFilePath = (): string => {
 
   const path = filePath[environment.value];
 
-  process.loadEnvFile(path);
-  return path;
+  globalThis.process.loadEnvFile(path);
+  return { path, environment, env: globalThis.process.env };
 };

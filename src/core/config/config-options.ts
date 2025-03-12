@@ -1,12 +1,12 @@
 import { ConfigModuleOptions } from "@nestjs/config";
 
-import configuration from "@/core/config/configuration";
+import { configuration } from "@/core/config/configuration";
 import { validate } from "@/core/config/env.validation";
 
-import { envFilePath } from "./env-file-path";
+import { environmentVariables } from "./environment-variables";
 
 const configOptions = (): ConfigModuleOptions => ({
-  envFilePath: envFilePath(),
+  envFilePath: environmentVariables().path,
   isGlobal: true,
   cache: true,
   load: [configuration],
