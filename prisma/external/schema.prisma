@@ -1,0 +1,62 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters", "typedSql"]
+  output = "../client/external"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("TURSO_LOCAL_DEV")
+}
+
+model Congregations {
+  congregation_id       Int     @id
+  name                  String  @unique
+  circuit               String
+  number_of_territories Int?    @default(0)
+  map_image_url         String?
+  north_limit           String
+  south_limit           String
+  east_limit            String
+  west_limit            String
+
+  territory Territories[]
+}
+
+model Territories {
+  territory_id        String   @unique
+  number              Int
+  label               String   @unique
+  sector              String?
+  quantity_houses     Int      @default(0)
+  locality            String
+  locality_in_part    String?
+  map_image_url       String?
+  last_date_completed DateTime
+  current_assigned    Boolean  @default(false)
+
+  meeting_place MeetingPlaces[]
+
+  congregation    Congregations @relation(fields: [congregation_id], references: [congregation_id])
+  congregation_id Int
+
+  @@id([congregation_id, number])
+}
+
+model MeetingPlaces {
+  meeting_place_id String  @id @default(uuid())
+  address          String
+  latitude         String?
+  longitude        String?
+
+  territory    Territories @relation(fields: [territory_id], references: [territory_id], onDelete: Cascade)
+  territory_id String
+  publisher    Publishers?  @relation(fields: [publisher_id], references: [publisher_id])
+  publisher_id String?      @unique
+}
+
+model Publishers {
+  publisher_id  String    @id @default(uuid())
+
+  meeting_place     MeetingPlaces?
+}

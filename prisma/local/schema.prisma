@@ -1,0 +1,91 @@
+generator client {
+  provider        = "prisma-client-js"
+  output = "../client/local"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("SQLITE_DATABASE")
+}
+
+model Periods {
+  period_id   String    @id @default(uuid())
+  description String
+  start_date  DateTime
+  finish_date DateTime?
+
+  registries Registries[]
+}
+
+model Registries {
+  registry_id    String    @id @default(uuid())
+  date_assigned  DateTime
+  date_completed DateTime?
+  territory_id String
+
+  assigned_to  Conductors @relation(fields: [conductor_id], references: [conductor_id], onDelete: Cascade)
+  conductor_id String
+
+  period       Periods     @relation(fields: [period_id], references: [period_id], onDelete: Cascade)
+  period_id    String
+}
+
+model Roles {
+  role_id     Int     @id @default(autoincrement())
+  role        String  @unique
+  description String?
+  users       Users[] @relation("RoleOfUser")
+}
+
+model Users {
+  user_id  String  @id @default(uuid())
+  username String  @unique
+  password String
+  enabled  Boolean @default(true)
+  verified Boolean @default(false)
+  roles    Roles[] @relation("RoleOfUser")
+
+  publisher    Publishers? @relation(fields: [publisher_id], references: [publisher_id])
+  publisher_id String?     @unique
+}
+
+model Publishers {
+  publisher_id  String    @id @default(uuid())
+
+  conductors        Conductors[]
+  user              Users?
+}
+
+model Conductors {
+  conductor_id       String    @id @default(uuid())
+  last_date_assigned DateTime?
+
+  assignaments Assignaments[]
+  registries   Registries[]
+
+  publisher    Publishers @relation(fields: [publisher_id], references: [publisher_id], onDelete: Cascade)
+  publisher_id String
+}
+
+model Programs {
+  program_id   String   @id @default(uuid())
+  since_week   DateTime
+  until_week   DateTime
+  is_published Boolean  @default(false)
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  assignaments Assignaments[]
+}
+
+model Assignaments {
+  assignament_id String   @id @default(uuid())
+  date           DateTime
+  covered        Boolean  @default(false)
+  meeting_place_id String
+
+  conductor        Conductors    @relation(fields: [conductor_id], references: [conductor_id], onDelete: Cascade)
+  conductor_id     String
+  programs         Programs      @relation(fields: [program_id], references: [program_id], onDelete: Cascade)
+  program_id       String
+}
