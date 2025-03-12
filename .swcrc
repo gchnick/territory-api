@@ -13,7 +13,7 @@
     },
     "baseUrl": "./",
     "paths": {
-      "@/src/*": ["src/*"],
+      "@/db/client/*": ["prisma/client/*"],
       "@/app/*": ["src/app/*"],
       "@/contexts/*": ["src/contexts/*"],
       "@/core/*": ["src/core/*"],

@@ -1,6 +1,8 @@
 node_modules/
 dist/
-prisma/db/*
+prisma/client/
+prisma/local/db/
+prisma/external/db/
 src/core/seed/*seed.ts
 .tmp
 .idea
