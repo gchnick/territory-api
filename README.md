@@ -50,12 +50,22 @@ Run following command:
 pnpm install --prod
 ```
 
-## 6. Create database
+## 6. Deploy databases
+
+### 6.1 Create local database
 
 To create the database files of `SQLITE` following command:
 
 ```
-node --run generate-db
+node --run prisma:deploy
+```
+
+### 6.1 Apply migration to external database
+
+To apply the migration using Turso's CLI:
+
+```
+turso db shell turso-prisma.db < ./prisma/external/migrations/20250310214508_init/migration.sql
 ```
 
 ### 6. Run server
