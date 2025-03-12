@@ -1,3 +1,5 @@
+import { Temporal } from "temporal-polyfill";
+
 import { DomainEvent } from "@/shared/domain/domain-event";
 
 import { Role } from "./role/role-name";
@@ -24,7 +26,7 @@ export class UserCreatedDomainEvent extends DomainEvent {
     eventId?: string;
     email: string;
     roles: Role[];
-    occurredOn?: Date;
+    occurredOn?: Temporal.Instant;
   }) {
     super({
       eventName: UserCreatedDomainEvent.EVENT_NAME,
@@ -47,7 +49,7 @@ export class UserCreatedDomainEvent extends DomainEvent {
   static fromPrimitives(params: {
     aggregateId: string;
     eventId: string;
-    occurredOn: Date;
+    occurredOn: Temporal.Instant;
     attributes: CreateUserDomainEventAttributes;
   }): DomainEvent {
     const { aggregateId, attributes, occurredOn, eventId } = params;

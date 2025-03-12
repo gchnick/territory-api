@@ -6,7 +6,7 @@ import { SignInQueryHandler } from "@/contexts/shared/auth/application/sign-in/s
 import { Encode } from "@/contexts/shared/auth/domain/encode";
 import { Jwt } from "@/contexts/shared/auth/domain/jwt";
 import { Bcrypt } from "@/contexts/shared/infrastructure/encode/bcrypt";
-import { NestPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/nest-prisma-service";
+import { NestAuthPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/services/nest-auth-prisma.service";
 import { UserRepository } from "@/contexts/shared/users/domain/user-repository";
 import { UserPrisma } from "@/contexts/shared/users/infrastructure/persistence/user-prisma";
 
@@ -32,10 +32,10 @@ import { AuthPostController } from "./api/auth-post.controller";
     },
     {
       provide: UserRepository,
-      useFactory(p: NestPrismaService) {
+      useFactory(p: NestAuthPrismaService) {
         return new UserPrisma(p);
       },
-      inject: [NestPrismaService],
+      inject: [NestAuthPrismaService],
     },
     {
       provide: Encode,
