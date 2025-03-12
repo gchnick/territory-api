@@ -33,7 +33,7 @@ import { AuthPostController } from "./api/auth-post.controller";
     {
       provide: UserRepository,
       useFactory(p: NestAuthPrismaService) {
-        return new UserPrisma(p);
+        return new UserPrisma(p, "users");
       },
       inject: [NestAuthPrismaService],
     },

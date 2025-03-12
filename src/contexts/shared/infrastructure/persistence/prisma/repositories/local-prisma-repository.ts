@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { PrismaClient } from "@/db/client/local";
+import { Prisma, PrismaClient } from "@/db/client/local";
 
 import { AggregateRoot } from "@/contexts/shared/domain/aggregate-root";
 
@@ -15,12 +15,13 @@ export abstract class LocalPrismaRepository<
   T extends AggregateRoot,
   U extends Exclude<keyof PrismaClient, symbol | `$${string}`>,
 > {
-  readonly #model!: U;
-
-  constructor(private readonly _repository: NestLocalPrismaService) {}
+  constructor(
+    private readonly _repository: NestLocalPrismaService,
+    private readonly model: U,
+  ) {}
 
   protected repository(): PrismaClient[U] {
-    return this._repository[this.#model];
+    return this._repository[this.model];
   }
 
   protected async persist(
@@ -30,6 +31,13 @@ export abstract class LocalPrismaRepository<
     const repository = this.repository();
     const args = mapper.toModel(aggregateRoot.toPrimitives());
     await (repository.create as any)(...args);
+  }
+
+  protected async unitOfWork<P extends Prisma.PrismaPromise<any>[]>(
+    arg: [...P],
+    options?: { isolationLevel?: Prisma.TransactionIsolationLevel },
+  ) {
+    return await this._repository.$transaction(arg, options);
   }
 
   protected async truncate(): Promise<void> {

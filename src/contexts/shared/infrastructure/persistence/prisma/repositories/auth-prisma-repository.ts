@@ -13,16 +13,17 @@ export abstract class AuthPrismaRepository<
   T extends AggregateRoot,
   U extends Exclude<keyof PrismaClient, symbol | `$${string}`>,
 > {
-  readonly #model!: U;
-
-  constructor(private readonly _repository: NestAuthPrismaService) {}
+  constructor(
+    private readonly _repository: NestAuthPrismaService,
+    private readonly model: U,
+  ) {}
 
   protected client() {
     return this._repository;
   }
 
   protected repository(): PrismaClient[U] {
-    return this._repository[this.#model];
+    return this._repository[this.model];
   }
 
   protected async persist(

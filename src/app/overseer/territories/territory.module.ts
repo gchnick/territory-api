@@ -38,7 +38,7 @@ import { TerritoryPutController } from "./api/territory-put.controller";
     {
       provide: TerritoryRepository,
       useFactory(p: NestExternalPrismaService) {
-        return new TerritoryPrisma(p);
+        return new TerritoryPrisma(p, "territories");
       },
     },
     TerritoryCreator,
