@@ -4,7 +4,7 @@ import { AuthModule } from "@/app/shared/auth/auth.module";
 
 import { CongregationRepository } from "@/contexts/Overseer/congregations/domain/congregation-repository";
 import { CongregationPrisma } from "@/contexts/Overseer/congregations/infrastructure/congregation-prisma";
-import { NestPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/nest-prisma-service";
+import { NestExternalPrismaService } from "@/contexts/shared/infrastructure/persistence/prisma/services/nest-external-prisma.service";
 
 @Module({
   imports: [AuthModule],
@@ -13,10 +13,10 @@ import { NestPrismaService } from "@/contexts/shared/infrastructure/persistence/
     CongregationPrisma,
     {
       provide: CongregationRepository,
-      useFactory(p: NestPrismaService) {
+      useFactory(p: NestExternalPrismaService) {
         return new CongregationPrisma(p);
       },
-      inject: [NestPrismaService],
+      inject: [NestExternalPrismaService],
     },
   ],
 })

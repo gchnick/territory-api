@@ -1,3 +1,4 @@
+import { AggregateRoot } from "@/contexts/shared/domain/aggregate-root";
 import { Nullable } from "@/contexts/shared/domain/nullable";
 
 import { CongregationCircuit } from "./congregation-circuit";
@@ -19,7 +20,7 @@ export type CongregationPrimitives = {
   limits: CongregationLimitsPrimitives;
 };
 
-export class Congregation {
+export class Congregation extends AggregateRoot {
   readonly number: CongregationId;
   readonly name: CongregationName;
   readonly circuit: CongregationCircuit;
@@ -35,6 +36,7 @@ export class Congregation {
     map: Nullable<CongregationMap>,
     limits: CongregationLimits,
   ) {
+    super();
     this.number = number;
     this.name = name;
     this.circuit = circuit;
