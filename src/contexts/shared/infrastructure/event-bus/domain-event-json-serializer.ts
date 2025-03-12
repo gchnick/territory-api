@@ -6,7 +6,7 @@ export const DomainEventJsonSerializer = {
       data: {
         id: event.eventId,
         type: event.eventName,
-        occurred_on: event.occurredOn.toISOString(),
+        occurred_on: event.occurredOn.toString(),
         aggregateId: event.aggregateId,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         attributes: event.toPrimitives(),

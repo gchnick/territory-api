@@ -1,3 +1,5 @@
+import { Temporal } from "temporal-polyfill";
+
 import { DomainEvent, DomainEventClass } from "@/shared/domain/domain-event";
 
 import { DomainEventSubscribers } from "./domain-event-subscribers";
@@ -39,7 +41,7 @@ export class DomainEventDeserializer extends Map<string, DomainEventClass> {
     return eventClass.fromPrimitives({
       aggregateId,
       attributes,
-      occurredOn: new Date(occurred_on),
+      occurredOn: Temporal.Instant.from(occurred_on),
       eventId: id,
     });
   }

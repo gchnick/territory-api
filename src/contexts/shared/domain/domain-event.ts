@@ -1,3 +1,5 @@
+import { Temporal } from "temporal-polyfill";
+
 import { Uuid } from "./value-object/uuid";
 
 export abstract class DomainEvent {
@@ -5,25 +7,25 @@ export abstract class DomainEvent {
   static fromPrimitives: (params: {
     aggregateId: string;
     eventId: string;
-    occurredOn: Date;
+    occurredOn: Temporal.Instant;
     attributes: DomainEventAttributes;
   }) => DomainEvent;
 
   readonly aggregateId: string;
   readonly eventId: string;
-  readonly occurredOn: Date;
+  readonly occurredOn: Temporal.Instant;
   readonly eventName: string;
 
   constructor(params: {
     eventName: string;
     aggregateId: string;
     eventId?: string;
-    occurredOn?: Date;
+    occurredOn?: Temporal.Instant;
   }) {
     const { aggregateId, eventName, eventId, occurredOn } = params;
     this.aggregateId = aggregateId;
     this.eventId = eventId ?? Uuid.random().value;
-    this.occurredOn = occurredOn ?? new Date();
+    this.occurredOn = occurredOn ?? Temporal.Now.instant();
     this.eventName = eventName;
   }
 
@@ -35,7 +37,7 @@ export type DomainEventClass = {
   fromPrimitives(params: {
     aggregateId: string;
     eventId: string;
-    occurredOn: Date;
+    occurredOn: Temporal.Instant;
     attributes: DomainEventAttributes;
   }): DomainEvent;
 };
