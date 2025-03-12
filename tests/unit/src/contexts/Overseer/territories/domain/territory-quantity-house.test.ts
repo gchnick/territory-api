@@ -1,5 +1,5 @@
 import { TerritoryQuantityHouse } from "@/contexts/Overseer/territories/domain/territory-quantity-house";
-import { TerritoryQuantityHouseIsInvalid } from "@/src/contexts/Overseer/territories/domain/territory-quantity-house-is-invalid";
+import { TerritoryQuantityHouseIsInvalid } from "@/contexts/Overseer/territories/domain/territory-quantity-house-is-invalid";
 
 import { TerritoryQuantityHouseMother } from "./territory-quantity-house-mother";
 

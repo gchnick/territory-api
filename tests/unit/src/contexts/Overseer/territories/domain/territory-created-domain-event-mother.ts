@@ -1,5 +1,7 @@
+import { Temporal } from "temporal-polyfill";
+
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
-import { TerritoryCreatedDomainEvent } from "@/src/contexts/Overseer/territories/domain/territory-created-domain-event";
+import { TerritoryCreatedDomainEvent } from "@/contexts/Overseer/territories/domain/territory-created-domain-event";
 
 export const TerritoryCreatedDomainEventMother = {
   create({
@@ -15,7 +17,7 @@ export const TerritoryCreatedDomainEventMother = {
     congregationId: number;
     number: number;
     label: string;
-    occurredOn?: Date;
+    occurredOn?: Temporal.Instant;
   }): TerritoryCreatedDomainEvent {
     return new TerritoryCreatedDomainEvent({
       aggregateId,

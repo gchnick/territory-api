@@ -1,8 +1,9 @@
+import { Temporal } from "temporal-polyfill";
+
 import { CongregationIdMother } from "@/tests/unit/src/contexts/Overseer/congregation/domain/congregation-id-mother";
 import { TerritoryIdMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-id-mother";
 import { TerritoryLabelMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-label-mother";
 import { TerritoryLastDateCompletedMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-last-date-completed-mother";
-import { TerritoryLocalityInPartMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-locality-in-part-mother";
 import { TerritoryLocalityMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-locality-mother";
 import { TerritoryNumberMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-number-mother";
 import { TerritoryQuantityHouseMother } from "@/tests/unit/src/contexts/Overseer/territories/domain/territory-quantity-house-mother";
@@ -19,7 +20,7 @@ type Params = {
   locality: string;
   localityInPart?: string;
   quantityHouses: number;
-  lastDateCompleted: Date;
+  lastDateCompleted: Temporal.PlainDate;
 };
 
 export const CreateTerritoryCommandMother = {
@@ -31,9 +32,9 @@ export const CreateTerritoryCommandMother = {
       label: TerritoryLabelMother.create().value,
       sector: TerritorySectorMother.create().value,
       locality: TerritoryLocalityMother.create().value,
-      localityInPart: TerritoryLocalityInPartMother.create().value,
+      localityInPart: TerritoryLocalityMother.create().value,
       quantityHouses: TerritoryQuantityHouseMother.create().value,
-      lastDateCompleted: TerritoryLastDateCompletedMother.create().value,
+      lastDateCompleted: TerritoryLastDateCompletedMother.create().date,
       ...params,
     };
     return new CreateTerritoryCommand(primitives);

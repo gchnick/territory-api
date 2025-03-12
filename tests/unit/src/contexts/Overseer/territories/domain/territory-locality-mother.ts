@@ -9,4 +9,10 @@ export const TerritoryLocalityMother = {
   locality(): string {
     return `${faker.location.secondaryAddress()}, ${faker.location.secondaryAddress()}, ${faker.location.secondaryAddress()}`;
   },
+  invalid(): string {
+    const exceeded = TerritoryLocality.MAXIMUM_CHARACTERS + 20;
+    return faker.string.alpha({
+      length: { min: exceeded, max: exceeded + 50 },
+    });
+  },
 };

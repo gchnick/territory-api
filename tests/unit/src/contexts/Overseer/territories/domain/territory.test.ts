@@ -1,4 +1,5 @@
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
+import { TerritoryLastDateCompleted } from "@/contexts/Overseer/territories/domain/territory-last-date-completed";
 
 import { TerritoryMother } from "./territory-mother";
 
@@ -18,8 +19,7 @@ describe.only("Territory should", () => {
     const territory: Territory = TerritoryMother.create({
       currentAssigned: true,
     });
-    const closedDate = new Date("2023-12-23");
-
+    const closedDate = TerritoryLastDateCompleted.fromPrimitive("2023-12-23");
     const territoryUnlocked = territory.unassigned(closedDate);
 
     const statusExpected = false;

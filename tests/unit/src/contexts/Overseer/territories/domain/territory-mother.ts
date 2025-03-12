@@ -10,7 +10,6 @@ import { TerritoryCurrentAssignedMother } from "./territory-current-assigned-mot
 import { TerritoryIdMother } from "./territory-id-mother";
 import { TerritoryLabelMother } from "./territory-label-mother";
 import { TerritoryLastDateCompletedMother } from "./territory-last-date-completed-mother";
-import { TerritoryLocalityInPartMother } from "./territory-locality-in-part-mother";
 import { TerritoryLocalityMother } from "./territory-locality-mother";
 import { TerritoryMapMother } from "./territory-map-mother";
 import { TerritoryNumberMother } from "./territory-number-mother";
@@ -28,17 +27,17 @@ export const TerritoryMother = {
   create(params?: Partial<TerritoryPrimitives>): Territory {
     const primitives: TerritoryPrimitives = {
       congregationId: CongregationIdMother.create().value,
-      id: TerritoryIdMother.create().value,
-      number: TerritoryNumberMother.create().value,
-      label: TerritoryLabelMother.create().value,
-      sector: TerritorySectorMother.create().value,
-      locality: TerritoryLocalityMother.create().value,
-      localityInPart: TerritoryLocalityInPartMother.create().value,
-      map: TerritoryMapMother.create().value,
-      quantityHouses: TerritoryQuantityHouseMother.create().value,
       currentAssigned: TerritoryCurrentAssignedMother.create().value,
+      id: TerritoryIdMother.create().value,
+      label: TerritoryLabelMother.create().value,
       lastDateCompleted: TerritoryLastDateCompletedMother.create().value,
+      locality: TerritoryLocalityMother.create().value,
+      localityInPart: TerritoryLocalityMother.create().value,
+      map: TerritoryMapMother.create().value,
       meetingPlaces: [],
+      number: TerritoryNumberMother.create().value,
+      quantityHouses: TerritoryQuantityHouseMother.create().value,
+      sector: TerritorySectorMother.create().value,
       ...params,
     };
 
@@ -46,26 +45,26 @@ export const TerritoryMother = {
   },
   fromCommand(command: CreateTerritoryCommand): Territory {
     const {
-      id,
       congregationId,
-      number,
+      id,
       label,
-      sector,
+      lastDateCompleted,
       locality,
       localityInPart,
+      number,
       quantityHouses,
-      lastDateCompleted,
+      sector,
     } = command;
     return this.create({
-      id,
       congregationId,
-      number,
+      id,
       label,
-      sector,
+      lastDateCompleted: lastDateCompleted.toString(),
       locality,
       localityInPart,
+      number,
       quantityHouses,
-      lastDateCompleted,
+      sector,
     });
   },
   fromQuery(query: FindByNumberQuery): Territory {
