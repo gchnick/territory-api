@@ -115,7 +115,7 @@ model Availability {
     availability_id Int         @id @default(autoincrement())
     start_date      DateTime?   @db.Timestamptz()
     finish_date     DateTime?   @db.Timestamptz()
-    frequency       Frequency?  @default(DAILY)
+    frequency       Frequency  @default(DAILY)
     days_of_week    DayOfWeek[]
     notes           String?     @db.VarChar(255)
 
