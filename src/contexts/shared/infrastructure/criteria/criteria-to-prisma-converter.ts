@@ -8,7 +8,8 @@ import { BooleanValueObject } from "@/contexts/shared/domain/value-object/boolea
 type Mappings = Record<string, string>;
 type Typecaster = Record<string, (input: string) => string | number | boolean>;
 
-export const BooleanCasting = (v: string) => BooleanValueObject.toBoolean(v);
+export const BooleanCasting = (v: string) =>
+  BooleanValueObject.fromValue(v).value;
 const NoCasting = (input: string) => input;
 
 type PrismaOptions = {

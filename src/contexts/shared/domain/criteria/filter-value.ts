@@ -12,6 +12,6 @@ export class FilterValue extends StringValueObject {
   }
 
   toBoolean() {
-    return new BooleanValueObject(this.value).value;
+    return BooleanValueObject.fromValue(this.value).value;
   }
 }
