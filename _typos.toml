@@ -5,4 +5,4 @@ extend-ignore-re = [
 ]
 
 [files]
-extend-exclude = ["etc/db/*.json", "etc/request/*.http"]
+extend-exclude = ["etc/db/*.json", "etc/request/*.http", "README.md"]
