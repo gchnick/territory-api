@@ -1,3 +1,3 @@
-import { ValueObject } from "@/shared/domain/value-object/value-object";
+import { EmailValueObject } from "../../domain/email-value-object";
 
-export class UserEmail extends ValueObject<string> {}
+export class UserEmail extends EmailValueObject {}
