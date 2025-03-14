@@ -43,7 +43,7 @@ import { InvalidArgumentError } from "@/shared/domain/value-object/invalid-argum
 import { CreateTerritoryCommand } from "@/contexts/Overseer/territories/application/create/create-territory-command";
 import { ExistsByIdQuery } from "@/contexts/Overseer/territories/application/exists/exists-by-id-query";
 import { UpdateTerritoryCommand } from "@/contexts/Overseer/territories/application/update/update-territory-command";
-import { PlainDateValueObject } from "@/contexts/shared/domain/value-object/pain-date-value-object";
+import { PlainDateValueObject } from "@/contexts/shared/domain/value-object/plain-date-value-object";
 import { Role } from "@/contexts/shared/users/domain/role/role-name";
 
 @ApiTags("Territory")

@@ -36,7 +36,7 @@ import Logger from "@/shared/domain/logger";
 import { InvalidArgumentError } from "@/shared/domain/value-object/invalid-argument-error";
 
 import { UpdateTerritoryCommand } from "@/contexts/Overseer/territories/application/update/update-territory-command";
-import { PlainDateValueObject } from "@/contexts/shared/domain/value-object/pain-date-value-object";
+import { PlainDateValueObject } from "@/contexts/shared/domain/value-object/plain-date-value-object";
 import { Role } from "@/contexts/shared/users/domain/role/role-name";
 
 import { TerritoryPatchRequest } from "../requests/territory-patch-request";

@@ -2,7 +2,7 @@ import { Temporal } from "temporal-polyfill";
 
 import { StringValueObject } from "./string-value-object";
 
-export class PlainDateValueObject extends StringValueObject {
+export abstract class PlainDateValueObject extends StringValueObject {
   readonly date: Temporal.PlainDate;
 
   constructor(value: Temporal.PlainDate) {

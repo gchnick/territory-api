@@ -1,6 +1,6 @@
 import { Temporal } from "temporal-polyfill";
 
-import { PlainDateValueObject } from "@/contexts/shared/domain/value-object/pain-date-value-object";
+import { PlainDateValueObject } from "@/contexts/shared/domain/value-object/plain-date-value-object";
 
 import { LastDateCompletedIsInvalid } from "./last-date-completed-is-invalid";
 
