@@ -14,7 +14,7 @@ import { NestExternalPrismaService } from "@/contexts/shared/infrastructure/pers
     {
       provide: CongregationRepository,
       useFactory(p: NestExternalPrismaService) {
-        return new CongregationPrisma(p);
+        return new CongregationPrisma(p, "congregations");
       },
       inject: [NestExternalPrismaService],
     },
