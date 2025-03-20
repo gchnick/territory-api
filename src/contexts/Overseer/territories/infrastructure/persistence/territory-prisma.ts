@@ -1,12 +1,9 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-
 import { Prisma } from "@/db/client/external";
 
 import { CongregationId } from "@/contexts/Overseer/congregations/domain/congregation-id";
 import { Territory } from "@/contexts/Overseer/territories/domain/territory";
 import { TerritoryId } from "@/contexts/Overseer/territories/domain/territory-id";
 import { TerritoryNumber } from "@/contexts/Overseer/territories/domain/territory-number";
-import { TerritoryNumberAlreadyRegistry } from "@/contexts/Overseer/territories/domain/territory-number-already-registry";
 import {
   PartialTerritoryPrimitives,
   TerritoryRepository,
@@ -19,6 +16,7 @@ import {
 } from "@/contexts/shared/infrastructure/criteria/criteria-to-prisma-converter";
 import { ExternalPrismaRepository } from "@/contexts/shared/infrastructure/persistence/prisma/repositories/external-prisma-repository";
 
+import { PrismaErrorHandler } from "./prisma-error-handler";
 import { TerritoryMapper } from "./territory-mapper";
 
 type TerritoryWithMeetingPlaces = Prisma.TerritoriesGetPayload<{
@@ -31,15 +29,12 @@ export class TerritoryPrisma
 {
   async save(territory: Territory): Promise<void> {
     const territoryMapper = new TerritoryMapper();
+    const prismaError = new PrismaErrorHandler();
+
     try {
       await this.persist(territory, territoryMapper);
     } catch (error) {
-      if (
-        error instanceof PrismaClientKnownRequestError &&
-        error.code === "P2002"
-      ) {
-        throw new TerritoryNumberAlreadyRegistry();
-      }
+      prismaError.handle(error);
     }
   }
 
