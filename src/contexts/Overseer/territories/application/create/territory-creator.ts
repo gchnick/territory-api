@@ -17,7 +17,7 @@ import { TerritoryNumberAlreadyRegistry } from "@/contexts/Overseer/territories/
 import { TerritoryQuantityHouse } from "@/contexts/Overseer/territories/domain/territory-quantity-house";
 import { TerritoryRepository } from "@/contexts/Overseer/territories/domain/territory-repository";
 import { TerritorySector } from "@/contexts/Overseer/territories/domain/territory-sector";
-import { UniqueContrainError } from "@/contexts/shared/domain/persistence/error/unique-contrain-error";
+import { UniqueConstrainError } from "@/contexts/shared/domain/persistence/error/unique-constrain-error";
 
 @Injectable()
 export class TerritoryCreator {
@@ -63,7 +63,7 @@ export class TerritoryCreator {
     try {
       await this.repository.save(territory);
     } catch (error) {
-      if (error instanceof UniqueContrainError) {
+      if (error instanceof UniqueConstrainError) {
         this.logger.warn(`[${error.code}]: ${error.message}`, "Territory");
         throw new TerritoryNumberAlreadyRegistry(
           `Territory Number <${territory.number.value}> already registry to congregation <${territory.congregation.value}>`,
