@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { NewableClass } from "@/contexts/shared/domain/newable-class";
 
-import { CommandError } from "./comand-error";
+import { CommandError } from "./command-error";
 
 type CommandErrorMappings = Record<string, NewableClass<CommandError>>;
 

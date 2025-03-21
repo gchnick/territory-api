@@ -1,5 +1,5 @@
-import { CommandError } from "./comand-error";
-import { UniqueContrainError } from "./unique-contrain-error";
+import { CommandError } from "./command-error";
+import { UniqueConstrainError } from "./unique-constrain-error";
 
 export class UniqueConstrainFailed implements CommandError {
   readonly #code: string;
@@ -11,6 +11,6 @@ export class UniqueConstrainFailed implements CommandError {
   }
 
   throwPersistenceError(): void {
-    throw new UniqueContrainError(this.#code, this.#message);
+    throw new UniqueConstrainError(this.#code, this.#message);
   }
 }
