@@ -50,6 +50,7 @@ model Publishers {
     last_irregular_without_report DateTime?              @db.Date
     is_active                     Boolean                @default(true)
     is_removed                    Boolean                @default(false)
+    sex                           Sex
     privileges                    PrivilegesOfPublisher[]
     phones                        Phones[]               @relation("PhoneOfPublisher")
     availability                  Availability[]
@@ -159,4 +160,9 @@ enum DayOfWeek {
 enum AvailabilityType {
     ABSENCE
     AVAILABLE
+}
+
+enum Sex {
+    MALE
+    FEMALE
 }
