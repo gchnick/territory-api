@@ -1,5 +1,6 @@
 import { Nullable } from "@/contexts/shared/domain/nullable";
 
+import { FinishDateIsBeforeStartDate } from "./availability/finish-date-is-before-start-date";
 import {
   DayOfWeek,
   PublisherAvailabilityDayOfWeek,
@@ -55,6 +56,10 @@ export class PublisherAvailability {
       startDate,
     });
 
+    if (startDate && finishDate) {
+      this.#ensureThatFinishDateIsAfterStartDate(startDate, finishDate);
+    }
+
     this.id = id;
     this.daysOfWeek = daysOfWeek;
     this.finishDate = finishDate;
@@ -104,6 +109,17 @@ export class PublisherAvailability {
   }) {
     if (!params.daysOfWeek && !params.finishDate && !params.startDate) {
       throw new ThereIsNoAvailability("The availability is empty");
+    }
+  }
+
+  #ensureThatFinishDateIsAfterStartDate(
+    startDate: PublisherAvailabilityStartDate,
+    finishDate: PublisherAvailabilityFinishDate,
+  ) {
+    if (startDate.isAfter(finishDate.date)) {
+      throw new FinishDateIsBeforeStartDate(
+        "The finish date is before the start date",
+      );
     }
   }
 }
