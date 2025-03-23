@@ -7,6 +7,7 @@ import type { PublisherPrivilegePrimitives } from "./publisher-privilege";
 
 import { AggregateRoot } from "@/contexts/shared/domain/aggregate-root";
 import { Nullable } from "@/contexts/shared/domain/nullable";
+import { Sex, SexValueObject } from "@/contexts/shared/domain/sex-value-object";
 
 import { PublisherAvailability } from "./publisher-availability";
 import { PublisherBaptismDate } from "./publisher-baptism-date";
@@ -42,6 +43,7 @@ export type PublisherPrimitives = {
   phones?: PublisherPhonePrimitives[];
   photoUrl?: string;
   privileges?: PublisherPrivilegePrimitives[];
+  sex: Sex;
 };
 
 export class Publisher extends AggregateRoot {
@@ -61,6 +63,7 @@ export class Publisher extends AggregateRoot {
   readonly phones: Nullable<PublisherPhone[]>;
   readonly photoUrl: Nullable<PublisherPhoto>;
   readonly privileges: Nullable<PublisherPrivilege[]>;
+  readonly sex: SexValueObject;
 
   constructor(params: {
     availability?: Nullable<PublisherAvailability[]>;
@@ -79,6 +82,7 @@ export class Publisher extends AggregateRoot {
     phones?: Nullable<PublisherPhone[]>;
     photoUrl: Nullable<PublisherPhoto>;
     privileges?: Nullable<PublisherPrivilege[]>;
+    sex: SexValueObject;
   }) {
     super();
 
@@ -99,6 +103,7 @@ export class Publisher extends AggregateRoot {
       phones,
       photoUrl,
       privileges,
+      sex,
     } = params;
 
     this.availability = availability;
@@ -117,6 +122,7 @@ export class Publisher extends AggregateRoot {
     this.phones = phones;
     this.photoUrl = photoUrl;
     this.privileges = privileges;
+    this.sex = sex;
   }
 
   static fromPrimitives(params: PublisherPrimitives): Publisher {
@@ -130,6 +136,7 @@ export class Publisher extends AggregateRoot {
       phones,
       photoUrl,
       privileges,
+      sex,
     } = params;
     return new Publisher({
       availability: availability?.map(a =>
@@ -160,6 +167,7 @@ export class Publisher extends AggregateRoot {
       privileges: privileges?.map(privilege =>
         PublisherPrivilege.fromPrimitives(privilege),
       ),
+      sex: SexValueObject.fromValue(sex),
     });
   }
 
@@ -181,6 +189,7 @@ export class Publisher extends AggregateRoot {
       phones: this.phones?.map(phone => phone.toPrimitives()),
       photoUrl: this.photoUrl?.value,
       privileges: this.privileges?.map(privilege => privilege.toPrimitives()),
+      sex: this.sex.value,
     };
   }
 }
