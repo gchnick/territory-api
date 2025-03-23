@@ -1,16 +1,13 @@
 import { Temporal } from "temporal-polyfill";
 
-import { StringValueObject } from "./string-value-object";
+import { BaseDateValueObject } from "./base-date-value-object";
 
-export class ZonedDateTimeValueObject extends StringValueObject {
-  readonly date: Temporal.ZonedDateTime;
-
-  constructor(value: Temporal.ZonedDateTime) {
-    super(value.toString());
-    this.date = value;
-  }
-
+export class ZonedDateTimeValueObject extends BaseDateValueObject<Temporal.ZonedDateTime> {
   static toTemporal(value: string) {
     return Temporal.ZonedDateTime.from(value, { overflow: "reject" });
+  }
+
+  protected compare(other: Temporal.ZonedDateTime): number {
+    return Temporal.ZonedDateTime.compare(this.date, other);
   }
 }

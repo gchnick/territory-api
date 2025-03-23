@@ -1,16 +1,13 @@
 import { Temporal } from "temporal-polyfill";
 
-import { StringValueObject } from "./string-value-object";
+import { BaseDateValueObject } from "./base-date-value-object";
 
-export class PlainDateTimeValueObject extends StringValueObject {
-  readonly date: Temporal.PlainDateTime;
-
-  constructor(value: Temporal.PlainDateTime) {
-    super(value.toString());
-    this.date = value;
-  }
-
+export class PlainDateTimeValueObject extends BaseDateValueObject<Temporal.PlainDateTime> {
   static toTemporal(value: string) {
     return Temporal.PlainDateTime.from(value, { overflow: "reject" });
+  }
+
+  protected compare(other: Temporal.PlainDateTime): number {
+    return Temporal.PlainDateTime.compare(this.date, other);
   }
 }
